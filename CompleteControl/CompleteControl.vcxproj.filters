@@ -53,6 +53,7 @@
     <ClCompile Include="..\obse\StdAfx.cpp">
       <Filter>obse</Filter>
     </ClCompile>
+    <ClCompile Include="Control.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\obse\obse\GameActorValues.h">
@@ -106,6 +107,7 @@
     <ClInclude Include="..\obse\StdAfx.h">
       <Filter>obse</Filter>
     </ClInclude>
+    <ClInclude Include="Control.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">

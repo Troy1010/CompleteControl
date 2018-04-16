@@ -11,7 +11,7 @@ OBSEScriptInterface * g_scriptInterface = NULL;	// make sure you assign to this
 #endif
 #include "obse/ParamInfos.h"
 
-IDebugLog		gLog("default.log"); //TEMPLATE SUGGESTION: Edit the log name
+IDebugLog		gLog("CompleteControl.log");
 
 //Code here
 
@@ -20,7 +20,7 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
 	_MESSAGE("query");
 	info->infoVersion = PluginInfo::kInfoVersion;
-	info->name = "obse_plugin_example";
+	info->name = "CompleteControl";
 	info->version = 1;
 	_MESSAGE("OBSE version: %08X",obse->oblivionVersion); //BUG: For some reason, obse->obseVersion gives 15 when it should give 21
 	// version checks
@@ -39,7 +39,7 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	_MESSAGE("load");
-	obse->SetOpcodeBase(0x2000);	//TEMPLATE SUGGESTION: Fill in your OpcodeBase
+	obse->SetOpcodeBase(0x28B0);
 	//obse->RegisterCommand(&kCommandInfo_TestExtractFormatString);
 	if(!obse->isEditor)
 	{
