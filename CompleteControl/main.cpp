@@ -10,7 +10,9 @@ OBSEScriptInterface * g_scriptInterface = NULL;	// make sure you assign to this
 #include "obse_editor/EditorAPI.h"
 #endif
 #include "obse/ParamInfos.h"
+#include <vector>
 
+using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
 //Code here
@@ -46,6 +48,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		// get an OBSEScriptInterface to use for argument extraction
 		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 	}
+
+	vector<int[5]> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
+	int int0 =1;
+
+
 	return true;
 }
 };
