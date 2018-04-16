@@ -11,6 +11,7 @@ OBSEScriptInterface * g_scriptInterface = NULL;	// make sure you assign to this
 #endif
 #include "obse/ParamInfos.h"
 #include <vector>
+#include "Control.h"
 
 using namespace std;
 IDebugLog		gLog("CompleteControl.log");
@@ -49,7 +50,9 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 	}
 
-	vector<int[5]> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
+	vector<Control> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
+	Controls.push_back(Control(1)); //? I don't have to write new?
+	//Controls[0] = ;
 	int int0 =1;
 
 

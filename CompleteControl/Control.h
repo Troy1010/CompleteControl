@@ -1,24 +1,22 @@
 #pragma once
-
+#include "TM_CommonCPP/Properties.h"
 
 class Control
 {
-private:
-	int _x;
-public:
-	Control(void);
-	~Control(void);
+	public:
+		enum MenuModeType
+		{
+			Both = 0, //?Do I need the =0?
+			GameMode,
+			MenuMode,
+		};
+		Control(int _FormID);
+		~Control(void);
 
-	PROPERTY(int,x);
-	GET(x)
-	{
-		return _x;
-	}
-	SET(x)
-	{
-		_x = value;
-	}
-
-
+		int FormID; //**This has the wrong type
+		int dxScancode;
+		int DisableCount;
+		int OverrideCount;
+		MenuModeType _MenuModeType;
+		//OnControlDownStringmap
 };
-

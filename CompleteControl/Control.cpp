@@ -1,8 +1,9 @@
 #include "Control.h"
 
 
-Control::Control(void)
+Control::Control(int _FormID)
 {
+	FormID = _FormID;
 }
 
 
