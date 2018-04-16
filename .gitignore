@@ -1,5 +1,9 @@
 TM_CommonCPP/
-
+CompleteControl/Debug
+CompleteControl/Release
+Debug/
+Release/
+common/
 
 Debug
 Release

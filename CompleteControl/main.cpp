@@ -51,7 +51,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	}
 
 	vector<Control> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
-	Controls.push_back(Control(1)); //? I don't have to write new?
+	Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode)); //? I don't have to write new?
 	//Controls[0] = ;
 	int int0 =1;
 
