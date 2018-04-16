@@ -1,0 +1,1 @@
+common/ and obse/: https://github.com/llde/Oblivion-Script-Extender commit:275c07a SHA:fedc2d5bc1d48d4c173c698a5e23b43e518ec96f
