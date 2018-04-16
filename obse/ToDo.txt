@@ -1,0 +1,7 @@
+Fix PostLoadGame handler on steam (Need a steam executable)
+Fix OnMurder handler
+OffLimits Cell
+Refactoring
+Expose DeferredDelete 
+Implement getMapMArker the right way
+Define global the 3 global TESEffectShader

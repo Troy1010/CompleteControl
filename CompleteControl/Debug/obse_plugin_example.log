@@ -1,0 +1,34 @@
+﻿Build started 4/16/2018 2:22:01 AM.
+     1>Project "C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\obse_plugin_example.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\ /IC:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\\.. /IC:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\\..\obse\obse /IC:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\\..\obse\ /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D OBLIVION_VERSION=0x010201A0 /D OBLIVION /D _WINDLL /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /FIstdafx.h /FIobse_common/obse_prefix.h /analyze- /errorReport:prompt main.cpp
+         main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\Debug\obse_plugin_example.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"exports.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\Debug\obse_plugin_example.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\Debug\obse_plugin_example.lib" /MACHINE:X86 /SAFESEH /DLL Debug\GameActorValues.obj
+         Debug\GameAPI.obj
+         Debug\GameBSExtraData.obj
+         Debug\GameData.obj
+         Debug\GameExtraData.obj
+         Debug\GameForms.obj
+         Debug\GameObjects.obj
+         Debug\GameTasks.obj
+         Debug\GameTypes.obj
+         Debug\NiAPI.obj
+         Debug\NiNodes.obj
+         Debug\NiRTTI.obj
+         Debug\Script.obj
+         Debug\Utilities.obj
+         Debug\StdAfx.obj
+         Debug\dllmain.obj
+         Debug\main.obj
+         C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\common\Debug\common.lib
+         obse_plugin_example.vcxproj -> C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\Debug\obse_plugin_example.dll
+       PostBuildEvent:
+         copy "C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\Debug\obse_plugin_example.dll" "C:\Oblivion Files\Oblivion\data\obse\plugins\obse_plugin_example.dll"
+         :VCEnd
+                 1 file(s) copied.
+     1>Done Building Project "C:\TMinus1010\Projects\Coding\C++\OBSEPluginTemplate\obse_plugin_example\obse_plugin_example.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.49

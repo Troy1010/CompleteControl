@@ -1,0 +1,13 @@
+DeleteReference doesn't work on actors. --Fixed
+GetCombatSpell returns an array with spells repeated 4 times- Fixed
+OverrideActorSwimBreath overrides are not registered in the map --Fixed
+HasSpell works on NPCs but doesn't work on Creatures -Fixed
+HasSpell cycle in the effect listof the spell unnecessariy- Fixed
+Ar_customsort doesn't sort arrays of arrays -Fixed
+getDistance were calling another functions -Fixed (Tiawar)
+getSelectedSpell crash when in combat. --Fixed
+IsReference: return 1 for all objects with compiler override -Fixed
+PostLoadGame handler misfire on Steam. doesnt' fire the first time, generally fire after reload.
+I suppose this happen also for PostLoad callbacks
+
+OnMurder doesn't fire
