@@ -3,7 +3,7 @@
 #include "obse_common/SafeWrite.cpp"
 #if OBLIVION
 #include "obse/GameAPI.h"
-OBSEScriptInterface * g_scriptInterface = NULL;	// make sure you assign to this
+OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
 #define ExtractArgsEx(...) g_scriptInterface->ExtractArgsEx(__VA_ARGS__)
 #define ExtractFormatStringArgs(...) g_scriptInterface->ExtractFormatStringArgs(__VA_ARGS__)
 #else
@@ -16,7 +16,19 @@ OBSEScriptInterface * g_scriptInterface = NULL;	// make sure you assign to this
 using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
-//Code here
+static vector<Control> Controls;
+// Helper Function
+bool RegisterVanillaControls()
+{
+	Controls.push_back(Control(Control::GenerateFormID(),17,0,0,GameMode)); //*Grab dxScancodes from Oblivion.ini
+	Controls.push_back(Control(Control::GenerateFormID(),30,0,0,Control::MenuModeType::GameMode));
+	Controls.push_back(Control(Control::GenerateFormID(),31,0,0,Control::MenuModeType::GameMode));
+	Controls.push_back(Control(Control::GenerateFormID(),32,0,0,Control::MenuModeType::GameMode));
+	Control* Control1 = new Control();
+	Control1->~Control();
+
+}
+
 
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
@@ -50,10 +62,17 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 	}
 
-	vector<Control> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
-	Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode)); //? I don't have to write new?
+	//vector<Control> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
+	//Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode)); //? I don't have to write new?
 	//Controls[0] = ;
-	int int0 =1;
+	
+	//Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode));
+	RegisterVanillaControls();
+	for (Control _Control : Controls)
+	{
+		for each (var 
+		_Control;
+	};
 
 
 	return true;
