@@ -1,3 +1,4 @@
 [submodule "TM_CommonCPP"]
 	path = TM_CommonCPP
 	url = https://github.com/Troy1010/TM_CommonCPP.git
+	branch = dev2
