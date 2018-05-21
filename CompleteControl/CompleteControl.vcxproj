@@ -109,21 +109,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\obse\obse\GameActorValues.cpp" />
-    <ClCompile Include="..\obse\obse\GameAPI.cpp" />
-    <ClCompile Include="..\obse\obse\GameBSExtraData.cpp" />
-    <ClCompile Include="..\obse\obse\GameData.cpp" />
-    <ClCompile Include="..\obse\obse\GameExtraData.cpp" />
-    <ClCompile Include="..\obse\obse\GameForms.cpp" />
-    <ClCompile Include="..\obse\obse\GameObjects.cpp" />
-    <ClCompile Include="..\obse\obse\GameTasks.cpp" />
-    <ClCompile Include="..\obse\obse\GameTypes.cpp" />
-    <ClCompile Include="..\obse\obse\NiAPI.cpp" />
-    <ClCompile Include="..\obse\obse\NiNodes.cpp" />
-    <ClCompile Include="..\obse\obse\NiRTTI.cpp" />
-    <ClCompile Include="..\obse\obse\Script.cpp" />
-    <ClCompile Include="..\obse\obse\Utilities.cpp" />
-    <ClCompile Include="..\obse\StdAfx.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="dllmain.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -134,29 +119,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\obse\obse\GameActorValues.h" />
-    <ClInclude Include="..\obse\obse\GameAPI.h" />
-    <ClInclude Include="..\obse\obse\GameBSExtraData.h" />
-    <ClInclude Include="..\obse\obse\GameData.h" />
-    <ClInclude Include="..\obse\obse\GameExtraData.h" />
-    <ClInclude Include="..\obse\obse\GameForms.h" />
-    <ClInclude Include="..\obse\obse\GameObjects.h" />
-    <ClInclude Include="..\obse\obse\GameTasks.h" />
-    <ClInclude Include="..\obse\obse\GameTypes.h" />
-    <ClInclude Include="..\obse\obse\NiAPI.h" />
-    <ClInclude Include="..\obse\obse\NiNodes.h" />
-    <ClInclude Include="..\obse\obse\NiRTTI.h" />
-    <ClInclude Include="..\obse\obse\ParamInfos.h" />
-    <ClInclude Include="..\obse\obse\PluginAPI.h" />
-    <ClInclude Include="..\obse\obse\Script.h" />
-    <ClInclude Include="..\obse\obse\Utilities.h" />
-    <ClInclude Include="..\obse\StdAfx.h" />
     <ClInclude Include="Control.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\obse\obse\GameRTTI_1_1.inl" />
-    <None Include="..\obse\obse\GameRTTI_1_2.inl" />
-    <None Include="..\obse\obse\GameRTTI_1_2_416.inl" />
     <None Include="exports.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
