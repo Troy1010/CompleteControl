@@ -5,6 +5,8 @@ Debug/
 Release/
 common/
 .vs/
+conanbuildinfo.*
+conaninfo.txt
 
 Debug
 Release
