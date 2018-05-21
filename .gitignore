@@ -4,6 +4,7 @@ CompleteControl/Release
 Debug/
 Release/
 common/
+.vs/
 
 Debug
 Release
