@@ -17,17 +17,6 @@ using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
 static vector<Control> Controls;
-// Helper Function
-bool RegisterVanillaControls()
-{
-	//Controls.push_back(Control(Control::GenerateFormID(),17,0,0,GameMode)); //*Grab dxScancodes from Oblivion.ini
-	Controls.push_back(Control(Control::GenerateFormID(),30,0,0,Control::MenuModeType::GameMode));
-	Controls.push_back(Control(Control::GenerateFormID(),31,0,0,Control::MenuModeType::GameMode));
-	Controls.push_back(Control(Control::GenerateFormID(),32,0,0,Control::MenuModeType::GameMode));
-	Control* Control1 = new Control();
-	Control1->~Control();
-	return true;
-}
 
 
 extern "C" {
@@ -62,17 +51,6 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 	}
 
-	//vector<Control> Controls; //Controls [ID:ControlObject][dxScancode,DisableCount,OverrideCount,MenuModeType,OnControlDownStringmap]
-	//Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode)); //? I don't have to write new?
-	//Controls[0] = ;
-	
-	//Controls.push_back(Control(1,1,1,1,Control::MenuModeType::GameMode));
-	RegisterVanillaControls();
-	for (Control _Control : Controls)
-	{
-		//for each (var 
-		//_Control;
-	};
 
 
 	return true;
