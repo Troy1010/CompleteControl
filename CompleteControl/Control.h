@@ -1,5 +1,5 @@
 #pragma once
-#include "TM_CommonCPP/TM_CommonCPP/Properties.h"
+#include "TM_CommonCPP/Properties.h"
 #include <string>
 
 class Control

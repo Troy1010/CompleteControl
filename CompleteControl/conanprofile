@@ -1,0 +1,13 @@
+[settings]
+os=Windows
+os_build=Windows
+arch=x86
+arch_build=x86
+compiler=Visual Studio
+compiler.runtime=MTd
+compiler.version=11
+compiler.toolset=v110
+build_type=Debug
+[options]
+[build_requires]
+[env]

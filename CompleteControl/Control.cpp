@@ -1,5 +1,9 @@
 #include "Control.h"
 
+
+int Control::FreeFormID;
+bool Control::DoOnce;
+
 Control::Control()
 {
 	FormID = 0;
