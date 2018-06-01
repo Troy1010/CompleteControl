@@ -13,50 +13,106 @@ OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
 #include <vector>
 #include "Control.h"
 #include "obse/Hooks_DirectInput8Create.h"
+#include "TM_CommonCPP/Misc.h"
 
 
 using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
 OBSECommandTableInterface	* g_commandTableIntfc = NULL;
+const CommandInfo * kCommandInfo_DisableKey = NULL;
+const CommandInfo * kCommandInfo_EnableKey = NULL;
+CommandInfo * kCommandInfo_DisableKey2_Pointer = NULL;
 
 static vector<Control> Controls;
 
-
-std::string strcat2(const char * sTemp1, const char * sTemp2)
+// called from 004F90A5
+bool Cmd_Default_Parse2(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
 {
-	std::string sReturning(sTemp1);
-	sReturning = sReturning.append(sTemp2);
-	return sReturning;
+#ifdef _DEBUG
+#if 0
+	_MESSAGE("Cmd_Default_Parse: %08X %08X %08X %08X",
+		arg0, arg1, arg2, arg3);
+#endif
+#endif
+
+#ifdef OBLIVION
+
+#if OBLIVION_VERSION == OBLIVION_VERSION_1_1
+	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F38C0;
+#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2
+	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDF80;
+#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2_416
+	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDE30;
+#else
+#error unsupported version of oblivion
+#endif
+
+#else
+
+#if CS_VERSION == CS_VERSION_1_0
+	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F69C0;
+#elif CS_VERSION == CS_VERSION_1_2
+	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x00500FF0;
+#else
+#error unsupported cs version
+#endif
+
+#endif
+
+	// arg0 = idx?
+	// arg1 = ParamInfo *
+	// arg2 = ptr to line to parse, skip UInt32 header first
+	// arg3 = ptr to script info? first UInt32 is ptr to script data
+
+	return g_defaultParseCommand(numParams, paramInfo, lineBuf, scriptBuf);
 }
 
-const char * strcat3(const char * sTemp1, const char * sTemp2)
+
+// DisableKey2
+bool Cmd_DisableKey2_Execute(COMMAND_ARGS)
 {
-	char sReturning[100];
-	strcpy(sReturning, sTemp1);
-	strcat(sReturning, sTemp2);
-	return sReturning;
-}
+	//Console_Print("Cmd_DisableKey2_Execute`Open");
+//	*result = 0; //Do I need this?
 
+//	kCommandInfo_DisableKey = g_commandTableIntfc->GetByOpcode(0x1430); //opcode:00001430
 
-// DisableW
-bool Cmd_DisableW_Execute(COMMAND_ARGS)
-{
-	*result = 0;
-	//UInt32	keycode = 17; //W:17
-	//DI_data.DisallowStates[keycode] = 0x00;
-	const CommandInfo * kCommandInfo_DisableKey =  g_commandTableIntfc->GetByName("DisableKey");
-	//kCommandInfo_DisableKey->execute(paramInfo, arg1, thisObj, arg3, scriptObj, eventList, result, opcodeOffsetPtr);
+//	Console_Print(strcat3("kCommandInfo_DisableKey->shortName: ", kCommandInfo_DisableKey->shortName));
+//	kCommandInfo_DisableKey->execute(PASS_COMMAND_ARGS);
+	Console_Print("ReplacementCommand`Open");
 
-	kCommandInfo_DisableKey->execute(PASS_COMMAND_ARGS);
-
-	Console_Print(strcat3("kCommandInfo_DisableKey->shortName: ", kCommandInfo_DisableKey->shortName));
-	Console_Print("Cmd_DisableW_Execute`Close");
 
 	// Report Success
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(DisableW, "Disables the W key", 0, 1, kParams_OneInt)
+//DEFINE_COMMAND_PLUGIN(DisableKey2, "Disables a key and registers this action", 0, 1, kParams_OneInt)
+CommandInfo kCommandInfo_DisableKey2 =
+{
+	"DisableKey2",
+	"dk2",
+	0,
+	"Prevents a player from using a key2",
+	0,
+	1,
+	kParams_OneInt,
+	HANDLER(Cmd_DisableKey2_Execute),
+	Cmd_Default_Parse2,
+	NULL,
+	0
+};
+
+
+// EnableKey2
+bool Cmd_EnableKey2_Execute(COMMAND_ARGS)
+{
+	*result = 0; //Do I need this?
+
+	kCommandInfo_EnableKey->execute(PASS_COMMAND_ARGS);
+
+	// Report Success
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(EnableKey2, "Enables a key if 0 mods have it disabled", 0, 1, kParams_OneInt)
 
 
 extern "C" {
@@ -66,7 +122,6 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
-	_MESSAGE("OBSE version: %08X",obse->oblivionVersion); //BUG: For some reason, obse->obseVersion gives 15 when it should give 21
 	// version checks
 	if(!obse->isEditor)
 	{
@@ -84,7 +139,8 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
-	obse->RegisterCommand(&kCommandInfo_DisableW);
+	obse->RegisterCommand(&kCommandInfo_DisableKey2);
+	obse->RegisterCommand(&kCommandInfo_EnableKey2);
 	//obse->RegisterCommand(&kCommandInfo_TestExtractFormatString);
 	if(!obse->isEditor)
 	{
@@ -93,6 +149,25 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	}
 
 	g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
+//	kCommandInfo_DisableKey = g_commandTableIntfc->GetByName("DisableKey"); //opcode:00001430
+	kCommandInfo_EnableKey = g_commandTableIntfc->GetByName("EnableKey"); //opcode:00001431
+	kCommandInfo_DisableKey = g_commandTableIntfc->GetByOpcode(0x1430); //opcode:00001430
+	UInt32 opcode_1 = 0x1430;
+//	UInt32 opcode_1 = kCommandInfo_DisableKey->opcode;
+
+	kCommandInfo_DisableKey2.opcode = 0x00001434;
+	_MESSAGE("kCommandInfo_DisableKey2.opcode: %08X", kCommandInfo_DisableKey2.opcode);
+	kCommandInfo_DisableKey2_Pointer = &kCommandInfo_DisableKey2;
+	_MESSAGE("kCommandInfo_DisableKey2_Pointer->opcode: %08X", kCommandInfo_DisableKey2_Pointer->opcode);
+	kCommandInfo_DisableKey2_Pointer->opcode = 0x00001430;
+	_MESSAGE("kCommandInfo_DisableKey2_Pointer->opcode: %08X", kCommandInfo_DisableKey2_Pointer->opcode);
+
+	g_commandTableIntfc->Replace(0x1430, kCommandInfo_DisableKey2_Pointer);
+//	g_commandTableIntfc->Replace(kCommandInfo_DisableKey->opcode, &kCommandInfo_DisableKey2);
+//	g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey2); //This one is my fav
+
+//	CommandInfo* kCommandInfo_DisableKey_NotConst = const_cast<CommandInfo*>(kCommandInfo_DisableKey);
+//	g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey_NotConst);
 
 	return true;
 }
