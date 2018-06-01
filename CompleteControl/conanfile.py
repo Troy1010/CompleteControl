@@ -32,8 +32,6 @@ class TM_HelloWorld_Conan(ConanFile):
         vDTE = VSA.InstantiateDTE()
         vProj = VSA.OpenProj(vDTE,self.sProjPath)
         for vItem in cRecommendedIntegrationFiles:
-            print("vItem:"+vItem)
-            print("os.path.join(sRoot,vItem):"+os.path.join(sRoot,vItem))
             VSA.AddFileToProj(vProj,os.path.join(sRoot,vItem),"obse")
         vProj.Save()
         VSA.QuitDTE(vDTE)
