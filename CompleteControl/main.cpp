@@ -196,7 +196,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	_MESSAGE("a");
 	kCommandInfo_DisableKey2_Pointer->eval = kCommandInfo_DisableKey->eval;
 	_MESSAGE("b");
-	kCommandInfo_DisableKey2_Pointer->execute = kCommandInfo_DisableKey->execute;
+//	kCommandInfo_DisableKey2_Pointer->execute = kCommandInfo_DisableKey->execute;
 	_MESSAGE("c");
 	kCommandInfo_DisableKey2_Pointer->flags = kCommandInfo_DisableKey->flags;
 	_MESSAGE("d");
@@ -219,11 +219,14 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	_MESSAGE("Replace`Open");
 	try
 	{
-		g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey2_Pointer);
+		if (!obse->isEditor)
+		{
+			g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey2_Pointer);
+		}
 	}
 	catch (...)
 	{
-		_ERROR("ERROR");
+		_ERROR("Replace ERROR");
 		throw;
 	}
 	/*catch (exception& e)
