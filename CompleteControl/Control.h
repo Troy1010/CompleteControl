@@ -2,6 +2,7 @@
 #include "TM_CommonCPP/Properties.h"
 #include <string>
 #include <vector>
+#include <set>
 
 class Control
 {
@@ -11,5 +12,5 @@ public:
 	~Control(void);
 	//---Members
 	int dxScancode;
-	std::vector<int> cModIndices;
+	std::set<UInt8> cModIndices;
 };
