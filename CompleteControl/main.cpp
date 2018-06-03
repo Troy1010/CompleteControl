@@ -15,8 +15,9 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include <set>
 #include "Control.h"
 #include <string>
-//#include "TM_CommonCPP/Misc.h"
+#include "TM_CommonCPP/Misc.h"
 #define CC_Debug 1
+#include "obse/Script.h"
 
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
@@ -55,13 +56,13 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
 		Debug_CC("Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
 		return true;
-		ExtractArgs;
 	}
 	else
 	{
 		Debug_CC("Cmd_DisableKey_Replacing_Execute`Succeeded arg extraction");
 	}
-	//scriptObj->
+	Debug_CC("scriptObj->refID:"+ to_string_hex(scriptObj->refID));
+	//scriptObj->refID;
 	//-Get iModIndex
 	//Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Open");
 	//thisObj->baseForm;
@@ -71,12 +72,8 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	//if (form->IsCloned())
 	//	*result = 0xFF;
 	//else
-	//	*result = (UInt8)(form->refID >> 24);
-
-	std::string sTemp = g_commandTableIntfc->GetByName("GetSourceModIndex")->longName;
-	Debug_CC("g_commandTableIntfc->GetByName()->GetName:"+sTemp);
-	g_commandTableIntfc->GetByName("GetSourceModIndex")->execute(NULL, arg1, thisObj, arg3, scriptObj, eventList, result, opcodeOffsetPtr); //PASS_COMMAND_ARGS
-	iModIndex = *result;
+	iModIndex = (UInt8)(scriptObj->refID >> 24);
+	Debug_CC("iModIndex:" + to_string_hex(iModIndex));
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Close");
 	//-Register iModIndex in vControl.cModIndices
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`Register`Open");
