@@ -26,48 +26,6 @@ CommandInfo * kCommandInfo_DisableKey2_Pointer = NULL;
 
 static vector<Control> Controls;
 
-//// called from 004F90A5
-//bool Cmd_Default_Parse2(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
-//{
-//#ifdef _DEBUG
-//#if 0
-//	_MESSAGE("Cmd_Default_Parse: %08X %08X %08X %08X",
-//		arg0, arg1, arg2, arg3);
-//#endif
-//#endif
-//
-//#ifdef OBLIVION
-//
-//#if OBLIVION_VERSION == OBLIVION_VERSION_1_1
-//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F38C0;
-//#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2
-//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDF80;
-//#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2_416
-//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDE30;
-//#else
-//#error unsupported version of oblivion
-//#endif
-//
-//#else
-//
-//#if CS_VERSION == CS_VERSION_1_0
-//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F69C0;
-//#elif CS_VERSION == CS_VERSION_1_2
-//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x00500FF0;
-//#else
-//#error unsupported cs version
-//#endif
-//
-//#endif
-//
-//	// arg0 = idx?
-//	// arg1 = ParamInfo *
-//	// arg2 = ptr to line to parse, skip UInt32 header first
-//	// arg3 = ptr to script info? first UInt32 is ptr to script data
-//
-//	return g_defaultParseCommand(numParams, paramInfo, lineBuf, scriptBuf);
-//}
-
 // Tester1
 bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
@@ -86,34 +44,16 @@ DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 0, NULL)
 // DisableKey2
 bool Cmd_DisableKey2_Execute(COMMAND_ARGS)
 {
-	//Console_Print("Cmd_DisableKey2_Execute`Open");
+	Console_Print("Cmd_DisableKey2_Execute`Open");
 	*result = 0; //Do I need this?
 
-//	kCommandInfo_DisableKey = g_commandTableIntfc->GetByOpcode(0x1430); //opcode:00001430
-
-//	Console_Print(strcat3("kCommandInfo_DisableKey->shortName: ", kCommandInfo_DisableKey->shortName));
-//	kCommandInfo_DisableKey->execute(PASS_COMMAND_ARGS);
-	Console_Print("ReplacementCommand`Open");
 
 
 	// Report Success
+	Console_Print("Cmd_DisableKey2_Execute`Close");
 	return true;
 }
-//DEFINE_COMMAND_PLUGIN(DisableKey2, "Disables a key and registers this action", 0, 1, kParams_OneInt)
-CommandInfo kCommandInfo_DisableKey2 =
-{
-	"DisableKey2",
-	"dk2",
-	0,
-	"Prevents a player from using a key2",
-	0,
-	1,
-	kParams_OneInt,
-	HANDLER(Cmd_DisableKey2_Execute),
-	NULL,//Cmd_Default_Parse2,
-	NULL,
-	0
-};
+DEFINE_COMMAND_PLUGIN(DisableKey2, "Disables a key and registers this action", 0, 1, kParams_OneInt)
 
 
 // EnableKey2
@@ -164,7 +104,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_Tester1);
-	obse->RegisterCommand(&kCommandInfo_DisableKey2);
+//	obse->RegisterCommand(&kCommandInfo_DisableKey2);
 	obse->RegisterCommand(&kCommandInfo_EnableKey2);
 	//obse->RegisterCommand(&kCommandInfo_TestExtractFormatString);
 	if(!obse->isEditor)
