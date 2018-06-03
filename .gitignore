@@ -1,3 +1,13 @@
+TM_CommonCPP/
+CompleteControl/Debug
+CompleteControl/Release
+Debug/
+Release/
+common/
+.vs/
+conanbuildinfo.*
+conaninfo.txt
+
 Debug
 Release
 /obse/*.sdf
@@ -14,5 +24,5 @@ Release
 
 
 
-common
-obse
+/common/
+/obse/
