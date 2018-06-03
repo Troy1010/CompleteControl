@@ -3,40 +3,24 @@
 #include "obse_common/SafeWrite.cpp"
 #if OBLIVION
 #include "obse/GameAPI.h"
-OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
-#define ExtractArgsEx(...) g_scriptInterface->ExtractArgsEx(__VA_ARGS__)
-#define ExtractFormatStringArgs(...) g_scriptInterface->ExtractFormatStringArgs(__VA_ARGS__)
+OBSEScriptInterface * g_scriptIntfc = NULL; // assigned in OBSEPlugin_Load
+#define ExtractArgsEx(...) g_scriptIntfc->ExtractArgsEx(__VA_ARGS__)
+#define ExtractFormatStringArgs(...) g_scriptIntfc->ExtractFormatStringArgs(__VA_ARGS__)
 #else
 #include "obse_editor/EditorAPI.h"
 #endif
 #include "obse/ParamInfos.h"
 #include <vector>
 #include "Control.h"
-#include "TM_CommonCPP/Misc.h"
+//#include "TM_CommonCPP/Misc.h"
 
 
-IDebugLog		gLog("CompleteControl.log");
-
-OBSECommandTableInterface	* g_commandTableIntfc = NULL;
-const CommandInfo * kCommandInfo_DisableKey_Original = NULL;
-CommandInfo(kCommandInfo_DisableKey_CopyOfOriginal) = { "DisableKey_CopyOfOriginal","", 0, "Stores the old DisableKey function", 0, 1, kParams_OneInt, NULL, NULL, NULL, 0 };
+IDebugLog		gLog("CompleteControl.log"); //Log
+OBSECommandTableInterface	* g_commandTableIntfc = NULL; //For command argument extraction
+Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 static std::vector<Control> Controls;
 
-void CopyCmdInfo(CommandInfo Receiver, const CommandInfo * Giver) //Not using
-{
-	Receiver.eval = Giver->eval;
-	Receiver.execute = Giver->execute;
-	Receiver.flags = Giver->flags;
-	Receiver.helpText = Giver->helpText;
-	Receiver.longName = Giver->longName;
-	Receiver.needsParent = Giver->needsParent;
-	Receiver.numParams = Giver->numParams;
-	Receiver.opcode = Giver->opcode;
-	Receiver.params = Giver->params;
-	Receiver.parse = Giver->parse;
-	Receiver.shortName = Giver->shortName;
-}
-
+//-------Commands
 // Tester1
 bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
@@ -44,27 +28,28 @@ bool Cmd_Tester1_Execute(COMMAND_ARGS)
 	Console_Print("Tester1`Open");
 	*result = 0; //Do I need this?
 	//
-	kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
+	//kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
 	//Close
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, kParams_OneInt)
-
 // DisableKey_Replacing
 bool Cmd_DisableKey_Replacing_Execute(COMMAND_ARGS)
 {
 	//Open
 	Console_Print("Cmd_DisableKey_Replacing_Execute`Open");
 	*result = 0; //Do I need this?
-	//
-	kCommandInfo_DisableKey_CopyOfOriginal.execute(PASS_COMMAND_ARGS);
+	//Execute Original DisableKey
+	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
+	//Register in Controls
+
 	//Close
 	Console_Print("Cmd_DisableKey_Replacing_Execute`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers this action", 0, 1, kParams_OneInt)
 
-
+//-------Load
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
@@ -104,15 +89,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	if (!obse->isEditor)
 	{
 		// get an OBSEScriptInterface to use for argument extraction
-		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
-		//
+		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-		//
-		kCommandInfo_DisableKey_Original = g_commandTableIntfc->GetByName("DisableKey"); //opcode:00001430
-		kCommandInfo_DisableKey_CopyOfOriginal.execute = kCommandInfo_DisableKey_Original->execute;
-		_MESSAGE("Replace`Open");
+		// replace DisableKey
+		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:00001430
 		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
-		_MESSAGE("Replace`Close");
 	}
 
 	return true;
