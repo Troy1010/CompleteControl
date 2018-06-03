@@ -3,7 +3,8 @@
 #include "obse_common/SafeWrite.cpp"
 #if OBLIVION
 #include "obse/GameAPI.h"
-OBSEScriptInterface * g_scriptIntfc = NULL; // assigned in OBSEPlugin_Load
+OBSECommandTableInterface * g_commandTableIntfc = NULL; // assigned in OBSEPlugin_Load
+OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #define ExtractArgsEx(...) g_scriptIntfc->ExtractArgsEx(__VA_ARGS__)
 #define ExtractFormatStringArgs(...) g_scriptIntfc->ExtractFormatStringArgs(__VA_ARGS__)
 #else
@@ -11,21 +12,29 @@ OBSEScriptInterface * g_scriptIntfc = NULL; // assigned in OBSEPlugin_Load
 #endif
 #include "obse/ParamInfos.h"
 #include <vector>
+#include <set>
 #include "Control.h"
+#include <string>
 //#include "TM_CommonCPP/Misc.h"
-
+#define CC_Debug 1
 
 IDebugLog		gLog("CompleteControl.log"); //Log
-OBSECommandTableInterface	* g_commandTableIntfc = NULL; //For command argument extraction
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 static std::vector<Control> Controls;
-
+//-------HelperFunctions
+void Debug_CC(std::string sString)
+{
+#if CC_Debug
+	Console_Print(sString.c_str());
+	_MESSAGE(sString.c_str());
+#endif
+}
 //-------Commands
 // Tester1
 bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
 	//Open
-	Console_Print("Tester1`Open");
+	Debug_CC("Tester1`Open");
 	*result = 0; //Do I need this?
 	//
 	//kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
@@ -34,20 +43,62 @@ bool Cmd_Tester1_Execute(COMMAND_ARGS)
 }
 DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, kParams_OneInt)
 // DisableKey_Replacing
-bool Cmd_DisableKey_Replacing_Execute(COMMAND_ARGS)
+bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
-	Console_Print("Cmd_DisableKey_Replacing_Execute`Open");
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`Open");
+	UInt32	dxScancode = 0;
+	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
-	//Execute Original DisableKey
-	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
-	//Register in Controls
+	//---Register in Controls
+	//-Get dxScancode
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
+		Debug_CC("Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
+		return true;
+		ExtractArgs;
+	}
+	else
+	{
+		Debug_CC("Cmd_DisableKey_Replacing_Execute`Succeeded arg extraction");
+	}
+	//scriptObj->
+	//-Get iModIndex
+	//Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Open");
+	//thisObj->baseForm;
+	////g_commandTableIntfc->GetByName("GetSourceModIndex")->execute(PASS_COMMAND_ARGS);
+	//TESForm* form = NULL;
+	//form = thisObj;
+	//if (form->IsCloned())
+	//	*result = 0xFF;
+	//else
+	//	*result = (UInt8)(form->refID >> 24);
 
+	std::string sTemp = g_commandTableIntfc->GetByName("GetSourceModIndex")->longName;
+	Debug_CC("g_commandTableIntfc->GetByName()->GetName:"+sTemp);
+	g_commandTableIntfc->GetByName("GetSourceModIndex")->execute(NULL, arg1, thisObj, arg3, scriptObj, eventList, result, opcodeOffsetPtr); //PASS_COMMAND_ARGS
+	iModIndex = *result;
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Close");
+	//-Register iModIndex in vControl.cModIndices
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`Register`Open");
+	for each (Control vControl in Controls)
+	{
+		if (vControl.dxScancode == dxScancode)
+		{
+			vControl.cModIndices.insert(iModIndex);
+			break;
+		}
+	}
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`Register`Close");
+	//---DisableKey
+	//-Execute Original DisableKey
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`DisableKey`Open");
+	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`DisableKey`Close");
 	//Close
-	Console_Print("Cmd_DisableKey_Replacing_Execute`Close");
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers this action", 0, 1, kParams_OneInt)
+DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers", 0, 1, kParams_OneInt)
 
 //-------Load
 extern "C" {
