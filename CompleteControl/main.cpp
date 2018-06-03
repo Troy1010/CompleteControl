@@ -62,16 +62,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 		Debug_CC("Cmd_DisableKey_Replacing_Execute`Succeeded arg extraction");
 	}
 	Debug_CC("scriptObj->refID:"+ to_string_hex(scriptObj->refID));
-	//scriptObj->refID;
 	//-Get iModIndex
-	//Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Open");
-	//thisObj->baseForm;
-	////g_commandTableIntfc->GetByName("GetSourceModIndex")->execute(PASS_COMMAND_ARGS);
-	//TESForm* form = NULL;
-	//form = thisObj;
-	//if (form->IsCloned())
-	//	*result = 0xFF;
-	//else
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	Debug_CC("iModIndex:" + to_string_hex(iModIndex));
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`GetModIndex`Close");
@@ -96,6 +87,51 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers", 0, 1, kParams_OneInt)
+
+// EnableKey_Replacing
+bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+{
+	//Open
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`Open");
+	UInt32	dxScancode = 0;
+	UInt8	iModIndex = 0;
+	*result = 0; //Do I need this?
+				 //---Register in Controls
+				 //-Get dxScancode
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
+		Debug_CC("Cmd_EnableKey_Replacing_Execute`Failed arg extraction");
+		return true;
+	}
+	else
+	{
+		Debug_CC("Cmd_EnableKey_Replacing_Execute`Succeeded arg extraction");
+	}
+	Debug_CC("scriptObj->refID:" + to_string_hex(scriptObj->refID));
+	//-Get iModIndex
+	iModIndex = (UInt8)(scriptObj->refID >> 24);
+	Debug_CC("iModIndex:" + to_string_hex(iModIndex));
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`GetModIndex`Close");
+	//-Register iModIndex in vControl.cModIndices
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`Register`Open");
+	for each (Control vControl in Controls)
+	{
+		if (vControl.dxScancode == dxScancode)
+		{
+			vControl.cModIndices.insert(iModIndex);
+			break;
+		}
+	}
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`Register`Close");
+	//---EnableKey
+	//-Execute Original EnableKey
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`EnableKey`Open");
+	EnableKey_OriginalExecute(PASS_COMMAND_ARGS);
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`EnableKey`Close");
+	//Close
+	Debug_CC("Cmd_EnableKey_Replacing_Execute`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Disables a key and registers", 0, 1, kParams_OneInt)
 
 //-------Load
 extern "C" {
