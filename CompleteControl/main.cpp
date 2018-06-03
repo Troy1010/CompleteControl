@@ -15,18 +15,14 @@ OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
 #include "TM_CommonCPP/Misc.h"
 
 
-using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
 OBSECommandTableInterface	* g_commandTableIntfc = NULL;
 const CommandInfo * kCommandInfo_DisableKey_Original = NULL;
-const CommandInfo * kCommandInfo_EnableKey_Original = NULL;
-CommandInfo * kCommandInfo_DisableKey2_Pointer = NULL;
-CommandInfo kCommandInfo_DisableKey_Original2;
+CommandInfo(kCommandInfo_DisableKey_CopyOfOriginal) = { "DisableKey_CopyOfOriginal","", 0, "Stores the old DisableKey function", 0, 1, kParams_OneInt, NULL, NULL, NULL, 0 };
+static std::vector<Control> Controls;
 
-static vector<Control> Controls;
-
-void CopyCmdInfo(CommandInfo Receiver, const CommandInfo * Giver)
+void CopyCmdInfo(CommandInfo Receiver, const CommandInfo * Giver) //Not using
 {
 	Receiver.eval = Giver->eval;
 	Receiver.execute = Giver->execute;
@@ -44,64 +40,29 @@ void CopyCmdInfo(CommandInfo Receiver, const CommandInfo * Giver)
 // Tester1
 bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
+	//Open
 	Console_Print("Tester1`Open");
 	*result = 0; //Do I need this?
+	//
 	kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
-//	Console_Print("ReplacementCommand`Open");
-//	g_commandTableIntfc->Replace(0x1430, kCommandInfo_DisableKey2_Pointer);
-
-	// Report Success
+	//Close
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, kParams_OneInt)
 
-
-// DisableKey3 Access Old
-bool Cmd_DisableKey3_Execute(COMMAND_ARGS)
+// DisableKey_Replacing
+bool Cmd_DisableKey_Replacing_Execute(COMMAND_ARGS)
 {
-	Console_Print("Cmd_DisableKey3_Execute`Open");
+	//Open
+	Console_Print("Cmd_DisableKey_Replacing_Execute`Open");
 	*result = 0; //Do I need this?
-
-				 //Execute DisableKey_Original
-				 //kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
-	kCommandInfo_DisableKey_Original2.execute(PASS_COMMAND_ARGS);
-
-
-	// Report Success
-	Console_Print("Cmd_DisableKey3_Execute`Close");
+	//
+	kCommandInfo_DisableKey_CopyOfOriginal.execute(PASS_COMMAND_ARGS);
+	//Close
+	Console_Print("Cmd_DisableKey_Replacing_Execute`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(DisableKey3, "Disables a key and registers this action", 0, 1, kParams_OneInt)
-
-// DisableKey2 Replacing
-bool Cmd_DisableKey2_Execute(COMMAND_ARGS)
-{
-	Console_Print("Cmd_DisableKey2_Execute`Open");
-	*result = 0; //Do I need this?
-
-	//Execute DisableKey_Original
-	//kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
-	kCommandInfo_DisableKey3.execute(PASS_COMMAND_ARGS);
-
-
-	// Report Success
-	Console_Print("Cmd_DisableKey2_Execute`Close");
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(DisableKey2, "Disables a key and registers this action", 0, 1, kParams_OneInt)
-
-
-// EnableKey2
-bool Cmd_EnableKey2_Execute(COMMAND_ARGS)
-{
-	*result = 0; //Do I need this?
-
-	kCommandInfo_EnableKey_Original->execute(PASS_COMMAND_ARGS);
-
-	// Report Success
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(EnableKey2, "Enables a key if 0 mods have it disabled", 0, 1, kParams_OneInt)
+DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers this action", 0, 1, kParams_OneInt)
 
 
 extern "C" {
@@ -139,53 +100,20 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_Tester1);
-//	obse->RegisterCommand(&kCommandInfo_DisableKey2);
-	obse->RegisterCommand(&kCommandInfo_EnableKey2);
 
-	if(!obse->isEditor)
+	if (!obse->isEditor)
 	{
 		// get an OBSEScriptInterface to use for argument extraction
 		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
+		//
+		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
+		//
+		kCommandInfo_DisableKey_Original = g_commandTableIntfc->GetByName("DisableKey"); //opcode:00001430
+		kCommandInfo_DisableKey_CopyOfOriginal.execute = kCommandInfo_DisableKey_Original->execute;
+		_MESSAGE("Replace`Open");
+		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
+		_MESSAGE("Replace`Close");
 	}
-
-	g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-	kCommandInfo_DisableKey_Original = g_commandTableIntfc->GetByName("DisableKey"); //opcode:00001430
-
-	kCommandInfo_DisableKey3.execute = kCommandInfo_DisableKey_Original->execute;
-	obse->RegisterCommand(&kCommandInfo_DisableKey3);
-
-
-
-//	CopyCmdInfo(kCommandInfo_DisableKey_Original2, kCommandInfo_DisableKey_Original);
-	//kCommandInfo_DisableKey_Original2.opcode = 0x28B6;
-//	obse->RegisterCommand(&kCommandInfo_DisableKey_Original2);
-
-
-	_MESSAGE("Replace`Open");
-	try
-	{
-		if (!obse->isEditor)
-		{
-			g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey2);
-		}
-	}
-	catch (...)
-	{
-		_ERROR("Replace ERROR");
-		throw;
-	}
-	/*catch (exception& e)
-	{
-		_MESSAGE("ERROR:%s", e.what());
-		throw;
-	}*/
-//	g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey2_Pointer);
-//	g_commandTableIntfc->Replace(kCommandInfo_DisableKey->opcode, &kCommandInfo_DisableKey2);
-//	g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey2); //This one is my fav
-
-//	CommandInfo* kCommandInfo_DisableKey_NotConst = const_cast<CommandInfo*>(kCommandInfo_DisableKey);
-//	g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey_NotConst);
-	_MESSAGE("Replace`Close");
 
 	return true;
 }
