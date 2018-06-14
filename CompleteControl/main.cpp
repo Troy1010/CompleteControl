@@ -63,6 +63,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	//-Register iModIndex in vControl.cModIndices
+	Debug_CC("Controls:" + Narrator::Narrate_Collection(Controls)); // This is always empty
 	for each (Control vControl in Controls)
 	{
 		if (vControl.dxScancode == dxScancode)
