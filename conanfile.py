@@ -4,12 +4,10 @@ sProj = "CompleteControl/CompleteControl.vcxproj"
 ##endregion
 ##region Imports
 from conans import ConanFile
-import xml.etree.ElementTree
-import os, sys, ctypes
+import os, sys
 import TM_CommonPy as TM
 import VisualStudioAutomation as VS
-import pickle
-import dill
+import traceback
 ##endregion
 ##region DoubleclickEvent
 if __name__ == "__main__":
@@ -18,16 +16,20 @@ if __name__ == "__main__":
         vCommandSet = TM.CommandSet.TryLoad()
         vCommandSet.Que((VS.SetTMDefaultVSSettings.Do,VS.SetTMDefaultVSSettings.Undo),sProj)
         vCommandSet.Que([VS.IntegrateProps,VS.IntegrateProps_Undo],[sProj,"conanbuildinfo.props"])
-        vCommandSet.QueConanPackageRecommendedIntegrations(sProj,"conanbuildinfo.txt")
+        for sRoot in TM.GetDependencyRoots("conanbuildinfo.txt"):
+            sPossibleRecommendedIntegrationPath = os.path.join(sRoot,"RecommendedIntegration.py")
+            if os.path.isfile(sPossibleRecommendedIntegrationPath):
+                vCommandSet.QueScript(sPossibleRecommendedIntegrationPath,[sProj,sRoot])
+        print("Executing CommandSet..")
         vCommandSet.Execute()
         vCommandSet.Save()
     except Exception as e:
-        if bPause:
-            print(e)
-            os.system('pause')
-        else:
-            ctypes.windll.user32.MessageBoxW(0, "Exception occured.", __file__, 1)
-        raise
+        print("====================================================================")
+        print("Traceback (most recent call last):")
+        traceback.print_tb(e.__traceback__)
+        print(e)
+        os.system('pause')
+        sys.exit(1)
     if bPause:
         print("\n\t\t\tDone\n")
         os.system('pause')
