@@ -14,11 +14,11 @@ def QueActions(vCommandSet):
     #---TMDefaultSettings
     vCommandSet.Que((VS.SetTMDefaultVSSettings.Do,VS.SetTMDefaultVSSettings.Undo),sProj)
     #---Integrate Conan-installed packages
-    vCommandSet.Que([VS.IntegrateProps,VS.IntegrateProps_Undo],[sProj,"conanbuildinfo.props"])
     for sRoot in TM.GetDependencyRoots("conanbuildinfo.txt"):
         sPossibleRecommendedIntegrationPath = os.path.join(sRoot,"RecommendedIntegration.py")
         if os.path.isfile(sPossibleRecommendedIntegrationPath):
             vCommandSet.QueScript(sPossibleRecommendedIntegrationPath,[sRoot,sProj,sSln])
+    vCommandSet.Que([VS.IntegrateProps,VS.IntegrateProps_Undo],[sProj,"conanbuildinfo.props"])
 
 ##region DoubleclickEvent
 if __name__ == "__main__":
