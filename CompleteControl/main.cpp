@@ -62,16 +62,16 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	}
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	Debug_CC("Cmd_DisableKey_Replacing_Execute`iModIndex:" + Narrator::Narrate(iModIndex));
+	//Debug_CC("Cmd_DisableKey_Replacing_Execute`iModIndex:" + Narrator::Narrate(iModIndex));
 	//-Register iModIndex in vControl.cModIndices
 	//Debug_CC("Controls:" + Narrator::Narrate_Collection(Controls)); // This is always empty
 	for each (Control vControl in Controls)
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			Debug_CC("BEFORE vControl.cModIndices:" + Narrator::Narrate_Collection(vControl.cModIndices)); // This is always empty
+			//Debug_CC("BEFORE vControl.cModIndices:" + Narrator::Narrate_Collection(vControl.cModIndices)); // This is always empty
 			vControl.cModIndices.insert(iModIndex);
-			Debug_CC("AFTER vControl.cModIndices:"+Narrator::Narrate_Collection(vControl.cModIndices)); // This has the index it needs
+			//Debug_CC("AFTER vControl.cModIndices:"+Narrator::Narrate_Collection(vControl.cModIndices)); // This has the index it needs
 			break;
 		}
 	}

@@ -167,6 +167,9 @@
     <ProjectReference Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\common\common.vcxproj">
       <Project>{20c6411c-596f-4b85-be4e-8bc91f59d8a6}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Users\2troy\.conan\data\TM_CommonCPP\0.1\Troy1010\channel\package\38c6bf848be0a8f67e6d135bde2edefc148431bc\TM_CommonCPP\TM_CommonCPP\TM_CommonCPP.vcxproj">
+      <Project>{34b7ddfa-e30b-4ff9-bf6c-f7f6a4985668}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
