@@ -65,7 +65,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -89,7 +89,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -127,15 +127,15 @@
     <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Script.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\StdAfx.cpp" />
-    <ClCompile Include="Control.cpp" />
     <ClCompile Include="dllmain.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="TM_CommonCPP_NarrateOverloads.cpp" />
+    <ClCompile Include="src\Control.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TM_CommonCPP_NarrateOverloads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Hooks_DirectInput8Create.h" />
@@ -156,8 +156,8 @@
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Script.h" />
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.h" />
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\StdAfx.h" />
-    <ClInclude Include="Control.h" />
-    <ClInclude Include="TM_CommonCPP_NarrateOverloads.h" />
+    <ClInclude Include="include\CompleteControl\Control.h" />
+    <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\GameRTTI_1_1.inl" />

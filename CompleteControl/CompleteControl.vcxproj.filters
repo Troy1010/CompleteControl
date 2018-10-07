@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="dllmain.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Control.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Hooks_DirectInput8Create.cpp">
       <Filter>obse</Filter>
     </ClCompile>
@@ -52,10 +50,17 @@
     <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.cpp">
       <Filter>obse</Filter>
     </ClCompile>
-    <ClCompile Include="TM_CommonCPP_NarrateOverloads.cpp" />
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TM_CommonCPP_NarrateOverloads.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Control.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Control.h" />
     <ClInclude Include="..\..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Hooks_DirectInput8Create.h">
       <Filter>obse</Filter>
     </ClInclude>
@@ -110,7 +115,12 @@
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.h">
       <Filter>obse</Filter>
     </ClInclude>
-    <ClInclude Include="TM_CommonCPP_NarrateOverloads.h" />
+    <ClInclude Include="include\CompleteControl\Control.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -127,6 +137,12 @@
   <ItemGroup>
     <Filter Include="obse">
       <UniqueIdentifier>{213b18d9-04c6-4074-9c62-d73c36f2a854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{f27aea9b-d578-4214-aedb-6e9292beffb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{558128d7-9ffb-4845-8e32-1ba9acf44e77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
