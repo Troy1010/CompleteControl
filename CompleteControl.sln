@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompleteControl", "..\..\..
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\common\common.vcxproj", "{20C6411C-596F-4B85-BE4E-8BC91F59D8A6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TM_CommonCPP", "..\..\..\..\Users\2troy\.conan\data\TM_CommonCPP\0.1\Troy1010\channel\package\38c6bf848be0a8f67e6d135bde2edefc148431bc\TM_CommonCPP\TM_CommonCPP\TM_CommonCPP.vcxproj", "{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TM_CommonCPP_Lib", "..\..\..\..\Users\2troy\.conan\data\TM_CommonCPP\0.1\Troy1010\channel\package\38c6bf848be0a8f67e6d135bde2edefc148431bc\TM_CommonCPP\TM_CommonCPP\TM_CommonCPP_Lib.vcxproj", "{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +29,14 @@ Global
 		{20C6411C-596F-4B85-BE4E-8BC91F59D8A6}.Release|Win32.ActiveCfg = Release|Win32
 		{20C6411C-596F-4B85-BE4E-8BC91F59D8A6}.Release|Win32.Build.0 = Release|Win32
 		{20C6411C-596F-4B85-BE4E-8BC91F59D8A6}.Release|x64.ActiveCfg = Release|Win32
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Debug|Win32.ActiveCfg = Debug|Win32
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Debug|Win32.Build.0 = Debug|Win32
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Debug|x64.ActiveCfg = Debug|x64
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Debug|x64.Build.0 = Debug|x64
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Release|Win32.ActiveCfg = Release|Win32
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Release|Win32.Build.0 = Release|Win32
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Release|x64.ActiveCfg = Release|x64
-		{34B7DDFA-E30B-4FF9-BF6C-F7F6A4985668}.Release|x64.Build.0 = Release|x64
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Debug|Win32.Build.0 = Debug|Win32
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Debug|x64.ActiveCfg = Debug|x64
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Debug|x64.Build.0 = Debug|x64
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Release|Win32.ActiveCfg = Release|Win32
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Release|Win32.Build.0 = Release|Win32
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Release|x64.ActiveCfg = Release|x64
+		{434875EF-3F94-44DD-BFC5-93D69C0DE9A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
