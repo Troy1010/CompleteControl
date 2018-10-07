@@ -7,7 +7,6 @@ sSln = "CompleteControl.sln"
 import os, sys
 import TM_CommonPy as TM
 import VisualStudioAutomation as VS
-import traceback
 ##endregion
 
 def QueActions(vCommandSet):
@@ -20,23 +19,15 @@ def QueActions(vCommandSet):
             vCommandSet.QueScript(sPossibleRecommendedIntegrationPath,[sRoot,sProj,sSln])
     vCommandSet.Que([VS.IntegrateProps,VS.IntegrateProps_Undo],[sProj,"conanbuildinfo.props"])
 
-##region DoubleclickEvent
-if __name__ == "__main__":
-    try:
-        TM.Run("conan install . -pr conanprofile_OBSEPlugin")
-        vCommandSet = TM.CommandSet.TryLoad()
-        QueActions(vCommandSet)
-        print("Executing CommandSet..")
-        vCommandSet.Execute()
-        vCommandSet.Save()
-    except Exception as e:
-        print("====================================================================")
-        print("Traceback (most recent call last):")
-        traceback.print_tb(e.__traceback__)
-        print(e)
-        os.system('pause')
-        sys.exit(1)
-    if bPause:
-        print("\n\t\t\tDone\n")
-        os.system('pause')
-##endregion
+try:
+    TM.Run("conan install . -pr conanprofile_OBSEPlugin")
+    vCommandSet = TM.CommandSet.TryLoad()
+    QueActions(vCommandSet)
+    print("Executing CommandSet..")
+    vCommandSet.Execute(bRedo=True)
+    vCommandSet.Save()
+except Exception as e:
+    TM.DisplayException(e)
+    sys.exit(1)
+if bPause:
+    TM.DisplayDone()
