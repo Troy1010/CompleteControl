@@ -52,6 +52,7 @@
     <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.cpp">
       <Filter>obse</Filter>
     </ClCompile>
+    <ClCompile Include="TM_CommonCPP_NarrateOverloads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.h">
       <Filter>obse</Filter>
     </ClInclude>
+    <ClInclude Include="TM_CommonCPP_NarrateOverloads.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

@@ -17,6 +17,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include <string>
 #include "TM_CommonCPP/Misc.h"
 #include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP_NarrateOverloads.h"
 #define CC_Debug 1
 #include "obse/Script.h"
 
@@ -51,6 +52,17 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 {
 	//Open
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`Open");
+	int iInt = 5;
+	Debug_CC("5:"+TM_CommonCPP::Narrate(iInt));
+	UInt8 vUInt8 = 3;
+	Debug_CC("3:"+TM_CommonCPP::Narrate(vUInt8));
+	std::set<UInt8> cSet;
+	cSet.insert(65);
+	cSet.insert(64);
+	cSet.insert(63);
+	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
+	Debug_CC("Controls:" + TM_CommonCPP::Narrate(Controls));
+
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
