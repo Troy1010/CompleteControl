@@ -63,7 +63,7 @@ bool Cmd_Tester1_Execute(COMMAND_ARGS)
 	Controls_Fake.push_back(15);
 	for (Control &vControl : Controls_Fake)
 	{
-		vControl.cModIndices.insert(222);
+		vControl.cModIndices_Disables.insert(222);
 	}
 	//Close
 #if CC_Debug
@@ -85,7 +85,7 @@ bool Cmd_Tester2_Execute(COMMAND_ARGS)
 	//
 	for (Control &vControl : Controls)
 	{
-		vControl.cModIndices.insert(321);
+		vControl.cModIndices_Disables.insert(321);
 		break;
 	}
 	//Close
@@ -123,7 +123,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			vControl.cModIndices.insert(iModIndex);
+			vControl.cModIndices_Disables.insert(iModIndex);
 			break;
 		}
 	}
@@ -165,8 +165,8 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			vControl.cModIndices.erase(iModIndex);
-			if (!(vControl.cModIndices.empty()))
+			vControl.cModIndices_Disables.erase(iModIndex);
+			if (!(vControl.cModIndices_Disables.empty()))
 			{
 				bDoEnableKey = false;
 			}

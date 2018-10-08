@@ -6,13 +6,13 @@
 Control::Control(int _dxScancode)
 {
 	dxScancode = _dxScancode;
-	cModIndices = std::set<UInt8>();
+	cModIndices_Disables = std::set<UInt8>();
 }
 
 std::string Control::Narrate()
 {
 	std::ostringstream vReturning;
-	vReturning << "dxScancode:" << dxScancode << "\n" << TM_CommonCPP::Narrator::Indent() <<"cModIndices:" << TM_CommonCPP::Narrate(cModIndices);
+	vReturning << "dxScancode:" << dxScancode << "\n" << TM_CommonCPP::Narrator::Indent() <<"cModIndices:" << TM_CommonCPP::Narrate(cModIndices_Disables);
 	return vReturning.str();
 }
 
