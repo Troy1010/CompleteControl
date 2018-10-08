@@ -39,61 +39,102 @@ void Debug_CC(std::string sString)
 bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
 	//Open
+#if CC_Debug
 	Debug_CC("Tester1`Open");
+#endif
 	*result = 0; //Do I need this?
 	int iInt = 5;
+#if CC_Debug
 	Debug_CC("5:" + TM_CommonCPP::Narrate(iInt));
+#endif
 	UInt8 vUInt8 = 3;
+#if CC_Debug
 	Debug_CC("3:" + TM_CommonCPP::Narrate(vUInt8));
+#endif
 	std::set<UInt8> cSet;
 	cSet.insert(65);
 	cSet.insert(64);
 	cSet.insert(63);
+#if CC_Debug
 	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
-	Debug_CC("Controls:" + TM_CommonCPP::Narrate(Controls));
-	Debug_CC("DebugCCInitPrints`Close");
-	//
-	//kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
+	Debug_CC("ActualControls:" + TM_CommonCPP::Narrate(Controls));
+#endif
+	static std::vector<Control> Controls_Fake;
+	Controls_Fake.push_back(15);
+	for (Control &vControl : Controls_Fake)
+	{
+		vControl.cModIndices.insert(222);
+	}
 	//Close
+#if CC_Debug
+	Debug_CC("FakeControls:" + TM_CommonCPP::Narrate(Controls_Fake));
+	Debug_CC("Tester1`Close");
+#endif
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, kParams_OneInt)
+DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, NULL)
+// Tester2
+bool Cmd_Tester2_Execute(COMMAND_ARGS)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("Tester2`Open");
+#endif
+	//Extras
+	*result = 0; //Do I need this?
+	//
+	for (Control &vControl : Controls)
+	{
+		vControl.cModIndices.insert(321);
+		break;
+	}
+	//Close
+#if CC_Debug
+	Debug_CC("Tester2`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(Tester2, "Tester2 command", 0, 1, NULL)
 // DisableKey_Replacing
 bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
+#if CC_Debug
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`Open");
+#endif
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
 	//---Register in Controls
 	//-Get dxScancode
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
+#if CC_Debug
 		Debug_CC("Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
+#endif
 		return false;
 	}
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
+#if CC_Debug
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`iModIndex:" + TM_CommonCPP::Narrate(iModIndex));
+#endif
 	//-Register iModIndex in vControl.cModIndices
-	Debug_CC("BEFORE Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
-	for each (Control vControl in Controls)
+	for (Control &vControl : Controls)
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			Debug_CC("BEFORE vControl.cModIndices:" + TM_CommonCPP::Narrate(vControl.cModIndices)); // This is always empty
 			vControl.cModIndices.insert(iModIndex);
-			Debug_CC("AFTER vControl.cModIndices:" + TM_CommonCPP::Narrate(vControl.cModIndices));// This has the index it needs
-			Debug_CC("AFTER1 Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
 			break;
 		}
 	}
-	Debug_CC("AFTER2 Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
 	//---DisableKey
 	//-Execute Original DisableKey
 	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
 	//Close
+#if CC_Debug
+	Debug_CC("Controls:" + TM_CommonCPP::Narrate(Controls));
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`Close");
+#endif
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
@@ -101,15 +142,18 @@ DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers a disa
 bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
+#if CC_Debug
 	Debug_CC("Cmd_EnableKey_Replacing_Execute`Open");
-	Debug_CC(TM_CommonCPP::Narrate(Controls));
+#endif
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
 	//---Register in Controls
 	//-Get dxScancode
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
+#if CC_Debug
 		Debug_CC("Cmd_EnableKey_Replacing_Execute`Failed arg extraction");
+#endif
 		return false;
 	}
 	//-Get iModIndex
@@ -117,32 +161,14 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	//---EnableKey
 	//-Unregister disable. Determine bDoEnableKey by checking if any disables are registered for our dxScancode
 	bool bDoEnableKey = true;
-	for each (Control vControl in Controls)
+	for (Control &vControl : Controls)
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			int iSize = vControl.cModIndices.size();
-			Debug_CC("iSize(beforeErase):" + std::to_string(iSize));
 			vControl.cModIndices.erase(iModIndex);
-			bool bBool = !(vControl.cModIndices.empty());
-			iSize = vControl.cModIndices.size();
-			Debug_CC("iSize:" + std::to_string(iSize));
-			Debug_CC("bBool:"+std::to_string(bBool));
-			if (bBool)
+			if (!(vControl.cModIndices.empty()))
 			{
 				bDoEnableKey = false;
-			}
-			else
-			{
-				bBool = !(vControl.cModIndices.empty());
-				iSize = vControl.cModIndices.size();
-				Debug_CC("iSize:" + std::to_string(iSize));
-				Debug_CC("bBool:" + std::to_string(bBool));
-				/*Debug_CC("vControl.cModIndices.empty():"+std::to_string(vControl.cModIndices.empty()));
-				Debug_CC("!(vControl.cModIndices.empty()):" + std::to_string(!(vControl.cModIndices.empty())));
-				if (!(vControl.cModIndices.empty())) {
-					Debug_CC("!(vControl.cModIndices.empty()) passed!");
-				}*/
 			}
 			break;
 		}
@@ -152,10 +178,13 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 		EnableKey_OriginalExecute(PASS_COMMAND_ARGS);
 	}
 	//Close
+#if CC_Debug
+	Debug_CC(TM_CommonCPP::Narrate(Controls));
 	Debug_CC("Cmd_EnableKey_Replacing_Execute`Close");
+#endif
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Enables a key if there are no disables registered. Also unregisters the disable of this mod.", 0, 1, kParams_OneInt)
+DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
 #pragma endregion
 #pragma region LoadEvent
 extern "C" {
@@ -193,13 +222,14 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_Tester1);
+	obse->RegisterCommand(&kCommandInfo_Tester2);
 
 	if (!obse->isEditor)
 	{
 		// get an OBSEScriptInterface to use for argument extraction
 		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-		// replace DisableKey, EnableKey
+		// replace DisableKey
 		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:00001430
 		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
 		// replace EnableKey
