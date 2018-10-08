@@ -7,9 +7,6 @@ Control::Control(int _dxScancode)
 {
 	dxScancode = _dxScancode;
 	cModIndices = std::set<UInt8>();
-	/*cModIndices.insert(43);
-	cModIndices.insert(15);
-	cModIndices.insert(73);*/
 }
 
 std::string Control::Narrate()
