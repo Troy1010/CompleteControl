@@ -41,6 +41,17 @@ bool Cmd_Tester1_Execute(COMMAND_ARGS)
 	//Open
 	Debug_CC("Tester1`Open");
 	*result = 0; //Do I need this?
+	int iInt = 5;
+	Debug_CC("5:" + TM_CommonCPP::Narrate(iInt));
+	UInt8 vUInt8 = 3;
+	Debug_CC("3:" + TM_CommonCPP::Narrate(vUInt8));
+	std::set<UInt8> cSet;
+	cSet.insert(65);
+	cSet.insert(64);
+	cSet.insert(63);
+	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
+	Debug_CC("Controls:" + TM_CommonCPP::Narrate(Controls));
+	Debug_CC("DebugCCInitPrints`Close");
 	//
 	//kCommandInfo_DisableKey_Original->execute(PASS_COMMAND_ARGS);
 	//Close
@@ -52,17 +63,6 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 {
 	//Open
 	Debug_CC("Cmd_DisableKey_Replacing_Execute`Open");
-	int iInt = 5;
-	Debug_CC("5:"+TM_CommonCPP::Narrate(iInt));
-	UInt8 vUInt8 = 3;
-	Debug_CC("3:"+TM_CommonCPP::Narrate(vUInt8));
-	std::set<UInt8> cSet;
-	cSet.insert(65);
-	cSet.insert(64);
-	cSet.insert(63);
-	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
-	Debug_CC("Controls:" + TM_CommonCPP::Narrate(Controls));
-
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
@@ -74,19 +74,21 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	}
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//Debug_CC("Cmd_DisableKey_Replacing_Execute`iModIndex:" + Narrator::Narrate(iModIndex));
+	Debug_CC("Cmd_DisableKey_Replacing_Execute`iModIndex:" + TM_CommonCPP::Narrate(iModIndex));
 	//-Register iModIndex in vControl.cModIndices
-	//Debug_CC("Controls:" + Narrator::Narrate_Collection(Controls)); // This is always empty
+	Debug_CC("BEFORE Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
 	for each (Control vControl in Controls)
 	{
 		if (vControl.dxScancode == dxScancode)
 		{
-			//Debug_CC("BEFORE vControl.cModIndices:" + Narrator::Narrate_Collection(vControl.cModIndices)); // This is always empty
+			Debug_CC("BEFORE vControl.cModIndices:" + TM_CommonCPP::Narrate(vControl.cModIndices)); // This is always empty
 			vControl.cModIndices.insert(iModIndex);
-			//Debug_CC("AFTER vControl.cModIndices:"+Narrator::Narrate_Collection(vControl.cModIndices)); // This has the index it needs
+			Debug_CC("AFTER vControl.cModIndices:" + TM_CommonCPP::Narrate(vControl.cModIndices));// This has the index it needs
+			Debug_CC("AFTER1 Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
 			break;
 		}
 	}
+	Debug_CC("AFTER2 Controls:" + TM_CommonCPP::Narrate(Controls)); // This is always empty
 	//---DisableKey
 	//-Execute Original DisableKey
 	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
@@ -100,6 +102,7 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 {
 	//Open
 	Debug_CC("Cmd_EnableKey_Replacing_Execute`Open");
+	Debug_CC(TM_CommonCPP::Narrate(Controls));
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	*result = 0; //Do I need this?
