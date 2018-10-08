@@ -9,11 +9,13 @@ namespace TM_CommonCPP
 	{
 		std::ostringstream vReturning;
 		int i = 0;
+		TM_CommonCPP::Narrator::iIndent++;
 		for each (Control vControl in Controls)
 		{
-			vReturning << "\n\t" << i << ":??" ;
+			vReturning << "\n" << TM_CommonCPP::Narrator::Indent() << i << ":" <<vControl.Narrate() ;
 			i++;
 		}
+		TM_CommonCPP::Narrator::iIndent--;
 		return "NarrateControls(Count:" + Narrate(i) + ").." + vReturning.str();
 	}
 	std::string Narrate(std::set<UInt8> cSet)
@@ -22,6 +24,6 @@ namespace TM_CommonCPP
 	}
 	std::string Narrate(UInt8 vUInt8)
 	{
-		return Narrator::Narrate_Stringable(vUInt8);
+		return std::to_string(vUInt8);
 	}
 }
