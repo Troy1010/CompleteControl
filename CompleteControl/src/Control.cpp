@@ -1,14 +1,23 @@
 #include "Control.h"
 #include <vector>
+#include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP_NarrateOverloads.h"
 
 Control::Control(int _dxScancode)
 {
 	dxScancode = _dxScancode;
-	UInt8 cTemp[] = { 1,3,5 };
-	//std::set<UInt8> cModIndices(cTemp.begin(), cTemp.end());
-	//std::set<int> seet = { 10, 20, 30, 40, 50 };
+	cModIndices = std::set<UInt8>();
+	/*cModIndices.insert(43);
+	cModIndices.insert(15);
+	cModIndices.insert(73);*/
 }
 
+std::string Control::Narrate()
+{
+	std::ostringstream vReturning;
+	vReturning << "dxScancode:" << dxScancode << "\n" << TM_CommonCPP::Narrator::Indent() <<"cModIndices:" << TM_CommonCPP::Narrate(cModIndices);
+	return vReturning.str();
+}
 
 Control::~Control(void)
 {

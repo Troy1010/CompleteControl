@@ -13,4 +13,5 @@ public:
 	//---Members
 	int dxScancode;
 	std::set<UInt8> cModIndices;
+	std::string Narrate();
 };
