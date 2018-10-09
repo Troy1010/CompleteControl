@@ -26,4 +26,8 @@ namespace TM_CommonCPP
 	{
 		return std::to_string(vUInt8);
 	}
+	std::string Narrate(UInt32 vUInt32)
+	{
+		return std::to_string(vUInt32);
+	}
 }
