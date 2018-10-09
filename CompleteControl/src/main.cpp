@@ -23,7 +23,8 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
-Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
+Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
+Cmd_Execute GetControl = NULL; //Execute of GetControl command
 static std::vector<Control> Controls;
 #pragma region HelperFunctions
 void Debug_CC(std::string sString)
@@ -35,67 +36,115 @@ void Debug_CC(std::string sString)
 }
 #pragma endregion
 #pragma region CompleteControlAPI
-// Tester1
-bool Cmd_Tester1_Execute(COMMAND_ARGS)
+//### CommandTemplate
+bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 {
 	//Open
 #if CC_Debug
-	Debug_CC("Tester1`Open");
+	Debug_CC("CommandTemplate`Open");
 #endif
-	*result = 0; //Do I need this?
+	//
+	//Close
+#if CC_Debug
+	Debug_CC("CommandTemplate`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
+//### BasicRuntimeTests
+bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("BasicRuntimeTests`Open");
+	//*result = 0; //Do I need this?
 	int iInt = 5;
-#if CC_Debug
 	Debug_CC("5:" + TM_CommonCPP::Narrate(iInt));
-#endif
 	UInt8 vUInt8 = 3;
-#if CC_Debug
 	Debug_CC("3:" + TM_CommonCPP::Narrate(vUInt8));
-#endif
 	std::set<UInt8> cSet;
 	cSet.insert(65);
 	cSet.insert(64);
 	cSet.insert(63);
-#if CC_Debug
 	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
-	Debug_CC("ActualControls:" + TM_CommonCPP::Narrate(Controls));
-#endif
-	static std::vector<Control> Controls_Fake;
-	Controls_Fake.push_back(15);
-	for (Control &vControl : Controls_Fake)
-	{
-		vControl.cModIndices_Disables.insert(222);
-	}
-	//Close
-#if CC_Debug
-	Debug_CC("FakeControls:" + TM_CommonCPP::Narrate(Controls_Fake));
-	Debug_CC("Tester1`Close");
+	//Debug_CC("ActualControls:" + TM_CommonCPP::Narrate(Controls));
+	//static std::vector<Control> Controls_Fake;
+	//Controls_Fake.push_back(Control(15,UInt32(4)));
+	//for (Control &vControl : Controls_Fake)
+	//{
+	//	vControl.cModIndices_Disables.insert(222);
+	//}
+	////Close
+	//Debug_CC("FakeControls:" + TM_CommonCPP::Narrate(Controls_Fake));
+	Debug_CC("BasicRuntimeTests`Close");
 #endif
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 1, NULL)
-// Tester2
-bool Cmd_Tester2_Execute(COMMAND_ARGS)
+DEFINE_COMMAND_PLUGIN(BasicRuntimeTests, "BasicRuntimeTests command", 0, 0, NULL)
+//### TestGetControlDirectly
+bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
 #if CC_Debug
-	Debug_CC("Tester2`Open");
+	Debug_CC("TestGetControlDirectly`Open");
 #endif
 	//Extras
 	*result = 0; //Do I need this?
 	//
-	for (Control &vControl : Controls)
-	{
-		vControl.cModIndices_Disables.insert(321);
-		break;
-	}
+	double vControlID = 0.0;
+	GetControl(paramInfo, arg1, thisObj, arg3, scriptObj, eventList, &vControlID, opcodeOffsetPtr);
 	//Close
 #if CC_Debug
-	Debug_CC("Tester2`Close");
+	Debug_CC("TestGetControlDirectly`Close");
 #endif
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(Tester2, "Tester2 command", 0, 1, NULL)
-// DisableKey_Replacing
+DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, NULL)
+//### TestGetControlCopyPasta
+bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("TestGetControlCopyPasta`Open");
+#endif
+	//
+	//if (!InputControls) GetControlMap();
+	//Close
+#if CC_Debug
+	Debug_CC("TestGetControlCopyPasta`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 0, NULL)
+//### GenerateEnum
+bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("GenerateEnum`Open");
+#endif
+	//Extract Args
+	TESForm* rTemp = NULL;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &rTemp)) {
+#if CC_Debug
+		Debug_CC("Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
+#endif
+		return false;
+	}
+	//Report
+#if CC_Debug
+	Debug_CC("rTemp:" + TM_CommonCPP::Narrate(rTemp->refID));
+#endif
+	//Return
+	*result = rTemp->refID;
+	//Close
+#if CC_Debug
+	Debug_CC("GenerateEnum`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(GenerateEnum, "GenerateEnum command", 0, 1, kParams_OneObjectRef)
+//### DisableKey_Replacing
 bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
@@ -138,7 +187,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
-// EnableKey_Replacing
+//### EnableKey_Replacing
 bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	//Open
@@ -221,8 +270,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
-	obse->RegisterCommand(&kCommandInfo_Tester1);
-	obse->RegisterCommand(&kCommandInfo_Tester2);
+	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
+	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
+	obse->RegisterCommand(&kCommandInfo_GenerateEnum);
+	obse->RegisterCommand(&kCommandInfo_CommandTemplate);
+	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
 
 	if (!obse->isEditor)
 	{
@@ -235,10 +287,12 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		// replace EnableKey
 		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:00001431
 		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
+		// Get GetControl
+		GetControl = g_commandTableIntfc->GetByName("GetControl")->execute;
 	}
 
 	//Register Controls
-	Controls.push_back(Control(17));
+	Controls.push_back(Control(17,Control::Forward));
 
 	return true;
 }
