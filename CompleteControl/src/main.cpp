@@ -151,20 +151,28 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	//
 	//double vControlID = 0.0;
 	//GetControl->execute(PASS_COMMAND_ARGS, 16);
+	//UInt8* fArgs = new UInt8[3 + sizeof(double)];
+	//UInt16* fArgsNumArgs = (UInt16*)fArgs;
+	//*fArgsNumArgs = 1;
+	//fArgs[2] = 0x7A; // argument type double
+	//double* fArgsVal = (double*)&fArgs[3];
+	//*fArgsVal = 2;
+	//UInt32 opOffsetPtr = 0;
+	////const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
+	////ceil->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	//GetControl->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	//delete[] fArgs;
+	//
 	UInt8* fArgs = new UInt8[3 + sizeof(double)];
 	UInt16* fArgsNumArgs = (UInt16*)fArgs;
 	*fArgsNumArgs = 1;
 	fArgs[2] = 0x7A; // argument type double
 	double* fArgsVal = (double*)&fArgs[3];
-	*fArgsVal = 2;
+	*fArgsVal = 2.0;
 	UInt32 opOffsetPtr = 0;
-	//const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
-	//ceil->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
-	GetControl->execute(paramInfo, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	GetControl->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
 	delete[] fArgs;
-#if CC_Debug
-	Debug_CC("*result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
-#endif
+	Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
 	//Close
 #if CC_Debug
 	Debug_CC("TestGetControlDirectly`Close");
