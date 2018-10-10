@@ -58,12 +58,35 @@ static void GetControlMap()
 static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
 
 #pragma region HelperFunctions
+//### Debug_CC
 void Debug_CC(std::string sString)
 {
 #if CC_Debug
 	Console_Print(sString.c_str());
 	_MESSAGE(sString.c_str());
 #endif
+}
+//### ExecuteCommand
+auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
+{
+	// Overload specific vars
+	int iDataTypeCode = 0x7A; //double
+	//
+	double result2 = 0;
+	UInt8* pData = new UInt8[3 + sizeof(double)];
+	UInt16* vNumArgs = (UInt16*)pData;
+	*vNumArgs = 1;
+	pData[2] = iDataTypeCode;
+	double* fArgsVal = (double*)&pData[3];
+	*fArgsVal = 2.0;
+	UInt32 opOffsetPtr = 0;
+	GetControl->execute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr);
+	delete[] pData;
+	return result2;
+}
+auto ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS)
+{
+	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
 }
 #pragma endregion
 #pragma region CompleteControlAPI
@@ -149,30 +172,21 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	//Extras
 	*result = 0; //Do I need this?
 	//
-	//double vControlID = 0.0;
-	//GetControl->execute(PASS_COMMAND_ARGS, 16);
 	//UInt8* fArgs = new UInt8[3 + sizeof(double)];
 	//UInt16* fArgsNumArgs = (UInt16*)fArgs;
 	//*fArgsNumArgs = 1;
 	//fArgs[2] = 0x7A; // argument type double
 	//double* fArgsVal = (double*)&fArgs[3];
-	//*fArgsVal = 2;
+	//*fArgsVal = 2.0;
 	//UInt32 opOffsetPtr = 0;
-	////const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
-	////ceil->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
-	//GetControl->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	//GetControl->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
 	//delete[] fArgs;
 	//
-	UInt8* fArgs = new UInt8[3 + sizeof(double)];
-	UInt16* fArgsNumArgs = (UInt16*)fArgs;
-	*fArgsNumArgs = 1;
-	fArgs[2] = 0x7A; // argument type double
-	double* fArgsVal = (double*)&fArgs[3];
-	*fArgsVal = 2.0;
-	UInt32 opOffsetPtr = 0;
-	GetControl->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
-	delete[] fArgs;
-	Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+	double endResult;
+	endResult = ExecuteCommand(GetControl,2,PASS_COMMAND_ARGS);
+	// Report
+	//Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+	Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " endResult:" + TM_CommonCPP::Narrate(endResult));
 	//Close
 #if CC_Debug
 	Debug_CC("TestGetControlDirectly`Close");
