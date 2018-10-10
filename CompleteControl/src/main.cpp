@@ -20,12 +20,43 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "TM_CommonCPP_NarrateOverloads.h"
 #define CC_Debug 1
 #include "obse/Script.h"
+#include "obse/Hooks_DirectInput8Create.h"
 
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
-Cmd_Execute GetControl = NULL; //Execute of GetControl command
+const CommandInfo* DisableKey_CmdInfo; //DisableKey command
+const CommandInfo* GetControl; //GetControl command
 static std::vector<Control> Controls;
+
+// Copy-pasted from obse's Control_Input
+#define CONTROLSMAPPED 29
+//Roundabout way of getting a pointer to the array containing control map
+//Not sure what CtrlMapBaseAddr points to (no RTTI) so use brute pointer arithmetic
+#if OBLIVION_VERSION == OBLIVION_VERSION_1_1
+static const UInt32* CtrlMapBaseAddr = (UInt32*)0x00AEAAB8;
+static const UInt32	 CtrlMapOffset = 0x00000020;
+static const UInt32  CtrlMapOffset2 = 0x00001B7E;
+#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2
+static const UInt32* CtrlMapBaseAddr = (UInt32*)0x00B33398;
+static const UInt32	 CtrlMapOffset = 0x00000020;
+static const UInt32  CtrlMapOffset2 = 0x00001B7E;
+#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2_416
+static const UInt32* CtrlMapBaseAddr = (UInt32*)0x00B33398;
+static const UInt32	 CtrlMapOffset = 0x00000020;
+static const UInt32  CtrlMapOffset2 = 0x00001B7E;
+#endif
+UInt8*  InputControls = 0;
+UInt8*  AltInputControls = 0;
+static void GetControlMap()
+{
+	UInt32 addr = *CtrlMapBaseAddr + CtrlMapOffset;
+	addr = *(UInt32*)addr + CtrlMapOffset2;
+	InputControls = (UInt8*)addr;
+	AltInputControls = InputControls + CONTROLSMAPPED;
+}
+static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
+
 #pragma region HelperFunctions
 void Debug_CC(std::string sString)
 {
@@ -51,6 +82,33 @@ bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
+//### TestCeil
+bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("TestCeil`Open");
+#endif
+	//
+	*result = 0;
+	UInt8* fArgs = new UInt8[3 + sizeof(double)];
+	UInt16* fArgsNumArgs = (UInt16*)fArgs;
+	*fArgsNumArgs = 1;
+	fArgs[2] = 0x7A; // argument type double
+	double* fArgsVal = (double*)&fArgs[3];
+	*fArgsVal = 18.42;
+	UInt32 opOffsetPtr = 0;
+	const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
+	ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	delete[] fArgs;
+	Debug_CC("TestCeil`opcode:" + TM_CommonCPP::Narrate(ceil->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+	//Close
+#if CC_Debug
+	Debug_CC("TestCeil`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, NULL)
 //### BasicRuntimeTests
 bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 {
@@ -91,8 +149,22 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	//Extras
 	*result = 0; //Do I need this?
 	//
-	double vControlID = 0.0;
-	GetControl(paramInfo, arg1, thisObj, arg3, scriptObj, eventList, &vControlID, opcodeOffsetPtr);
+	//double vControlID = 0.0;
+	//GetControl->execute(PASS_COMMAND_ARGS, 16);
+	UInt8* fArgs = new UInt8[3 + sizeof(double)];
+	UInt16* fArgsNumArgs = (UInt16*)fArgs;
+	*fArgsNumArgs = 1;
+	fArgs[2] = 0x7A; // argument type double
+	double* fArgsVal = (double*)&fArgs[3];
+	*fArgsVal = 2;
+	UInt32 opOffsetPtr = 0;
+	//const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
+	//ceil->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	GetControl->execute(paramInfo, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	delete[] fArgs;
+#if CC_Debug
+	Debug_CC("*result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+#endif
 	//Close
 #if CC_Debug
 	Debug_CC("TestGetControlDirectly`Close");
@@ -107,15 +179,40 @@ bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 #if CC_Debug
 	Debug_CC("TestGetControlCopyPasta`Open");
 #endif
+	*result = 0xFFFF;
+	UInt32	keycode = 0;
+	//ExtractArgs
+	if (!ExtractArgs(paramInfo, arg1, opcodeOffsetPtr, thisObj, arg3, scriptObj, eventList, &keycode)) return true;
 	//
-	//if (!InputControls) GetControlMap();
+	if (!InputControls) GetControlMap();
+	*result = InputControls[keycode];
 	//Close
 #if CC_Debug
 	Debug_CC("TestGetControlCopyPasta`Close");
 #endif
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 1, kParams_OneInt)
+//### TestDisableKeyCopyPasta
+bool Cmd_TestDisableKeyCopyPasta_Execute(COMMAND_ARGS)
+{
+	//Open
+	*result = 0;
+	UInt32	keycode = 0;
+#if CC_Debug
+	Debug_CC("TestDisableKeyCopyPasta`Open");
+#endif
+	//
+	if (!ExtractArgs(paramInfo, arg1, opcodeOffsetPtr, thisObj, arg3, scriptObj, eventList, &keycode)) return true;
+	if (keycode % 256 == 255 && keycode < 2048) keycode = 255 + (keycode + 1) / 256;
+	if (IsKeycodeValid(keycode)) DI_data.DisallowStates[keycode] = 0x00;
+	//Close
+#if CC_Debug
+	Debug_CC("TestDisableKeyCopyPasta`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestDisableKeyCopyPasta, "TestDisableKeyCopyPasta command", 0, 0, NULL)
 //### GenerateEnum
 bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 {
@@ -275,6 +372,8 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_GenerateEnum);
 	obse->RegisterCommand(&kCommandInfo_CommandTemplate);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
+	obse->RegisterCommand(&kCommandInfo_TestDisableKeyCopyPasta);
+	obse->RegisterCommand(&kCommandInfo_TestCeil);
 
 	if (!obse->isEditor)
 	{
@@ -288,7 +387,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:00001431
 		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
 		// Get GetControl
-		GetControl = g_commandTableIntfc->GetByName("GetControl")->execute;
+		GetControl = g_commandTableIntfc->GetByName("GetControl");
+		//GetControl->
+		//
+		DisableKey_CmdInfo = g_commandTableIntfc->GetByOpcode(0x1430);
+		//DisableKey_CmdInfo->execute();
 	}
 
 	//Register Controls
