@@ -29,6 +29,9 @@ const CommandInfo* DisableKey_CmdInfo; //DisableKey command
 const CommandInfo* GetControl; //GetControl command
 static std::vector<Control> Controls;
 
+Script* pBlankScript = NULL;
+ScriptEventList * pBlankScriptEventList = NULL;
+
 // Copy-pasted from obse's Control_Input
 #define CONTROLSMAPPED 29
 //Roundabout way of getting a pointer to the array containing control map
@@ -79,13 +82,44 @@ auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 	pData[2] = iDataTypeCode;
 	double* fArgsVal = (double*)&pData[3];
 	*fArgsVal = 2.0;
-	UInt32 opOffsetPtr = 0;
-	GetControl->execute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr);
+	UInt32 opOffsetPtr2 = 0;
+	vCmdExecute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr2);
 	delete[] pData;
 	return result2;
 }
 auto ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS)
 {
+	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
+}
+auto ExecuteCommand(const CommandInfo* vCmd, double vArg, Script * scriptObj, ScriptEventList * eventList)
+{
+	ParamInfo * paramInfo=NULL;
+	void * arg1=0;
+	TESObjectREFR * thisObj=NULL;
+	UInt32 arg3=0;
+	//TESSpellList::GetNthSpell
+//	Script * scriptObj = (Script * )&Script(); // Problem
+//	Script * scriptObj=&Script(); //Problem
+//	Script * scriptObj = GetScriptFromForm(&TESSpellList::GetNthSpell(0));
+//	Script * scriptObj2 = GetScriptFromForm(LookupFormByID(0x00033B09));
+//	scriptObj = GetScriptFromForm(CloneForm(LookupFormByID(0x00066CDD)));
+//	scriptObj = GetScriptFromForm(CloneForm(LookupFormByID(0x00000466)));
+//	scriptObj = (Script*)CreateFormInstance(13); //WORKING
+	if (!pBlankScript)
+	{
+		pBlankScript = (Script*)CreateFormInstance(13);
+		pBlankScriptEventList = (*pBlankScript).CreateEventList();
+#if CC_Debug
+		Debug_CC("pBlankScript`INIT");
+#endif
+	}
+	scriptObj = pBlankScript;
+//	ScriptEventList * eventList =NULL; //Problem
+//	Script script2 = *scriptObj;
+//	eventList = (*scriptObj).CreateEventList(); //WORKING
+	eventList = pBlankScriptEventList;
+	double * result =0;
+	UInt32 * opcodeOffsetPtr =0;
 	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
 }
 #pragma endregion
@@ -172,21 +206,11 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	//Extras
 	*result = 0; //Do I need this?
 	//
-	//UInt8* fArgs = new UInt8[3 + sizeof(double)];
-	//UInt16* fArgsNumArgs = (UInt16*)fArgs;
-	//*fArgsNumArgs = 1;
-	//fArgs[2] = 0x7A; // argument type double
-	//double* fArgsVal = (double*)&fArgs[3];
-	//*fArgsVal = 2.0;
-	//UInt32 opOffsetPtr = 0;
-	//GetControl->execute(kParams_OneInt, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
-	//delete[] fArgs;
-	//
 	double endResult;
 	endResult = ExecuteCommand(GetControl,2,PASS_COMMAND_ARGS);
 	// Report
 	//Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
-	Debug_CC("TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " endResult:" + TM_CommonCPP::Narrate(endResult));
+	Debug_CC("TestGetControlDirectly`endResult:" + TM_CommonCPP::Narrate(endResult));
 	//Close
 #if CC_Debug
 	Debug_CC("TestGetControlDirectly`Close");
@@ -194,6 +218,28 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, NULL)
+//### TestGetControlDirectly2
+bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("TestGetControlDirectly2`Open");
+#endif
+	//Extras
+	*result = 0; //Do I need this?
+	//
+	double endResult;
+	endResult = ExecuteCommand(GetControl, 2, scriptObj, eventList);
+	// Report
+	//Debug_CC("TestGetControlDirectly2`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+	Debug_CC("TestGetControlDirectly2`endResult:" + TM_CommonCPP::Narrate(endResult));
+	//Close
+#if CC_Debug
+	Debug_CC("TestGetControlDirectly2`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestGetControlDirectly2, "TestGetControlDirectly2 command", 0, 0, NULL)
 //### TestGetControlCopyPasta
 bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 {
@@ -391,6 +437,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
+	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly2);
 	obse->RegisterCommand(&kCommandInfo_GenerateEnum);
 	obse->RegisterCommand(&kCommandInfo_CommandTemplate);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
@@ -417,7 +464,10 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	}
 
 	//Register Controls
-	Controls.push_back(Control(17,Control::Forward));
+	//Controls.push_back(Control(ExecuteCommand(GetControl,17) ,Control::Forward));
+	//Debug_CC("Startup test:" + TM_CommonCPP::Narrate(ExecuteCommand(GetControl, 17)));
+	//pBlankScript = (Script*)CreateFormInstance(13);
+	//pBlankScriptEventList = (*pBlankScript).CreateEventList();
 
 	return true;
 }
