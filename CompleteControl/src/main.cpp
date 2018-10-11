@@ -91,7 +91,7 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS)
 {
 	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
 }
-auto ExecuteCommand(const CommandInfo* vCmd, double vArg, Script * scriptObj, ScriptEventList * eventList)
+auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 {
 	ParamInfo * paramInfo=NULL;
 	void * arg1=0;
@@ -107,17 +107,17 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg, Script * scriptObj, Sc
 //	scriptObj = (Script*)CreateFormInstance(13); //WORKING
 	if (!pBlankScript)
 	{
+		Debug_CC("ExecuteCommand`pBlankScript INIT");
 		pBlankScript = (Script*)CreateFormInstance(13);
 		pBlankScriptEventList = (*pBlankScript).CreateEventList();
 #if CC_Debug
-		Debug_CC("pBlankScript`INIT");
 #endif
 	}
-	scriptObj = pBlankScript;
+	Script * scriptObj = pBlankScript;
 //	ScriptEventList * eventList =NULL; //Problem
 //	Script script2 = *scriptObj;
 //	eventList = (*scriptObj).CreateEventList(); //WORKING
-	eventList = pBlankScriptEventList;
+	ScriptEventList * eventList = pBlankScriptEventList;
 	double * result =0;
 	UInt32 * opcodeOffsetPtr =0;
 	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
@@ -229,7 +229,7 @@ bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TES
 	*result = 0; //Do I need this?
 	//
 	double endResult;
-	endResult = ExecuteCommand(GetControl, 2, scriptObj, eventList);
+	endResult = ExecuteCommand(GetControl, 2);
 	// Report
 	//Debug_CC("TestGetControlDirectly2`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
 	Debug_CC("TestGetControlDirectly2`endResult:" + TM_CommonCPP::Narrate(endResult));
