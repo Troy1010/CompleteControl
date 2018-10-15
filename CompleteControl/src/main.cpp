@@ -100,26 +100,15 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 	void * arg1=0;
 	TESObjectREFR * thisObj=NULL;
 	UInt32 arg3=0;
-	//TESSpellList::GetNthSpell
-//	Script * scriptObj = (Script * )&Script(); // Problem
-//	Script * scriptObj=&Script(); //Problem
-//	Script * scriptObj = GetScriptFromForm(&TESSpellList::GetNthSpell(0));
-//	Script * scriptObj2 = GetScriptFromForm(LookupFormByID(0x00033B09));
-//	scriptObj = GetScriptFromForm(CloneForm(LookupFormByID(0x00066CDD)));
-//	scriptObj = GetScriptFromForm(CloneForm(LookupFormByID(0x00000466)));
-//	scriptObj = (Script*)CreateFormInstance(13); //WORKING
 	if (!pBlankScript)
 	{
+#if CC_Debug
 		Debug_CC("ExecuteCommand`pBlankScript INIT");
+#endif
 		pBlankScript = (Script*)CreateFormInstance(13);
 		pBlankScriptEventList = (*pBlankScript).CreateEventList();
-#if CC_Debug
-#endif
 	}
 	Script * scriptObj = pBlankScript;
-//	ScriptEventList * eventList =NULL; //Problem
-//	Script script2 = *scriptObj;
-//	eventList = (*scriptObj).CreateEventList(); //WORKING
 	ScriptEventList * eventList = pBlankScriptEventList;
 	double * result =0;
 	UInt32 * opcodeOffsetPtr =0;
