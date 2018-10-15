@@ -23,7 +23,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
 #pragma endregion
-#pragma region globals
+#pragma region Globals
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
@@ -71,11 +71,6 @@ void Debug_CC(std::string sString)
 	Console_Print(sString.c_str());
 	_MESSAGE(sString.c_str());
 #endif
-}
-//### InitializeControls
-auto InitializeControls(std::vector<Control> Controls)
-{
-
 }
 //### ExecuteCommand
 auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
@@ -130,6 +125,23 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 	UInt32 * opcodeOffsetPtr =0;
 	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
 }
+//### InitializeControls
+auto InitializeControls(std::vector<Control> &Controls)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("InitializeControlsInner`Open");
+#endif
+	//Register Controls
+	Controls.push_back(Control(ExecuteCommand(GetControl, 17), Control::Forward));
+	//Debug_CC("Startup test:" + TM_CommonCPP::Narrate(ExecuteCommand(GetControl, 17)));
+	//pBlankScript = (Script*)CreateFormInstance(13);
+	//pBlankScriptEventList = (*pBlankScript).CreateEventList();
+	//Close
+#if CC_Debug
+	Debug_CC("InitializeControlsInner`Close");
+#endif
+}
 #pragma endregion
 #pragma region CompleteControlAPI
 //### CommandTemplate
@@ -147,6 +159,22 @@ bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
+//### InitializeControls
+bool Cmd_InitializeControls_Execute(COMMAND_ARGS)
+{
+	//Open
+#if CC_Debug
+	Debug_CC("InitializeControls`Open");
+#endif
+	//
+	InitializeControls(Controls);
+	//Close
+#if CC_Debug
+	Debug_CC("InitializeControls`Close");
+#endif
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(InitializeControls, "InitializeControls command", 0, 0, NULL)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
@@ -190,7 +218,7 @@ bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 	cSet.insert(64);
 	cSet.insert(63);
 	Debug_CC("Set:" + TM_CommonCPP::Narrate(cSet));
-	//Debug_CC("ActualControls:" + TM_CommonCPP::Narrate(Controls));
+	Debug_CC("ActualControls:" + TM_CommonCPP::Narrate(Controls));
 	//static std::vector<Control> Controls_Fake;
 	//Controls_Fake.push_back(Control(15,UInt32(4)));
 	//for (Control &vControl : Controls_Fake)
@@ -449,6 +477,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestDisableKeyCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestCeil);
+	obse->RegisterCommand(&kCommandInfo_InitializeControls);
 
 	if (!obse->isEditor)
 	{
@@ -468,12 +497,6 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		DisableKey_CmdInfo = g_commandTableIntfc->GetByOpcode(0x1430);
 		//DisableKey_CmdInfo->execute();
 	}
-
-	//Register Controls
-	//Controls.push_back(Control(ExecuteCommand(GetControl,17) ,Control::Forward));
-	//Debug_CC("Startup test:" + TM_CommonCPP::Narrate(ExecuteCommand(GetControl, 17)));
-	//pBlankScript = (Script*)CreateFormInstance(13);
-	//pBlankScriptEventList = (*pBlankScript).CreateEventList();
 
 	return true;
 }
