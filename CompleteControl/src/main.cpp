@@ -72,6 +72,11 @@ void Debug_CC(std::string sString)
 	_MESSAGE(sString.c_str());
 #endif
 }
+//### InitializeControls
+auto InitializeControls(std::vector<Control> Controls)
+{
+
+}
 //### ExecuteCommand
 auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 {
