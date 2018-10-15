@@ -1,3 +1,4 @@
+#pragma region Includes
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
 #include "obse_common/SafeWrite.cpp"
@@ -21,7 +22,8 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #define CC_Debug 1
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
-
+#pragma endregion
+#pragma region globals
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
@@ -31,7 +33,8 @@ static std::vector<Control> Controls;
 
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;
-
+#pragma endregion
+#pragma region CopyPasted
 // Copy-pasted from obse's Control_Input
 #define CONTROLSMAPPED 29
 //Roundabout way of getting a pointer to the array containing control map
@@ -59,7 +62,7 @@ static void GetControlMap()
 	AltInputControls = InputControls + CONTROLSMAPPED;
 }
 static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
-
+#pragma endregion
 #pragma region HelperFunctions
 //### Debug_CC
 void Debug_CC(std::string sString)
