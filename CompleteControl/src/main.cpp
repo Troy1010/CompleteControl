@@ -106,27 +106,31 @@ auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 	delete[] pData;
 	return result2;
 }
+auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
+{
+	ParamInfo * paramInfo = NULL;
+	void * arg1 = 0;
+	TESObjectREFR * thisObj = NULL;
+	UInt32 arg3 = 0;
+	if (!pBlankScript)
+	{
+		CCDebug(6, "ExecuteCommand`pBlankScript INIT");
+		pBlankScript = (Script*)CreateFormInstance(13);
+		pBlankScriptEventList = (*pBlankScript).CreateEventList();
+	}
+	Script * scriptObj = pBlankScript;
+	ScriptEventList * eventList = pBlankScriptEventList;
+	double * result = 0;
+	UInt32 * opcodeOffsetPtr = 0;
+	return ExecuteCommand(vCmdExecute, vArg, PASS_COMMAND_ARGS);
+}
 auto ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS)
 {
 	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
 }
 auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 {
-	ParamInfo * paramInfo=NULL;
-	void * arg1=0;
-	TESObjectREFR * thisObj=NULL;
-	UInt32 arg3=0;
-	if (!pBlankScript)
-	{
-		CCDebug(5,"ExecuteCommand`pBlankScript INIT");
-		pBlankScript = (Script*)CreateFormInstance(13);
-		pBlankScriptEventList = (*pBlankScript).CreateEventList();
-	}
-	Script * scriptObj = pBlankScript;
-	ScriptEventList * eventList = pBlankScriptEventList;
-	double * result =0;
-	UInt32 * opcodeOffsetPtr =0;
-	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
+	return ExecuteCommand(vCmd->execute, vArg);
 }
 //### InitializeControls
 auto InitializeControls(std::vector<Control> &Controls)
@@ -137,7 +141,7 @@ auto InitializeControls(std::vector<Control> &Controls)
 	{
 		Controls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	CCDebug(5, "InitializeControlsInner`Controls:" + TMC::Narrate(Controls));
+	CCDebug(5, "InitializeControls`Controls:" + TMC::Narrate(Controls));
 	CCDebug(5,"InitializeControls`Close");
 }
 #pragma endregion
