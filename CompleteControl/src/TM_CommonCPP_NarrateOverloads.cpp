@@ -10,9 +10,11 @@ namespace TMC
 		std::ostringstream vReturning;
 		TMC::Narrator::iIndent++;
 		vReturning << "Collection(Count:" << Narrate((int)Controls.size()) << ")..";
+		int i = 0;
 		for (Control vControl : Controls)
 		{
-			vReturning << "\n" << TMC::Narrator::Indent() << vControl.Narrate();
+			vReturning << "\n" << TMC::Narrator::Indent() << i << ":" << vControl.Narrate();
+			i++;
 		}
 		TMC::Narrator::iIndent--;
 		return vReturning.str();

@@ -15,7 +15,9 @@ std::string Control::Narrate()
 	std::ostringstream vReturning;
 	vReturning << "Control..";
 	TMC::Narrator::iIndent++;
-	vReturning << "\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode << "\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
+	vReturning <<
+		"\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode << 
+		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
 	TMC::Narrator::iIndent--;
 	return vReturning.str();
 }
