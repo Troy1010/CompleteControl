@@ -38,24 +38,6 @@ ScriptEventList * pBlankScriptEventList = NULL;
 bool bOblivionLoaded = false;
 #pragma endregion
 #pragma region Macros
-//### CCDebug
-void FnDebug(std::string sString)
-{
-	if (!bOblivionLoaded) // Trying to print to console without Oblivion loaded causes CTD.
-	{
-		//do nothing
-	}
-	else if (sString.length() < 1000) //1000 might not be the exact limit. Exceeding limit causes CTD.
-	{
-		Console_Print(sString.c_str());
-	}
-	else
-	{
-		Console_Print(sString.substr(0, 1000).c_str());
-		Console_Print("<MessageTooLarge>");
-	}
-	_MESSAGE(sString.c_str());
-}
 #define CCDebug(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
 #pragma endregion
 #pragma region CopyPasted
@@ -88,6 +70,29 @@ static void GetControlMap()
 static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
 #pragma endregion
 #pragma region HelperFunctions
+//### SafeConsolePrint
+void SafeConsolePrint(std::string sString)
+{
+	if (!bOblivionLoaded) // Trying to print to console without Oblivion loaded causes CTD.
+	{
+		//do nothing
+	}
+	else if (sString.length() < 1000) //1000 might not be the exact limit. Exceeding limit causes CTD.
+	{
+		Console_Print(sString.c_str());
+	}
+	else
+	{
+		Console_Print(sString.substr(0, 1000).c_str());
+		Console_Print("<MessageTooLarge>");
+	}
+}
+//### FnDebug
+void FnDebug(std::string sString)
+{
+	SafeConsolePrint(sString);
+	_MESSAGE(sString.c_str());
+}
 //### ExecuteCommand
 auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 {
@@ -141,7 +146,7 @@ auto InitializeControls(std::vector<Control> &Controls)
 	{
 		Controls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	CCDebug(5, "InitializeControls`Controls:" + TMC::Narrate(Controls));
+	CCDebug(5, "InitializeControls`Controls:" + TMC::Narrate(Controls)); //verbose
 	CCDebug(5,"InitializeControls`Close");
 }
 #pragma endregion
