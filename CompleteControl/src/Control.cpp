@@ -13,7 +13,10 @@ Control::Control(int _dxScancode, UInt32 _ControlID)
 std::string Control::Narrate()
 {
 	std::ostringstream vReturning;
-	vReturning << "dxScancode:" << dxScancode << "\n" << TM_CommonCPP::Narrator::Indent() <<"cModIndices:" << TM_CommonCPP::Narrate(cModIndices_Disables);
+	vReturning << "Control..";
+	TMC::Narrator::iIndent++;
+	vReturning << "\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode << "\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
+	TMC::Narrator::iIndent--;
 	return vReturning.str();
 }
 

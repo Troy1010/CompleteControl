@@ -3,7 +3,7 @@
 #include "TM_CommonCPP/Narrate.h"
 #include "Control.h"
 
-namespace TM_CommonCPP
+namespace TMC
 {
 	std::string Narrate(std::vector<Control> Controls);
 	std::string Narrate(std::set<UInt8> cSet);

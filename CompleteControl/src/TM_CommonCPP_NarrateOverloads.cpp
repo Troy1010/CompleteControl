@@ -3,20 +3,19 @@
 #include "Control.h"
 #include <sstream>
 
-namespace TM_CommonCPP
+namespace TMC
 {
 	std::string Narrate(std::vector<Control> Controls)
 	{
 		std::ostringstream vReturning;
-		int i = 0;
-		TM_CommonCPP::Narrator::iIndent++;
-		for each (Control vControl in Controls)
+		TMC::Narrator::iIndent++;
+		vReturning << "Collection(Count:" << Narrate((int)Controls.size()) << ")..";
+		for (Control vControl : Controls)
 		{
-			vReturning << "\n" << TM_CommonCPP::Narrator::Indent() << i << ":" <<vControl.Narrate() ;
-			i++;
+			vReturning << "\n" << TMC::Narrator::Indent() << vControl.Narrate();
 		}
-		TM_CommonCPP::Narrator::iIndent--;
-		return "NarrateControls(Count:" + Narrate(i) + ").." + vReturning.str();
+		TMC::Narrator::iIndent--;
+		return vReturning.str();
 	}
 	std::string Narrate(std::set<UInt8> cSet)
 	{
