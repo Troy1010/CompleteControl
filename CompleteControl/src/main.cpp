@@ -1,3 +1,6 @@
+#pragma region Settings
+constexpr auto DebugThreshold = 5;
+#pragma endregion
 #pragma region Includes
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
@@ -22,16 +25,6 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
 #pragma endregion
-#pragma region Macros
-//### FnDebug
-constexpr auto DebugThreshold = 5;
-void FnDebug(std::string sString)
-{
-	Console_Print(sString.c_str());
-	_MESSAGE(sString.c_str());
-}
-#define CCDebug(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
-#pragma endregion
 #pragma region Globals
 IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
@@ -42,6 +35,28 @@ static std::vector<Control> Controls;
 
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;
+bool bOblivionLoaded = false;
+#pragma endregion
+#pragma region Macros
+//### CCDebug
+void FnDebug(std::string sString)
+{
+	if (!bOblivionLoaded) // Trying to print to console without Oblivion loaded causes CTD.
+	{
+		//do nothing
+	}
+	else if (sString.length() < 1000) //1000 might not be the exact limit. Exceeding limit causes CTD.
+	{
+		Console_Print(sString.c_str());
+	}
+	else
+	{
+		Console_Print(sString.substr(0, 1000).c_str());
+		Console_Print("<MessageTooLarge>");
+	}
+	_MESSAGE(sString.c_str());
+}
+#define CCDebug(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
 #pragma endregion
 #pragma region CopyPasted
 // Copy-pasted from obse's Control_Input
@@ -85,7 +100,7 @@ auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 	*vNumArgs = 1;
 	pData[2] = iDataTypeCode;
 	double* fArgsVal = (double*)&pData[3];
-	*fArgsVal = 2.0;
+	*fArgsVal = vArg;
 	UInt32 opOffsetPtr2 = 0;
 	vCmdExecute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr2);
 	delete[] pData;
@@ -118,10 +133,12 @@ auto InitializeControls(std::vector<Control> &Controls)
 {
 	CCDebug(5,"InitializeControlsInner`Open");
 	//Register Controls
-	Controls.push_back(Control(ExecuteCommand(GetControl, 17), Control::Forward));
-	//CCDebug(5,"Startup test:" + TM_CommonCPP::Narrate(ExecuteCommand(GetControl, 17)));
-	//pBlankScript = (Script*)CreateFormInstance(13);
-	//pBlankScriptEventList = (*pBlankScript).CreateEventList();
+	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
+	{
+		CCDebug(5, "InitializeControlsInner`Pushing back. i:" + TMC::Narrate(i) + " dxScancode:" + TMC::Narrate(ExecuteCommand(GetControl, i)));
+		Controls.push_back(Control(ExecuteCommand(GetControl, i), i));
+	}
+	CCDebug(5,"InitializeControlsInner`Controls:" + TMC::Narrate(Controls));
 	CCDebug(5,"InitializeControlsInner`Close");
 }
 #pragma endregion
@@ -134,15 +151,16 @@ bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
-//### InitializeControls
-bool Cmd_InitializeControls_Execute(COMMAND_ARGS)
+//### HandleOblivionLoaded
+bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
-	CCDebug(5,"InitializeControls`Open");
+	CCDebug(5,"HandleOblivionLoaded`Open");
+	bOblivionLoaded = true;
 	InitializeControls(Controls);
-	CCDebug(5,"InitializeControls`Close");
+	CCDebug(5,"HandleOblivionLoaded`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(InitializeControls, "InitializeControls command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
@@ -158,7 +176,7 @@ bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * th
 	const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
 	ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
 	delete[] fArgs;
-	CCDebug(5,"TestCeil`opcode:" + TM_CommonCPP::Narrate(ceil->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
+	CCDebug(5,"TestCeil`opcode:" + TMC::Narrate(ceil->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
 	CCDebug(5,"TestCeil`Close");
 	return true;
 }
@@ -169,22 +187,22 @@ bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 	CCDebug(5,"BasicRuntimeTests`Open");
 	//*result = 0; //Do I need this?
 	int iInt = 5;
-	CCDebug(5,"5:" + TM_CommonCPP::Narrate(iInt));
+	CCDebug(5,"5:" + TMC::Narrate(iInt));
 	UInt8 vUInt8 = 3;
-	CCDebug(5,"3:" + TM_CommonCPP::Narrate(vUInt8));
+	CCDebug(5,"3:" + TMC::Narrate(vUInt8));
 	std::set<UInt8> cSet;
 	cSet.insert(65);
 	cSet.insert(64);
 	cSet.insert(63);
-	CCDebug(5,"Set:" + TM_CommonCPP::Narrate(cSet));
-	CCDebug(5,"ActualControls:" + TM_CommonCPP::Narrate(Controls));
+	CCDebug(5,"Set:" + TMC::Narrate(cSet));
+	CCDebug(5,"ActualControls:" + TMC::Narrate(Controls));
 	//static std::vector<Control> Controls_Fake;
 	//Controls_Fake.push_back(Control(15,UInt32(4)));
 	//for (Control &vControl : Controls_Fake)
 	//{
 	//	vControl.cModIndices_Disables.insert(222);
 	//}
-	//CCDebug(5,"FakeControls:" + TM_CommonCPP::Narrate(Controls_Fake));
+	//CCDebug(5,"FakeControls:" + TMC::Narrate(Controls_Fake));
 	CCDebug(5,"BasicRuntimeTests`Close");
 	return true;
 }
@@ -196,8 +214,8 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	double endResult;
 	endResult = ExecuteCommand(GetControl,2,PASS_COMMAND_ARGS);
 	// Report
-	//CCDebug(5,"TestGetControlDirectly`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
-	CCDebug(5,"TestGetControlDirectly`endResult:" + TM_CommonCPP::Narrate(endResult));
+	//CCDebug(5,"TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	CCDebug(5,"TestGetControlDirectly`endResult:" + TMC::Narrate(endResult));
 	CCDebug(5,"TestGetControlDirectly`Close");
 	return true;
 }
@@ -209,8 +227,8 @@ bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TES
 	double endResult;
 	endResult = ExecuteCommand(GetControl, 2);
 	// Report
-	//CCDebug(5,"TestGetControlDirectly2`opcode:" + TM_CommonCPP::Narrate(GetControl->opcode) + " *result:" + TM_CommonCPP::Narrate(*result) + " result:" + TM_CommonCPP::Narrate(result));
-	CCDebug(5,"TestGetControlDirectly2`endResult:" + TM_CommonCPP::Narrate(endResult));
+	//CCDebug(5,"TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	CCDebug(5,"TestGetControlDirectly2`endResult:" + TMC::Narrate(endResult));
 	CCDebug(5,"TestGetControlDirectly2`Close");
 	return true;
 }
@@ -256,7 +274,7 @@ bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 		return false;
 	}
 	//Report
-	CCDebug(5,"rTemp:" + TM_CommonCPP::Narrate(rTemp->refID));
+	CCDebug(5,"rTemp:" + TMC::Narrate(rTemp->refID));
 	//Return
 	*result = rTemp->refID;
 	CCDebug(5,"GenerateEnum`Close");
@@ -277,7 +295,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	}
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	CCDebug(5,"Cmd_DisableKey_Replacing_Execute`iModIndex:" + TM_CommonCPP::Narrate(iModIndex));
+	CCDebug(5,"Cmd_DisableKey_Replacing_Execute`iModIndex:" + TMC::Narrate(iModIndex));
 	//-Register iModIndex in vControl.cModIndices
 	for (Control &vControl : Controls)
 	{
@@ -290,7 +308,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	//---DisableKey
 	//-Execute Original DisableKey
 	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
-	CCDebug(5,"Controls:" + TM_CommonCPP::Narrate(Controls));
+	CCDebug(5,"Controls:" + TMC::Narrate(Controls));
 	CCDebug(5,"Cmd_DisableKey_Replacing_Execute`Close");
 	return true;
 }
@@ -329,7 +347,7 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	if (bDoEnableKey) {
 		EnableKey_OriginalExecute(PASS_COMMAND_ARGS);
 	}
-	CCDebug(5,TM_CommonCPP::Narrate(Controls));
+	CCDebug(5,TMC::Narrate(Controls));
 	CCDebug(5,"Cmd_EnableKey_Replacing_Execute`Close");
 	return true;
 }
@@ -339,7 +357,7 @@ DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Ena
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	_MESSAGE("query");
+	CCDebug(5,"Query`Open");
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
@@ -362,11 +380,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		//return false;
 	}
 
+	CCDebug(5, "Query`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	_MESSAGE("load");
+	CCDebug(5, "Load`Open");
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
@@ -376,7 +395,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestDisableKeyCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestCeil);
-	obse->RegisterCommand(&kCommandInfo_InitializeControls);
+	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 
 	if (!obse->isEditor)
 	{
@@ -397,6 +416,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		//DisableKey_CmdInfo->execute();
 	}
 
+	CCDebug(5, "Load`Close");
 	return true;
 }
 };

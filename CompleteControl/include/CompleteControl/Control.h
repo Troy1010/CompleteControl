@@ -7,10 +7,10 @@
 class Control
 {
 public:
-	//
+	static const int VanillaControlID_Count = 29;
 	enum VanillaControlID
 	{
-		Forward = 0,
+		Forward,
 		Back,
 		Left,
 		Right,
