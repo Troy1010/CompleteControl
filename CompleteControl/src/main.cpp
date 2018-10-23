@@ -250,7 +250,7 @@ static void ResetData(void)
 	g_strData.clear();
 }
 
-static void ExamplePlugin_SaveCallback(void * reserved)
+static void Handler_Save(void * reserved)
 {
 	// write out the string
 	g_serialization->OpenRecord('STR ', 0);
@@ -260,7 +260,7 @@ static void ExamplePlugin_SaveCallback(void * reserved)
 	g_serialization->WriteRecord('ASDF', 1234, "hello world", 11);
 }
 
-static void ExamplePlugin_LoadCallback(void * reserved)
+static void Handler_Load(void * reserved)
 {
 	UInt32	type, version, length;
 
@@ -270,7 +270,7 @@ static void ExamplePlugin_LoadCallback(void * reserved)
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		CCDebug(5, "record %08X (%.4s) %08X %08X", type, &type, version, length);
+		CCDebug(4, "record %08X (%.4s) %08X %08X", type, &type, version, length);
 		_MESSAGE("record %08X (%.4s) %08X %08X", type, &type, version, length);
 
 		switch (type)
@@ -279,7 +279,7 @@ static void ExamplePlugin_LoadCallback(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(5, "got string %s", buf);
+			CCDebug(4, "got string %s", buf);
 			_MESSAGE("got string %s", buf);
 
 			g_strData = buf;
@@ -289,7 +289,7 @@ static void ExamplePlugin_LoadCallback(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(5, "ASDF chunk = %s", buf);
+			CCDebug(4, "ASDF chunk = %s", buf);
 			_MESSAGE("ASDF chunk = %s", buf);
 			break;
 		default:
@@ -298,14 +298,14 @@ static void ExamplePlugin_LoadCallback(void * reserved)
 	}
 }
 
-static void ExamplePlugin_PreloadCallback(void * reserved)
+static void Handler_Preload(void * reserved)
 {
 	_MESSAGE("Preload Callback start");
-	ExamplePlugin_LoadCallback(reserved);
+	Handler_Load(reserved);
 	_MESSAGE("Preload Callback finished");
 }
 
-static void ExamplePlugin_NewGameCallback(void * reserved)
+static void Handler_NewGame(void * reserved)
 {
 	ResetData();
 }
@@ -484,9 +484,9 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		_ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
 		return false;
 	}
-	g_serialization->SetSaveCallback(g_pluginHandle, ExamplePlugin_SaveCallback);
-	g_serialization->SetLoadCallback(g_pluginHandle, ExamplePlugin_LoadCallback);
-	g_serialization->SetNewGameCallback(g_pluginHandle, ExamplePlugin_NewGameCallback);
+	g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
+	g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
+	g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
