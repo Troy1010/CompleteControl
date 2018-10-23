@@ -473,20 +473,23 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	CCDebug(4, "Load`Open");
 	g_pluginHandle = obse->GetPluginHandle();
-	g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
-	if (!g_serialization)
+	if (!obse->isEditor)
 	{
-		_ERROR("serialization interface not found");
-		return false;
+		g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
+		if (!g_serialization)
+		{
+			_ERROR("serialization interface not found");
+			return false;
+		}
+		if (g_serialization->version < OBSESerializationInterface::kVersion)
+		{
+			_ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
+			return false;
+		}
+		g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
+		g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
+		g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
 	}
-	if (g_serialization->version < OBSESerializationInterface::kVersion)
-	{
-		_ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
-		return false;
-	}
-	g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
-	g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
-	g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
