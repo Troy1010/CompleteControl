@@ -1,5 +1,5 @@
 #pragma region Settings
-constexpr auto DebugThreshold = 5;
+constexpr auto DebugThreshold = 4;
 #pragma endregion
 #pragma region Includes
 #include "obse/PluginAPI.h"
@@ -471,7 +471,7 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	CCDebug(5, "Load`Open");
+	CCDebug(4, "Load`Open");
 	g_pluginHandle = obse->GetPluginHandle();
 	g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
 	if (!g_serialization)
@@ -518,7 +518,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		//DisableKey_CmdInfo->execute();
 	}
 
-	CCDebug(5, "Load`Close");
+	CCDebug(4, "Load`Close");
 	return true;
 }
 };
