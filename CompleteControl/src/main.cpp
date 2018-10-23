@@ -213,7 +213,6 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	}
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//---EnableKey
 	//-Unregister disable. Determine bDoEnableKey by checking if any disables are registered for our dxScancode
 	bool bDoEnableKey = true;
 	for (Control &vControl : Controls)
@@ -228,7 +227,7 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 			break;
 		}
 	}
-	//Execute original EnableKey
+	//---Execute original EnableKey
 	if (bDoEnableKey) {
 		CCDebug(5, "Cmd_EnableKey_Replacing_Execute`EnablingKey");
 		EnableKey_OriginalExecute(PASS_COMMAND_ARGS);
