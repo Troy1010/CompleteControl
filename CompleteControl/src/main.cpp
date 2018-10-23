@@ -36,6 +36,8 @@ static std::vector<Control> Controls;
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;
 bool bOblivionLoaded = false;
+OBSESerializationInterface	* g_serialization = NULL;
+PluginHandle				g_pluginHandle = kPluginHandle_Invalid;
 #pragma endregion
 #pragma region Macros
 #define CCDebug(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
@@ -241,6 +243,73 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 }
 DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
 #pragma endregion
+#pragma region SerializationHandlers
+std::string	g_strData;
+static void ResetData(void)
+{
+	g_strData.clear();
+}
+
+static void ExamplePlugin_SaveCallback(void * reserved)
+{
+	// write out the string
+	g_serialization->OpenRecord('STR ', 0);
+	g_serialization->WriteRecordData(g_strData.c_str(), g_strData.length());
+
+	// write out some other data
+	g_serialization->WriteRecord('ASDF', 1234, "hello world", 11);
+}
+
+static void ExamplePlugin_LoadCallback(void * reserved)
+{
+	UInt32	type, version, length;
+
+	ResetData();
+
+	char	buf[512];
+
+	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
+	{
+		CCDebug(5, "record %08X (%.4s) %08X %08X", type, &type, version, length);
+		_MESSAGE("record %08X (%.4s) %08X %08X", type, &type, version, length);
+
+		switch (type)
+		{
+		case 'STR ':
+			g_serialization->ReadRecordData(buf, length);
+			buf[length] = 0;
+
+			CCDebug(5, "got string %s", buf);
+			_MESSAGE("got string %s", buf);
+
+			g_strData = buf;
+			break;
+
+		case 'ASDF':
+			g_serialization->ReadRecordData(buf, length);
+			buf[length] = 0;
+
+			CCDebug(5, "ASDF chunk = %s", buf);
+			_MESSAGE("ASDF chunk = %s", buf);
+			break;
+		default:
+			_MESSAGE("Unknown chunk type $08X", type);
+		}
+	}
+}
+
+static void ExamplePlugin_PreloadCallback(void * reserved)
+{
+	_MESSAGE("Preload Callback start");
+	ExamplePlugin_LoadCallback(reserved);
+	_MESSAGE("Preload Callback finished");
+}
+
+static void ExamplePlugin_NewGameCallback(void * reserved)
+{
+	ResetData();
+}
+#pragma endregion
 #pragma region Tests
 //### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS)
@@ -403,6 +472,21 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	CCDebug(5, "Load`Open");
+	g_pluginHandle = obse->GetPluginHandle();
+	g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
+	if (!g_serialization)
+	{
+		_ERROR("serialization interface not found");
+		return false;
+	}
+	if (g_serialization->version < OBSESerializationInterface::kVersion)
+	{
+		_ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
+		return false;
+	}
+	g_serialization->SetSaveCallback(g_pluginHandle, ExamplePlugin_SaveCallback);
+	g_serialization->SetLoadCallback(g_pluginHandle, ExamplePlugin_LoadCallback);
+	g_serialization->SetNewGameCallback(g_pluginHandle, ExamplePlugin_NewGameCallback);
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
