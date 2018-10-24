@@ -3,6 +3,7 @@
 #include "TM_CommonCPP/Misc.h"
 #include "TM_CommonCPP/Narrate.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
+#include <sstream>
 
 Control::Control(int _dxScancode, UInt32 _ControlID)
 {
@@ -31,7 +32,7 @@ std::string Control::ToString()
 	ss << ",";
 	for (UInt8 iInt : cModIndices_Disables)
 	{
-		ss << ":" << iInt;
+		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
 	}
 	ss << "," << ControlID;
 	return ss.str();
