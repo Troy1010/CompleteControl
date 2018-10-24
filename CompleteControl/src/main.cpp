@@ -21,6 +21,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include <string>
 #include "TM_CommonCPP/Misc.h"
 #include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP/StdStringFromFormatString.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
@@ -253,11 +254,13 @@ static void ResetData(void)
 static void Handler_Save(void * reserved)
 {
 	// write out the string
-	g_serialization->OpenRecord('STR ', 0);
-	g_serialization->WriteRecordData(g_strData.c_str(), g_strData.length());
+	//g_serialization->OpenRecord('STR ', 0);
+	//g_serialization->WriteRecordData(g_strData.c_str(), g_strData.length());
 
 	// write out some other data
 	g_serialization->WriteRecord('ASDF', 1234, "hello world", 11);
+
+	//-Write Control
 }
 
 static void Handler_Load(void * reserved)
@@ -270,8 +273,7 @@ static void Handler_Load(void * reserved)
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		CCDebug(4, "record %08X (%.4s) %08X %08X", type, &type, version, length);
-		_MESSAGE("record %08X (%.4s) %08X %08X", type, &type, version, length);
+		CCDebug(4, StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
 
 		switch (type)
 		{
@@ -279,9 +281,7 @@ static void Handler_Load(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(4, "got string %s", buf);
-			_MESSAGE("got string %s", buf);
-
+			CCDebug(4, StdStringFromFormatString("got string %s", buf));
 			g_strData = buf;
 			break;
 
@@ -289,8 +289,7 @@ static void Handler_Load(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(4, "ASDF chunk = %s", buf);
-			_MESSAGE("ASDF chunk = %s", buf);
+			CCDebug(4, StdStringFromFormatString("ASDF chunk = %s", buf));
 			break;
 		default:
 			_MESSAGE("Unknown chunk type $08X", type);
