@@ -261,6 +261,9 @@ static void Handler_Save(void * reserved)
 	g_serialization->WriteRecord('ASDF', 1234, "hello world", 11);
 
 	//-Write Control
+	g_serialization->OpenRecord('CTRL', 0);
+	Control vControl = Controls[0];
+	g_serialization->WriteRecordData(&vControl, sizeof(vControl));
 }
 
 static void Handler_Load(void * reserved)
@@ -310,6 +313,20 @@ static void Handler_NewGame(void * reserved)
 }
 #pragma endregion
 #pragma region Tests
+//### TestControlToString
+bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
+{
+	CCDebug(4, "TestControlToString`Open");
+	std::string sControl = Controls[0].ToString();
+	CCDebug(4, "sControl:" + sControl);
+	std::vector<std::string> cStrings = SplitString(sControl, ",");
+	CCDebug(4, "cStrings:" + TMC::Narrate(cStrings));
+	Control vControl = Control(sControl);
+	CCDebug(4, "vControl:" + vControl.Narrate());
+	CCDebug(4, "TestControlToString`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, NULL)
 //### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS)
 {
@@ -500,6 +517,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_TestCeil);
 	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_PrintControls);
+	obse->RegisterCommand(&kCommandInfo_TestControlToString);
 
 	if (!obse->isEditor)
 	{

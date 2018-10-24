@@ -48,11 +48,14 @@ public:
 	};
 	//---Constructors
 	Control(int _dxScancode, UInt32 _ControlID);
+	Control(std::string sString);
 	~Control(void);
+	//---
+	std::string ToString();
+	std::string Narrate();
 	//---Members
 	int dxScancode;
 	std::set<UInt8> cModIndices_Disables;
-	std::string Narrate();
 	UInt32 ControlID;
 
 	std::set<UInt8> cModIndices_UnreportedDisables;
