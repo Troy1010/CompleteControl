@@ -5,6 +5,10 @@
 
 namespace TMC
 {
+	std::string Narrate(Control Control)
+	{
+		return Control.Narrate();
+	}
 	std::string Narrate(std::vector<Control> Controls)
 	{
 		std::ostringstream vReturning;
@@ -13,7 +17,7 @@ namespace TMC
 		int i = 0;
 		for (Control vControl : Controls)
 		{
-			vReturning << "\n" << TMC::Narrator::Indent() << i << ":" << vControl.Narrate();
+			vReturning << "\n" << TMC::Narrator::Indent() << i << ":" << TMC::Narrate(vControl);
 			i++;
 		}
 		TMC::Narrator::iIndent--;
