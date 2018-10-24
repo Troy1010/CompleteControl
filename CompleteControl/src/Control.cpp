@@ -3,7 +3,6 @@
 #include "TM_CommonCPP/Misc.h"
 #include "TM_CommonCPP/Narrate.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
-#include <sstream>
 
 Control::Control(int _dxScancode, UInt32 _ControlID)
 {
@@ -17,14 +16,12 @@ Control::Control(std::string sString)
 	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");
 	dxScancode = TMC::IntFromString(cStrings[0]);
 	cModIndices_Disables = std::set<UInt8>();
-	UInt8 iTemp = 0;
-	for (std::string sString : TMC::SplitString(cStrings[1], ":"))
+	for (std::string s : TMC::SplitString(cStrings[1], ":"))
 	{
-		if (sString.empty()) continue;
-		std::istringstream(sString) >> iTemp;
-		cModIndices_Disables.insert(iTemp);
+		if (s.empty()) continue;
+		cModIndices_Disables.insert(TMC::IntFromString(s));
 	}
-	std::istringstream(cStrings[2]) >> ControlID;
+	ControlID = TMC::IntFromString(cStrings[2]);
 }
 
 std::string Control::ToString()
