@@ -25,6 +25,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
+#include <sstream>
 #pragma endregion
 #pragma region Globals
 IDebugLog		gLog("CompleteControl.log"); //Log
@@ -32,7 +33,7 @@ Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey 
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
 const CommandInfo* DisableKey_CmdInfo; //DisableKey command
 const CommandInfo* GetControl; //GetControl command
-static std::vector<Control> Controls;
+std::vector<Control> Controls;
 
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;
@@ -73,6 +74,27 @@ static void GetControlMap()
 static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
 #pragma endregion
 #pragma region HelperFunctions
+//### StringizeControls
+std::string StringizeControls(std::vector<Control> cControls)
+{
+	std::stringstream ss;
+	for (auto vControl : cControls)
+	{
+		ss << "`" << vControl.ToString();
+	}
+	return ss.str();
+}
+//### ControlsFromString
+std::vector<Control> ControlsFromString(std::string sBigString)
+{
+	std::vector<Control> cReturningControls;
+	for (auto s : TMC::SplitString(sBigString, "`"))
+	{
+		if (s.empty()) { continue; }
+		cReturningControls.push_back(Control(s));
+	}
+	return cReturningControls;
+}
 //### SafeConsolePrint
 void SafeConsolePrint(std::string sString)
 {
@@ -253,17 +275,16 @@ static void ResetData(void)
 
 static void Handler_Save(void * reserved)
 {
-	// write out the string
-	//g_serialization->OpenRecord('STR ', 0);
-	//g_serialization->WriteRecordData(g_strData.c_str(), g_strData.length());
-
-	// write out some other data
-	g_serialization->WriteRecord('ASDF', 1234, "hello world", 11);
-
 	//-Write Control
-	g_serialization->OpenRecord('CTRL', 0);
-	Control vControl = Controls[0];
-	g_serialization->WriteRecordData(&vControl, sizeof(vControl));
+	std::string sControls = StringizeControls(Controls);
+	if (sControls.size() > 1024) 
+	{
+		CCDebug(2,"Handler_Save`ERROR`sControls.size > 1024");
+	}
+	else
+	{
+		g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
+	}
 }
 
 static void Handler_Load(void * reserved)
@@ -272,7 +293,7 @@ static void Handler_Load(void * reserved)
 
 	ResetData();
 
-	char	buf[512];
+	char	buf[1024]; //512 was the old #
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
@@ -294,17 +315,23 @@ static void Handler_Load(void * reserved)
 
 			CCDebug(4, TMC::StdStringFromFormatString("ASDF chunk = %s", buf));
 			break;
+		case 'CTRL':
+			g_serialization->ReadRecordData(buf, length);
+			buf[length] = 0;
+			CCDebug(4, "buf:" + TMC::Narrate(buf));
+			Controls = ControlsFromString(std::string(buf));
+			CCDebug(4, "Controls:" + TMC::Narrate(Controls));
 		default:
-			_MESSAGE("Unknown chunk type $08X", type);
+			CCDebug(4, TMC::StdStringFromFormatString("Unknown chunk type $08X", type));
 		}
 	}
 }
 
 static void Handler_Preload(void * reserved)
 {
-	_MESSAGE("Preload Callback start");
+	CCDebug(4, "Preload Callback start");
 	Handler_Load(reserved);
-	_MESSAGE("Preload Callback finished");
+	CCDebug(4, "Preload Callback finished");
 }
 
 static void Handler_NewGame(void * reserved)
@@ -313,6 +340,19 @@ static void Handler_NewGame(void * reserved)
 }
 #pragma endregion
 #pragma region Tests
+//### TestControlsFromString
+bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
+{
+	CCDebug(4, "TestControlsFromString`Open");
+	CCDebug(4, "Controls:" + TMC::Narrate(Controls));
+	std::string sControls = StringizeControls(Controls);
+	CCDebug(4, "sControls:" + sControls);
+	std::vector<Control> cReturningControls = ControlsFromString(sControls);
+	CCDebug(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
+	CCDebug(4, "TestControlsFromString`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, NULL)
 //### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
@@ -518,6 +558,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_PrintControls);
 	obse->RegisterCommand(&kCommandInfo_TestControlToString);
+	obse->RegisterCommand(&kCommandInfo_TestControlsFromString);
 
 	if (!obse->isEditor)
 	{
