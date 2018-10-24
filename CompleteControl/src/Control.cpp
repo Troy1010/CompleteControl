@@ -14,11 +14,11 @@ Control::Control(int _dxScancode, UInt32 _ControlID)
 
 Control::Control(std::string sString)
 {
-	std::vector<std::string> cStrings = SplitString(sString, ",");
-	dxScancode = IntFromString(cStrings[0]);
+	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");
+	dxScancode = TMC::IntFromString(cStrings[0]);
 	cModIndices_Disables = std::set<UInt8>();
 	UInt8 iTemp = 0;
-	for (std::string sString : SplitString(cStrings[1], ":"))
+	for (std::string sString : TMC::SplitString(cStrings[1], ":"))
 	{
 		if (sString.empty()) continue;
 		std::istringstream(sString) >> iTemp;

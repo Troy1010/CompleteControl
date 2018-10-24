@@ -276,7 +276,7 @@ static void Handler_Load(void * reserved)
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		CCDebug(4, StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
+		CCDebug(4, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
 
 		switch (type)
 		{
@@ -284,7 +284,7 @@ static void Handler_Load(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(4, StdStringFromFormatString("got string %s", buf));
+			CCDebug(4, TMC::StdStringFromFormatString("got string %s", buf));
 			g_strData = buf;
 			break;
 
@@ -292,7 +292,7 @@ static void Handler_Load(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 
-			CCDebug(4, StdStringFromFormatString("ASDF chunk = %s", buf));
+			CCDebug(4, TMC::StdStringFromFormatString("ASDF chunk = %s", buf));
 			break;
 		default:
 			_MESSAGE("Unknown chunk type $08X", type);
@@ -319,7 +319,7 @@ bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 	CCDebug(4, "TestControlToString`Open");
 	std::string sControl = Controls[0].ToString();
 	CCDebug(4, "sControl:" + sControl);
-	std::vector<std::string> cStrings = SplitString(sControl, ",");
+	std::vector<std::string> cStrings = TMC::SplitString(sControl, ",");
 	CCDebug(4, "cStrings:" + TMC::Narrate(cStrings));
 	Control vControl = Control(sControl);
 	CCDebug(4, "vControl:" + vControl.Narrate());
