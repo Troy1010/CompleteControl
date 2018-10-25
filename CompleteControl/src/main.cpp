@@ -42,7 +42,7 @@ OBSESerializationInterface	* g_serialization = NULL;
 PluginHandle				g_pluginHandle = kPluginHandle_Invalid;
 #pragma endregion
 #pragma region Macros
-#define CCDebug(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
+#define DebugCC(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
 #pragma endregion
 #pragma region CopyPasted
 // Copy-pasted from obse's Control_Input
@@ -144,7 +144,7 @@ auto ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
 	UInt32 arg3 = 0;
 	if (!pBlankScript)
 	{
-		CCDebug(6, "ExecuteCommand`pBlankScript INIT");
+		DebugCC(6, "ExecuteCommand`pBlankScript INIT");
 		pBlankScript = (Script*)CreateFormInstance(13);
 		pBlankScriptEventList = (*pBlankScript).CreateEventList();
 	}
@@ -165,14 +165,14 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 //### InitializeControls
 auto InitializeControls()
 {
-	CCDebug(5,"InitializeControls`Open");
+	DebugCC(5,"InitializeControls`Open");
 	std::vector<Control> cControls;
 	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
 	{
 		cControls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	CCDebug(5, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
-	CCDebug(5,"InitializeControls`Close");
+	DebugCC(5, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
+	DebugCC(5,"InitializeControls`Close");
 	return cControls;
 }
 #pragma endregion
@@ -180,31 +180,31 @@ auto InitializeControls()
 //### CommandTemplate
 bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 {
-	CCDebug(5,"CommandTemplate`Open");
-	CCDebug(5,"CommandTemplate`Close");
+	DebugCC(5,"CommandTemplate`Open");
+	DebugCC(5,"CommandTemplate`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
 //### HandleOblivionLoaded
 bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
-	CCDebug(5,"HandleOblivionLoaded`Open");
+	DebugCC(5,"HandleOblivionLoaded`Open");
 	bOblivionLoaded = true;
 	//Controls = InitializeControls();
-	CCDebug(5,"HandleOblivionLoaded`Close");
+	DebugCC(5,"HandleOblivionLoaded`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
 //### DisableKey_Replacing
 bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	CCDebug(5,"Cmd_DisableKey_Replacing_Execute`Open");
+	DebugCC(5,"Cmd_DisableKey_Replacing_Execute`Open");
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	//---Register in Controls
 	//-Get dxScancode
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
-		CCDebug(5,"Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
+		DebugCC(5,"Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
 		return false;
 	}
 	//-Get iModIndex
@@ -221,20 +221,20 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	//---DisableKey
 	//-Execute Original DisableKey
 	DisableKey_OriginalExecute(PASS_COMMAND_ARGS);
-	CCDebug(5,"Cmd_DisableKey_Replacing_Execute`Close");
+	DebugCC(5,"Cmd_DisableKey_Replacing_Execute`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
 //### EnableKey_Replacing
 bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	CCDebug(5,"Cmd_EnableKey_Replacing_Execute`Open");
+	DebugCC(5,"Cmd_EnableKey_Replacing_Execute`Open");
 	UInt32	dxScancode = 0;
 	UInt8	iModIndex = 0;
 	//---Register in Controls
 	//-Get dxScancode
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) {
-		CCDebug(5,"Cmd_EnableKey_Replacing_Execute`Failed arg extraction");
+		DebugCC(5,"Cmd_EnableKey_Replacing_Execute`Failed arg extraction");
 		return false;
 	}
 	//-Get iModIndex
@@ -255,14 +255,14 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	}
 	//---Execute original EnableKey
 	if (bDoEnableKey) {
-		CCDebug(5, "Cmd_EnableKey_Replacing_Execute`EnablingKey");
+		DebugCC(5, "Cmd_EnableKey_Replacing_Execute`EnablingKey");
 		EnableKey_OriginalExecute(PASS_COMMAND_ARGS);
 	}
 	else
 	{
-		CCDebug(5, "Cmd_EnableKey_Replacing_Execute`Neglecting to enable key.");
+		DebugCC(5, "Cmd_EnableKey_Replacing_Execute`Neglecting to enable key.");
 	}
-	CCDebug(5,"Cmd_EnableKey_Replacing_Execute`Close");
+	DebugCC(5,"Cmd_EnableKey_Replacing_Execute`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
@@ -279,31 +279,35 @@ static void Handler_Load(void * reserved)
 {
 	UInt32	type, version, length;
 
-	char	buf[1024]; //old value:512 
+	char* buf;
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		CCDebug(4, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
+		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
 
 		switch (type)
 		{
 		case 'CTRL':
+			buf = new char[length+1]; //c strings require a null at the end.
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
-			CCDebug(4, "buf:" + TMC::Narrate(buf));
+			DebugCC(5, "buf:" + TMC::Narrate(buf));
 			Controls = ControlsFromString(std::string(buf));
-			CCDebug(4, "Controls:" + TMC::Narrate(Controls));
+			DebugCC(5, "Controls:" + TMC::Narrate(Controls));
+			delete buf;
+			break;
 		default:
-			CCDebug(4, TMC::StdStringFromFormatString("Unknown chunk type $08X", type));
+
+			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
 }
 
 static void Handler_Preload(void * reserved)
 {
-	CCDebug(4, "Preload Callback start");
+	DebugCC(4, "Preload Callback start");
 	Handler_Load(reserved);
-	CCDebug(4, "Preload Callback finished");
+	DebugCC(4, "Preload Callback finished");
 }
 
 static void Handler_NewGame(void * reserved)
@@ -315,41 +319,41 @@ static void Handler_NewGame(void * reserved)
 //### TestControlsFromString
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {
-	CCDebug(4, "TestControlsFromString`Open");
-	CCDebug(4, "Controls:" + TMC::Narrate(Controls));
+	DebugCC(4, "TestControlsFromString`Open");
+	DebugCC(4, "Controls:" + TMC::Narrate(Controls));
 	std::string sControls = StringizeControls(Controls);
-	CCDebug(4, "sControls:" + sControls);
+	DebugCC(4, "sControls:" + sControls);
 	std::vector<Control> cReturningControls = ControlsFromString(sControls);
-	CCDebug(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
-	CCDebug(4, "TestControlsFromString`Close");
+	DebugCC(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
+	DebugCC(4, "TestControlsFromString`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, NULL)
 //### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
-	CCDebug(4, "TestControlToString`Open");
+	DebugCC(4, "TestControlToString`Open");
 	std::string sControl = Controls[0].ToString();
-	CCDebug(4, "sControl:" + sControl);
+	DebugCC(4, "sControl:" + sControl);
 	std::vector<std::string> cStrings = TMC::SplitString(sControl, ",");
-	CCDebug(4, "cStrings:" + TMC::Narrate(cStrings));
+	DebugCC(4, "cStrings:" + TMC::Narrate(cStrings));
 	Control vControl = Control(sControl);
-	CCDebug(4, "vControl:" + vControl.Narrate());
-	CCDebug(4, "TestControlToString`Close");
+	DebugCC(4, "vControl:" + vControl.Narrate());
+	DebugCC(4, "TestControlToString`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, NULL)
 //### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS)
 {
-	CCDebug(5, "PrintControls`Controls:" + TMC::Narrate(Controls));
+	DebugCC(5, "PrintControls`Controls:" + TMC::Narrate(Controls));
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(PrintControls, "PrintControls command", 0, 0, NULL)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	CCDebug(5, "TestCeil`Open");
+	DebugCC(5, "TestCeil`Open");
 	*result = 0;
 	UInt8* fArgs = new UInt8[3 + sizeof(double)];
 	UInt16* fArgsNumArgs = (UInt16*)fArgs;
@@ -361,67 +365,67 @@ bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * th
 	const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
 	ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
 	delete[] fArgs;
-	CCDebug(5, "TestCeil`opcode:" + TMC::Narrate(ceil->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
-	CCDebug(5, "TestCeil`Close");
+	DebugCC(5, "TestCeil`opcode:" + TMC::Narrate(ceil->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	DebugCC(5, "TestCeil`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, NULL)
 //### BasicRuntimeTests
 bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 {
-	CCDebug(5, "BasicRuntimeTests`Open");
+	DebugCC(5, "BasicRuntimeTests`Open");
 	//*result = 0; //Do I need this?
 	int iInt = 5;
-	CCDebug(5, "5:" + TMC::Narrate(iInt));
+	DebugCC(5, "5:" + TMC::Narrate(iInt));
 	UInt8 vUInt8 = 3;
-	CCDebug(5, "3:" + TMC::Narrate(vUInt8));
+	DebugCC(5, "3:" + TMC::Narrate(vUInt8));
 	std::set<UInt8> cSet;
 	cSet.insert(65);
 	cSet.insert(64);
 	cSet.insert(63);
-	CCDebug(5, "Set:" + TMC::Narrate(cSet));
-	CCDebug(5, "ActualControls:" + TMC::Narrate(Controls));
+	DebugCC(5, "Set:" + TMC::Narrate(cSet));
+	DebugCC(5, "ActualControls:" + TMC::Narrate(Controls));
 	//static std::vector<Control> Controls_Fake;
 	//Controls_Fake.push_back(Control(15,UInt32(4)));
 	//for (Control &vControl : Controls_Fake)
 	//{
 	//	vControl.cModIndices_Disables.insert(222);
 	//}
-	//CCDebug(5,"FakeControls:" + TMC::Narrate(Controls_Fake));
-	CCDebug(5, "BasicRuntimeTests`Close");
+	//DebugCC(5,"FakeControls:" + TMC::Narrate(Controls_Fake));
+	DebugCC(5, "BasicRuntimeTests`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(BasicRuntimeTests, "BasicRuntimeTests command", 0, 0, NULL)
 //### TestGetControlDirectly
 bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	CCDebug(5, "TestGetControlDirectly`Open");
+	DebugCC(5, "TestGetControlDirectly`Open");
 	double endResult;
 	endResult = ExecuteCommand(GetControl, 2, PASS_COMMAND_ARGS);
 	// Report
-	//CCDebug(5,"TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
-	CCDebug(5, "TestGetControlDirectly`endResult:" + TMC::Narrate(endResult));
-	CCDebug(5, "TestGetControlDirectly`Close");
+	//DebugCC(5,"TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	DebugCC(5, "TestGetControlDirectly`endResult:" + TMC::Narrate(endResult));
+	DebugCC(5, "TestGetControlDirectly`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, NULL)
 //### TestGetControlDirectly2
 bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	CCDebug(5, "TestGetControlDirectly2`Open");
+	DebugCC(5, "TestGetControlDirectly2`Open");
 	double endResult;
 	endResult = ExecuteCommand(GetControl, 2);
 	// Report
-	//CCDebug(5,"TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
-	CCDebug(5, "TestGetControlDirectly2`endResult:" + TMC::Narrate(endResult));
-	CCDebug(5, "TestGetControlDirectly2`Close");
+	//DebugCC(5,"TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	DebugCC(5, "TestGetControlDirectly2`endResult:" + TMC::Narrate(endResult));
+	DebugCC(5, "TestGetControlDirectly2`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlDirectly2, "TestGetControlDirectly2 command", 0, 0, NULL)
 //### TestGetControlCopyPasta
 bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 {
-	CCDebug(5, "TestGetControlCopyPasta`Open");
+	DebugCC(5, "TestGetControlCopyPasta`Open");
 	*result = 0xFFFF;
 	UInt32	keycode = 0;
 	//ExtractArgs
@@ -429,7 +433,7 @@ bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 	//
 	if (!InputControls) GetControlMap();
 	*result = InputControls[keycode];
-	CCDebug(5, "TestGetControlCopyPasta`Close");
+	DebugCC(5, "TestGetControlCopyPasta`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 1, kParams_OneInt)
@@ -439,30 +443,30 @@ bool Cmd_TestDisableKeyCopyPasta_Execute(COMMAND_ARGS)
 	//Open
 	*result = 0;
 	UInt32	keycode = 0;
-	CCDebug(5, "TestDisableKeyCopyPasta`Open");
+	DebugCC(5, "TestDisableKeyCopyPasta`Open");
 	//
 	if (!ExtractArgs(paramInfo, arg1, opcodeOffsetPtr, thisObj, arg3, scriptObj, eventList, &keycode)) return true;
 	if (keycode % 256 == 255 && keycode < 2048) keycode = 255 + (keycode + 1) / 256;
 	if (IsKeycodeValid(keycode)) DI_data.DisallowStates[keycode] = 0x00;
-	CCDebug(5, "TestDisableKeyCopyPasta`Close");
+	DebugCC(5, "TestDisableKeyCopyPasta`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestDisableKeyCopyPasta, "TestDisableKeyCopyPasta command", 0, 0, NULL)
 //### GenerateEnum
 bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 {
-	CCDebug(5, "GenerateEnum`Open");
+	DebugCC(5, "GenerateEnum`Open");
 	//Extract Args
 	TESForm* rTemp = NULL;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &rTemp)) {
-		CCDebug(5, "Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
+		DebugCC(5, "Cmd_DisableKey_Replacing_Execute`Failed arg extraction");
 		return false;
 	}
 	//Report
-	CCDebug(5, "rTemp:" + TMC::Narrate(rTemp->refID));
+	DebugCC(5, "rTemp:" + TMC::Narrate(rTemp->refID));
 	//Return
 	*result = rTemp->refID;
-	CCDebug(5, "GenerateEnum`Close");
+	DebugCC(5, "GenerateEnum`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(GenerateEnum, "GenerateEnum command", 0, 1, kParams_OneObjectRef)
@@ -471,7 +475,7 @@ DEFINE_COMMAND_PLUGIN(GenerateEnum, "GenerateEnum command", 0, 1, kParams_OneObj
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	CCDebug(5,"Query`Open");
+	DebugCC(5,"Query`Open");
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
@@ -494,12 +498,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		//return false;
 	}
 
-	CCDebug(5, "Query`Close");
+	DebugCC(5, "Query`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	CCDebug(4, "Load`Open");
+	DebugCC(4, "Load`Open");
 	g_pluginHandle = obse->GetPluginHandle();
 	if (!obse->isEditor)
 	{
@@ -551,7 +555,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		//DisableKey_CmdInfo->execute();
 	}
 
-	CCDebug(4, "Load`Close");
+	DebugCC(4, "Load`Close");
 	return true;
 }
 };
