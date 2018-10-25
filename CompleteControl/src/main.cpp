@@ -74,6 +74,11 @@ static void GetControlMap()
 static bool IsKeycodeValid(UInt32 id) { return id < kMaxMacros - 2; }
 #pragma endregion
 #pragma region HelperFunctions
+//### SetOutcome
+void SetOutcome(Control vControl)
+{
+
+}
 //### StringizeControls
 std::string StringizeControls(std::vector<Control> cControls)
 {
@@ -278,13 +283,10 @@ static void Handler_Save(void * reserved)
 static void Handler_Load(void * reserved)
 {
 	UInt32	type, version, length;
-
 	char* buf;
-
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
 		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
-
 		switch (type)
 		{
 		case 'CTRL':
@@ -297,10 +299,14 @@ static void Handler_Load(void * reserved)
 			delete buf;
 			break;
 		default:
-
 			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
+	if (Controls.empty())
+	{
+		Controls = InitializeControls();
+	}
+	//---Refresh Disables
 }
 
 static void Handler_Preload(void * reserved)
