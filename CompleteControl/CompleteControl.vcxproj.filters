@@ -71,10 +71,10 @@
     <ClCompile Include="src\EventHandlers.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tests.cpp">
+    <ClCompile Include="src\CopyPastedFromOBSE.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CopyPastedFromOBSE.cpp">
+    <ClCompile Include="src\Tests.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,31 +134,31 @@
       <Filter>obse</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\Control.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\Misc.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\Globals.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\Settings.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\DebugCC.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\EventHandlers.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\Tests.h">
-      <Filter>headers</Filter>
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\CopyPastedFromOBSE.h">
-      <Filter>headers</Filter>
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\DebugCC.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\EventHandlers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\Globals.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\Misc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\Settings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\Tests.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +179,6 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{f27aea9b-d578-4214-aedb-6e9292beffb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="headers">
-      <UniqueIdentifier>{558128d7-9ffb-4845-8e32-1ba9acf44e77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
