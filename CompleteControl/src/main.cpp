@@ -1,6 +1,3 @@
-#pragma region Settings
-#include "Settings.h"
-#pragma endregion
 #pragma region Includes
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
@@ -27,15 +24,10 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 #include "DebugCC.h"
-#pragma endregion
-#pragma region Globals
+#include "Settings.h"
 #include "Globals.h"
-#pragma endregion
-#pragma region MiscFunctions
 #include "Misc.h"
-#pragma endregion
-#pragma region Macros
-#define DebugCC(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
+#include "EventHandlers.h"
 #pragma endregion
 #pragma region CopyPasted
 // Copy-pasted from obse's Control_Input
@@ -156,55 +148,6 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
-#pragma endregion
-#pragma region SerializationHandlers
-static void Handler_Save(void * reserved)
-{
-	//-Write Control
-	std::string sControls = StringizeControls(Controls);
-	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
-}
-
-static void Handler_Load(void * reserved)
-{
-	UInt32	type, version, length;
-	char* buf;
-	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
-	{
-		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
-		switch (type)
-		{
-		case 'CTRL':
-			buf = new char[length+1]; //c strings require a null at the end.
-			g_serialization->ReadRecordData(buf, length);
-			buf[length] = 0;
-			DebugCC(5, "buf:" + TMC::Narrate(buf));
-			Controls = ControlsFromString(std::string(buf));
-			DebugCC(5, "Controls:" + TMC::Narrate(Controls));
-			delete buf;
-			break;
-		default:
-			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
-		}
-	}
-	if (Controls.empty())
-	{
-		Controls = InitializeControls();
-	}
-	//---Refresh Disables
-}
-
-static void Handler_Preload(void * reserved)
-{
-	DebugCC(4, "Preload Callback start");
-	Handler_Load(reserved);
-	DebugCC(4, "Preload Callback finished");
-}
-
-static void Handler_NewGame(void * reserved)
-{
-	Controls = InitializeControls();
-}
 #pragma endregion
 #pragma region Tests
 //### TestControlsFromString
