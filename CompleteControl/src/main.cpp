@@ -163,16 +163,17 @@ auto ExecuteCommand(const CommandInfo* vCmd, double vArg)
 	return ExecuteCommand(vCmd->execute, vArg);
 }
 //### InitializeControls
-auto InitializeControls(std::vector<Control> &Controls)
+auto InitializeControls()
 {
 	CCDebug(5,"InitializeControls`Open");
-	//Register Controls
+	std::vector<Control> cControls;
 	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
 	{
-		Controls.push_back(Control(ExecuteCommand(GetControl, i), i));
+		cControls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	CCDebug(5, "InitializeControls`Controls:" + TMC::Narrate(Controls)); //verbose
+	CCDebug(5, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
 	CCDebug(5,"InitializeControls`Close");
+	return cControls;
 }
 #pragma endregion
 #pragma region CompleteControlAPI
@@ -189,7 +190,7 @@ bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
 	CCDebug(5,"HandleOblivionLoaded`Open");
 	bOblivionLoaded = true;
-	InitializeControls(Controls);
+	//Controls = InitializeControls();
 	CCDebug(5,"HandleOblivionLoaded`Close");
 	return true;
 }
@@ -267,33 +268,18 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
 #pragma endregion
 #pragma region SerializationHandlers
-std::string	g_strData;
-static void ResetData(void)
-{
-	g_strData.clear();
-}
-
 static void Handler_Save(void * reserved)
 {
 	//-Write Control
 	std::string sControls = StringizeControls(Controls);
-	if (sControls.size() > 1024) 
-	{
-		CCDebug(2,"Handler_Save`ERROR`sControls.size > 1024");
-	}
-	else
-	{
-		g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
-	}
+	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
 }
 
 static void Handler_Load(void * reserved)
 {
 	UInt32	type, version, length;
 
-	ResetData();
-
-	char	buf[1024]; //512 was the old #
+	char	buf[1024]; //old value:512 
 
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
@@ -301,20 +287,6 @@ static void Handler_Load(void * reserved)
 
 		switch (type)
 		{
-		case 'STR ':
-			g_serialization->ReadRecordData(buf, length);
-			buf[length] = 0;
-
-			CCDebug(4, TMC::StdStringFromFormatString("got string %s", buf));
-			g_strData = buf;
-			break;
-
-		case 'ASDF':
-			g_serialization->ReadRecordData(buf, length);
-			buf[length] = 0;
-
-			CCDebug(4, TMC::StdStringFromFormatString("ASDF chunk = %s", buf));
-			break;
 		case 'CTRL':
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
@@ -336,7 +308,7 @@ static void Handler_Preload(void * reserved)
 
 static void Handler_NewGame(void * reserved)
 {
-	ResetData();
+	Controls = InitializeControls();
 }
 #pragma endregion
 #pragma region Tests
