@@ -71,6 +71,12 @@
     <ClCompile Include="src\EventHandlers.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tests.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CopyPastedFromOBSE.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Hooks_DirectInput8Create.h">
@@ -146,6 +152,12 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\EventHandlers.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\Tests.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\CopyPastedFromOBSE.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

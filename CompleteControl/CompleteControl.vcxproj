@@ -134,11 +134,13 @@
       </ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="src\Control.cpp" />
+    <ClCompile Include="src\CopyPastedFromOBSE.cpp" />
     <ClCompile Include="src\DebugCC.cpp" />
     <ClCompile Include="src\EventHandlers.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Misc.cpp" />
+    <ClCompile Include="src\Tests.cpp" />
     <ClCompile Include="src\TM_CommonCPP_NarrateOverloads.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,11 +163,13 @@
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.h" />
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\StdAfx.h" />
     <ClInclude Include="include\CompleteControl\Control.h" />
+    <ClInclude Include="include\CompleteControl\CopyPastedFromOBSE.h" />
     <ClInclude Include="include\CompleteControl\DebugCC.h" />
     <ClInclude Include="include\CompleteControl\EventHandlers.h" />
     <ClInclude Include="include\CompleteControl\Globals.h" />
     <ClInclude Include="include\CompleteControl\Misc.h" />
     <ClInclude Include="include\CompleteControl\Settings.h" />
+    <ClInclude Include="include\CompleteControl\Tests.h" />
     <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h" />
   </ItemGroup>
   <ItemGroup>

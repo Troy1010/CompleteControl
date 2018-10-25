@@ -19,7 +19,12 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
-extern int iIntGlobal;
+#if OBLIVION
+extern OBSECommandTableInterface * g_commandTableIntfc; // assigned in OBSEPlugin_Load
+extern OBSEScriptInterface * g_scriptIntfc; //For command argument extraction
+#define ExtractArgsEx(...) g_scriptIntfc->ExtractArgsEx(__VA_ARGS__)
+#define ExtractFormatStringArgs(...) g_scriptIntfc->ExtractFormatStringArgs(__VA_ARGS__)
+#endif
 
 extern Cmd_Execute DisableKey_OriginalExecute; //Execute of replaced DisableKey command
 extern Cmd_Execute EnableKey_OriginalExecute; //Execute of replaced EnableKey command
