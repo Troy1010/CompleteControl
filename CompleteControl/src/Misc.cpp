@@ -24,9 +24,9 @@
 
 #include "Globals.h"
 #include "Settings.h"
+#include "DebugCC.h"
 
 
-#define DebugCC(iLvl,sTxt) if (DebugThreshold >= iLvl) {FnDebug(sTxt);};
 
 //### StringizeControls
 std::string StringizeControls(std::vector<Control> cControls)
@@ -65,12 +65,6 @@ void SafeConsolePrint(std::string sString)
 		Console_Print(sString.substr(0, 1000).c_str());
 		Console_Print("<MessageTooLarge>");
 	}
-}
-//### FnDebug
-void FnDebug(std::string sString)
-{
-	SafeConsolePrint(sString);
-	_MESSAGE(sString.c_str());
 }
 //### ExecuteCommand
 double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)

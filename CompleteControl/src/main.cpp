@@ -26,6 +26,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
+#include "DebugCC.h"
 #pragma endregion
 #pragma region Globals
 #include "Globals.h"

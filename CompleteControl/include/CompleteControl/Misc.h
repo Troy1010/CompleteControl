@@ -26,7 +26,6 @@
 std::string StringizeControls(std::vector<Control> cControls);
 std::vector<Control> ControlsFromString(std::string sBigString);
 void SafeConsolePrint(std::string sString);
-void FnDebug(std::string sString);
 double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS);
 double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg);
 double ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS);

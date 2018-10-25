@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Misc.h"
 
-IDebugLog		gLog("CompleteControl.log"); //Log
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
 const CommandInfo* DisableKey_CmdInfo; //DisableKey command
