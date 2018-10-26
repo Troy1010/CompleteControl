@@ -73,6 +73,7 @@ void Handler_Load(void * reserved)
 			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
+	//-For savegames written before CC install.
 	if (Controls.empty())
 	{
 		Controls = InitializeControls();

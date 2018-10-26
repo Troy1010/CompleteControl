@@ -28,7 +28,7 @@
 
 
 
-//### StringizeControls
+
 std::string StringizeControls(std::vector<Control> cControls)
 {
 	std::stringstream ss;
@@ -38,7 +38,7 @@ std::string StringizeControls(std::vector<Control> cControls)
 	}
 	return ss.str();
 }
-//### ControlsFromString
+
 std::vector<Control> ControlsFromString(std::string sBigString)
 {
 	std::vector<Control> cReturningControls;
@@ -49,7 +49,7 @@ std::vector<Control> ControlsFromString(std::string sBigString)
 	}
 	return cReturningControls;
 }
-//### SafeConsolePrint
+
 void SafeConsolePrint(std::string sString)
 {
 	if (!bOblivionLoaded) // Trying to print to console without Oblivion loaded causes CTD.
@@ -66,12 +66,10 @@ void SafeConsolePrint(std::string sString)
 		Console_Print("<MessageTooLarge>");
 	}
 }
-//### ExecuteCommand
+
 double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 {
-	// Overload specific vars
-	int iDataTypeCode = 0x7A; //double
-	//
+	int iDataTypeCode = 0x7A; //doubleTypeID, apparently
 	double result2 = 0;
 	UInt8* pData = new UInt8[3 + sizeof(double)];
 	UInt16* vNumArgs = (UInt16*)pData;
@@ -110,7 +108,7 @@ double ExecuteCommand(const CommandInfo* vCmd, double vArg)
 {
 	return ExecuteCommand(vCmd->execute, vArg);
 }
-//### InitializeControls
+
 std::vector<Control> InitializeControls()
 {
 	DebugCC(5, "InitializeControls`Open");
