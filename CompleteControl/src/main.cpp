@@ -95,6 +95,50 @@ void Handler_NewGame(void * reserved)
 	DebugCC(5, "Handler_NewGame`Close");
 }
 #pragma endregion
+#pragma region MessageHandler
+OBSEMessagingInterface* g_msg;
+
+void MessageHandler(OBSEMessagingInterface::Message* msg)
+{
+	switch (msg->type)
+	{
+	case OBSEMessagingInterface::kMessage_ExitGame:
+		DebugCC(5, "MessageHandler`received ExitGame message");
+		break;
+	case OBSEMessagingInterface::kMessage_ExitToMainMenu:
+		DebugCC(5, "MessageHandler`received ExitToMainMenu message");
+		break;
+	case OBSEMessagingInterface::kMessage_PostLoad: //PostPluginsLoad
+		DebugCC(5, "MessageHandler`received PostLoad message");
+		break;
+	case OBSEMessagingInterface::kMessage_LoadGame:
+	case OBSEMessagingInterface::kMessage_SaveGame:
+		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received save/load message with file path %s", msg->data));
+		break;
+	case OBSEMessagingInterface::kMessage_Precompile:
+	{
+		ScriptBuffer* buffer = (ScriptBuffer*)msg->data;
+		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received precompile message. Script Text:\n%s", buffer->scriptText));
+		break;
+	}
+	case OBSEMessagingInterface::kMessage_PreLoadGame:
+		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received pre-loadgame message with file path %s", msg->data));
+		break;
+	case OBSEMessagingInterface::kMessage_ExitGame_Console:
+		DebugCC(5, "MessageHandler`received quit game from console message");
+		break;
+	case OBSEMessagingInterface::kMessage_PostPostLoad:
+		DebugCC(5, "MessageHandler`received PostPostLoad message");
+		break;
+	case OBSEMessagingInterface::kMessage_RuntimeScriptError:
+		DebugCC(5, "MessageHandler`received RuntimeScriptError message");
+		break;
+	default:
+		DebugCC(5, "Plugin Example received unknown message");
+		break;
+	}
+}
+#pragma endregion
 #pragma region LoadCCHandler
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
@@ -181,6 +225,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		DisableKey_CmdInfo = g_commandTableIntfc->GetByOpcode(0x1430);
 		//DisableKey_CmdInfo->execute();
 	}
+
+	// register to receive messages from OBSE
+	OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
+	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
+	g_msg = msgIntfc;
 
 	DebugCC(4, "Load`Close");
 	return true;
