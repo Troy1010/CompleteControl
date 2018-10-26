@@ -99,7 +99,9 @@ void Handler_NewGame(void * reserved)
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	DebugCC(5,"Query`Open");
+	DebugCC(4,"Query`Open");
+	/*InterfaceManager* intfc = InterfaceManager::GetSingleton();
+	DebugCC(4, "IsConsoleMode:"+ TMC::Narrate(intfc->IsGameMode()));*/
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
@@ -122,7 +124,7 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		//return false;
 	}
 
-	DebugCC(5, "Query`Close");
+	DebugCC(4, "Query`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
