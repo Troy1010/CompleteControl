@@ -133,6 +133,7 @@
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="src\CCCommands.cpp" />
     <ClCompile Include="src\Control.cpp" />
     <ClCompile Include="src\CopyPastedFromOBSE.cpp" />
     <ClCompile Include="src\DebugCC.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Script.h" />
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Utilities.h" />
     <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\StdAfx.h" />
+    <ClInclude Include="include\CompleteControl\CCCommands.h" />
     <ClInclude Include="include\CompleteControl\Control.h" />
     <ClInclude Include="include\CompleteControl\CopyPastedFromOBSE.h" />
     <ClInclude Include="include\CompleteControl\DebugCC.h" />

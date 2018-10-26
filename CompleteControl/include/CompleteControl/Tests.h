@@ -24,33 +24,24 @@
 #include "CopyPastedFromOBSE.h"
 
 
-//### TestControlsFromString
+//Might not need to prototype the _Execute functions
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_TestControlsFromString);
-//### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_TestControlToString);
-//### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_PrintControls);
-//### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
 extern CommandInfo(kCommandInfo_TestCeil);
-//### BasicRuntimeTests
 bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_BasicRuntimeTests);
-//### TestGetControlDirectly
 bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
 extern CommandInfo(kCommandInfo_TestGetControlDirectly);
-//### TestGetControlDirectly2
 bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
 extern CommandInfo(kCommandInfo_TestGetControlDirectly2);
-//### TestGetControlCopyPasta
 bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_TestGetControlCopyPasta);
-//### TestDisableKeyCopyPasta
 bool Cmd_TestDisableKeyCopyPasta_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_TestDisableKeyCopyPasta);
-//### GenerateEnum
 bool Cmd_GenerateEnum_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_GenerateEnum);

@@ -26,6 +26,8 @@
 #include "Globals.h"
 #include "DebugCC.h"
 
+bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS);
+extern CommandInfo(kCommandInfo_HandleOblivionLoaded);
 void Handler_Save(void * reserved);
 void Handler_Load(void * reserved);
 void Handler_Preload(void * reserved);

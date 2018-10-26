@@ -77,6 +77,9 @@
     <ClCompile Include="src\Tests.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CCCommands.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\265db0df056ee777e467d81c01e1c3f405931683\include\obse\obse\Hooks_DirectInput8Create.h">
@@ -158,6 +161,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\Tests.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompleteControl\CCCommands.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

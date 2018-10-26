@@ -27,6 +27,16 @@
 #include "DebugCC.h"
 
 
+//This 'handler' is literally just a command called by the CompleteControl.esp mod when its own OblivionLoaded event is fired.
+bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, "HandleOblivionLoaded`Open");
+	bOblivionLoaded = true;
+	//Controls = InitializeControls();
+	DebugCC(5, "HandleOblivionLoaded`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
 
 void Handler_Save(void * reserved)
 {
