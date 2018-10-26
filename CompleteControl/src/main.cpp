@@ -23,12 +23,78 @@
 #include "Settings.h"
 #include "Globals.h"
 #include "Misc.h"
-#include "EventHandlers.h"
 #include "CopyPastedFromOBSE.h"
 #include "Tests.h"
 #include "CCCommands.h"
 #pragma endregion
-#pragma region LoadCCEvent
+
+#pragma region ModHandlers
+//This 'handler' is literally just a command called by the CompleteControl.esp mod when its own OblivionLoaded event is fired.
+bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, "HandleOblivionLoaded`Open");
+	bOblivionLoaded = true;
+	//Controls = InitializeControls();
+	DebugCC(5, "HandleOblivionLoaded`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
+#pragma endregion
+#pragma region SerializationIntfcHandlers
+void Handler_Save(void * reserved)
+{
+	DebugCC(5, "Handler_Save`Open");
+	//-Write Control
+	std::string sControls = StringizeControls(Controls);
+	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
+	DebugCC(5, "Handler_Save`Close");
+}
+
+void Handler_Load(void * reserved)
+{
+	DebugCC(5, "Handler_Load`Open");
+	UInt32	type, version, length;
+	char* buf;
+	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
+	{
+		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
+		switch (type)
+		{
+		case 'CTRL':
+			buf = new char[length + 1]; //c strings require a null at the end.
+			g_serialization->ReadRecordData(buf, length);
+			buf[length] = 0;
+			DebugCC(5, "buf:" + TMC::Narrate(buf));
+			Controls = ControlsFromString(std::string(buf));
+			DebugCC(6, "Controls:" + TMC::Narrate(Controls));
+			delete buf;
+			break;
+		default:
+			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
+		}
+	}
+	if (Controls.empty())
+	{
+		Controls = InitializeControls();
+	}
+	//---Refresh Disables
+	DebugCC(5, "Handler_Load`Close");
+}
+
+void Handler_Preload(void * reserved)
+{
+	DebugCC(5, "Handler_Preload`Open");
+	DebugCC(5, "Handler_Preload`Close");
+}
+
+void Handler_NewGame(void * reserved)
+{
+	DebugCC(5, "Handler_NewGame`Open");
+	Controls = InitializeControls();
+	DebugCC(5, "Handler_NewGame`Close");
+}
+#pragma endregion
+#pragma region LoadCCHandler
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
@@ -78,6 +144,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
 		g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
 		g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
+		g_serialization->SetPreloadCallback(g_pluginHandle, Handler_Preload);
 	}
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);

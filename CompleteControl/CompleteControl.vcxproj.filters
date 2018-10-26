@@ -68,9 +68,6 @@
     <ClCompile Include="src\DebugCC.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\EventHandlers.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\CopyPastedFromOBSE.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -143,9 +140,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\DebugCC.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CompleteControl\EventHandlers.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="include\CompleteControl\Globals.h">

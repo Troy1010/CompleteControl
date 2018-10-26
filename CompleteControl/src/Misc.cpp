@@ -119,7 +119,7 @@ std::vector<Control> InitializeControls()
 	{
 		cControls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	DebugCC(5, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
+	DebugCC(6, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
 	DebugCC(5, "InitializeControls`Close");
 	return cControls;
 }
