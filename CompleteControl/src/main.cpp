@@ -28,12 +28,17 @@
 #include "CCCommands.h"
 #pragma endregion
 
+inline void NewGameOrLoadGame()
+{
+	bOblivionLoaded = true; //Because there is no OblivionLoaded event, this is the closest I can get.
+}
+
 #pragma region ModHandlers
 //This 'handler' is literally just a command called by the CompleteControl.esp mod when its own OblivionLoaded event is fired.
 bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, "HandleOblivionLoaded`Open");
-	bOblivionLoaded = true;
+	//bOblivionLoaded = true;	//This would be a very good place to set this variable. However, I am trying to get rid of CC's reliance on a helper mod.
 	//Controls = InitializeControls();
 	DebugCC(5, "HandleOblivionLoaded`Close");
 	return true;
@@ -53,6 +58,8 @@ void Handler_Save(void * reserved)
 void Handler_Load(void * reserved)
 {
 	DebugCC(5, "Handler_Load`Open");
+	NewGameOrLoadGame();
+	//-Serialization
 	UInt32	type, version, length;
 	char* buf;
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
@@ -79,6 +86,7 @@ void Handler_Load(void * reserved)
 		Controls = InitializeControls();
 	}
 	//---Refresh Disables
+	SetOutcomeForAllControls(Controls);
 	DebugCC(5, "Handler_Load`Close");
 }
 
@@ -91,6 +99,7 @@ void Handler_Preload(void * reserved)
 void Handler_NewGame(void * reserved)
 {
 	DebugCC(5, "Handler_NewGame`Open");
+	NewGameOrLoadGame();
 	Controls = InitializeControls();
 	DebugCC(5, "Handler_NewGame`Close");
 }
@@ -143,9 +152,9 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	DebugCC(4,"Query`Open");
+	DebugCC(5,"Query`Open");
 	/*InterfaceManager* intfc = InterfaceManager::GetSingleton();
-	DebugCC(4, "IsConsoleMode:"+ TMC::Narrate(intfc->IsGameMode()));*/
+	DebugCC(5, "IsConsoleMode:"+ TMC::Narrate(intfc->IsGameMode()));*/
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
@@ -168,12 +177,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		//return false;
 	}
 
-	DebugCC(4, "Query`Close");
+	DebugCC(5, "Query`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	DebugCC(4, "Load`Open");
+	DebugCC(5, "Load`Open");
 	g_pluginHandle = obse->GetPluginHandle();
 	if (!obse->isEditor)
 	{
@@ -231,7 +240,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
 	g_msg = msgIntfc;
 
-	DebugCC(4, "Load`Close");
+	DebugCC(5, "Load`Close");
 	return true;
 }
 };

@@ -33,27 +33,27 @@
 //### TestControlsFromString
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, "TestControlsFromString`Open");
-	DebugCC(4, "Controls:" + TMC::Narrate(Controls));
+	DebugCC(5, "TestControlsFromString`Open");
+	DebugCC(5, "Controls:" + TMC::Narrate(Controls));
 	std::string sControls = StringizeControls(Controls);
-	DebugCC(4, "sControls:" + sControls);
+	DebugCC(5, "sControls:" + sControls);
 	std::vector<Control> cReturningControls = ControlsFromString(sControls);
-	DebugCC(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
-	DebugCC(4, "TestControlsFromString`Close");
+	DebugCC(5, "cReturningControls:" + TMC::Narrate(cReturningControls));
+	DebugCC(5, "TestControlsFromString`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, NULL)
 //### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, "TestControlToString`Open");
+	DebugCC(5, "TestControlToString`Open");
 	std::string sControl = Controls[0].ToString();
-	DebugCC(4, "sControl:" + sControl);
+	DebugCC(5, "sControl:" + sControl);
 	std::vector<std::string> cStrings = TMC::SplitString(sControl, ",");
-	DebugCC(4, "cStrings:" + TMC::Narrate(cStrings));
+	DebugCC(5, "cStrings:" + TMC::Narrate(cStrings));
 	Control vControl = Control(sControl);
-	DebugCC(4, "vControl:" + vControl.Narrate());
-	DebugCC(4, "TestControlToString`Close");
+	DebugCC(5, "vControl:" + vControl.Narrate());
+	DebugCC(5, "TestControlToString`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, NULL)

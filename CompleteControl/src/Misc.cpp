@@ -26,8 +26,35 @@
 #include "Settings.h"
 #include "DebugCC.h"
 
+bool IsDisabled(Control vControl)
+{
+	return !vControl.cModIndices_Disables.empty();
+}
 
+void SetOutcome(Control vControl)
+{
+	if (IsDisabled(vControl))
+	{
+		DebugCC(4, "Disabling Control:" + TMC::Narrate(vControl.ControlID) + " dxScancode:" + TMC::Narrate(vControl.dxScancode));
+		ExecuteCommand(DisableKey_OriginalExecute, vControl.dxScancode);
+	}
+	else
+	{
+		ExecuteCommand(EnableKey_OriginalExecute, vControl.dxScancode);
+		DebugCC(4, "Enabling Control:" + TMC::Narrate(vControl.ControlID) + " dxScancode:" + TMC::Narrate(vControl.dxScancode));
+	}
+}
 
+void SetOutcomeForAllControls(std::vector<Control> cControls)
+{
+	DebugCC(4, "SetOutcomeForAllControls`Open");
+	for (auto vControl : cControls)
+	{
+		SetOutcome(vControl);
+	}
+	DebugCC(4, "cControls:"+TMC::Narrate(Controls));
+	DebugCC(4, "SetOutcomeForAllControls`Close");
+}
 
 std::string StringizeControls(std::vector<Control> cControls)
 {

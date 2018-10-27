@@ -32,8 +32,8 @@ extern const CommandInfo* DisableKey_CmdInfo; //DisableKey command
 extern const CommandInfo* GetControl; //GetControl command
 extern std::vector<Control> Controls;
 
-extern Script* pBlankScript;
-extern ScriptEventList * pBlankScriptEventList;
-extern bool bOblivionLoaded;
+extern Script* pBlankScript; // For use in ExecuteCommand
+extern ScriptEventList * pBlankScriptEventList; // For use in ExecuteCommand
+extern bool bOblivionLoaded; //Because there is no OblivionLoaded event, this variable is set true later than it should be.
 extern OBSESerializationInterface	* g_serialization;
 extern PluginHandle				g_pluginHandle;

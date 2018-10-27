@@ -22,7 +22,8 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
-
+void SetOutcome(Control vControl);
+void SetOutcomeForAllControls(std::vector<Control> cControls);
 std::string StringizeControls(std::vector<Control> cControls);
 std::vector<Control> ControlsFromString(std::string sBigString);
 void SafeConsolePrint(std::string sString);
