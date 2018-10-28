@@ -137,6 +137,7 @@
     <ClCompile Include="src\Control.cpp" />
     <ClCompile Include="src\CopyPastedFromOBSE.cpp" />
     <ClCompile Include="src\DebugCC.cpp" />
+    <ClCompile Include="src\ExecuteCommand.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Misc.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="include\CompleteControl\Control.h" />
     <ClInclude Include="include\CompleteControl\CopyPastedFromOBSE.h" />
     <ClInclude Include="include\CompleteControl\DebugCC.h" />
+    <ClInclude Include="include\CompleteControl\ExecuteCommand.h" />
     <ClInclude Include="include\CompleteControl\Globals.h" />
     <ClInclude Include="include\CompleteControl\Misc.h" />
     <ClInclude Include="include\CompleteControl\Settings.h" />

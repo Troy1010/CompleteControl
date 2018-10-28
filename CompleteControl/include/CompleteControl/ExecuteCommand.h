@@ -1,7 +1,4 @@
 #pragma once
-#include "Control.h"
-#include "TM_CommonCPP/Misc.h"
-
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
 #if OBLIVION
@@ -22,10 +19,11 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
-Control GetControlByScancode(int iDXScancode);
-Control GetControlByID(UInt32 vControlID);
-void SetOutcomeForAllControls(std::vector<Control> cControls);
-std::string StringizeControls(std::vector<Control> cControls);
-std::vector<Control> ControlsFromString(std::string sBigString);
-void SafeConsolePrint(std::string sString);
-std::vector<Control> InitializeControls();
+#include "Globals.h"
+#include "DebugCC.h"
+
+
+double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS);
+double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg);
+double ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS);
+double ExecuteCommand(const CommandInfo* vCmd, double vArg);

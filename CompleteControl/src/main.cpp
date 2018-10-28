@@ -30,7 +30,7 @@
 
 inline void NewGameOrLoadGame()
 {
-	bOblivionLoaded = true; //Because there is no OblivionLoaded event, this is the closest I can get.
+	bOblivionLoaded = true; //Because there is no OblivionLoaded event, I think this is the closest I can get.
 }
 
 #pragma region ModHandlers
@@ -122,7 +122,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		break;
 	case OBSEMessagingInterface::kMessage_LoadGame:
 	case OBSEMessagingInterface::kMessage_SaveGame:
-		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received save/load message with file path %s", msg->data));
+		DebugCC(5, "MessageHandler`received save/load message with file name:" + TMC::RSplitString(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_Precompile:
 	{
@@ -131,10 +131,13 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		break;
 	}
 	case OBSEMessagingInterface::kMessage_PreLoadGame:
-		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received pre-loadgame message with file path %s", msg->data));
+		DebugCC(5, "MessageHandler`received pre-loadgame message with file name:" + TMC::RSplitString(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_ExitGame_Console:
 		DebugCC(5, "MessageHandler`received quit game from console message");
+		break;
+	case OBSEMessagingInterface::kMessage_PostLoadGame:
+		DebugCC(5, "MessageHandler`received PostLoadGame message");
 		break;
 	case OBSEMessagingInterface::kMessage_PostPostLoad:
 		DebugCC(5, "MessageHandler`received PostPostLoad message");
@@ -143,7 +146,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		DebugCC(5, "MessageHandler`received RuntimeScriptError message");
 		break;
 	default:
-		DebugCC(5, "Plugin Example received unknown message");
+		DebugCC(5, "Plugin Example received unknown message. typeID:" + TMC::Narrate(msg->type));
 		break;
 	}
 }
@@ -152,7 +155,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	DebugCC(5,"Query`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	/*InterfaceManager* intfc = InterfaceManager::GetSingleton();
 	DebugCC(5, "IsConsoleMode:"+ TMC::Narrate(intfc->IsGameMode()));*/
 	info->infoVersion = PluginInfo::kInfoVersion;
@@ -177,12 +180,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		//return false;
 	}
 
-	DebugCC(5, "Query`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	DebugCC(5, "Load`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	g_pluginHandle = obse->GetPluginHandle();
 	if (!obse->isEditor)
 	{
@@ -240,7 +243,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
 	g_msg = msgIntfc;
 
-	DebugCC(5, "Load`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 };

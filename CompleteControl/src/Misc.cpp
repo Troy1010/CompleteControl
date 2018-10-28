@@ -25,35 +25,45 @@
 #include "Globals.h"
 #include "Settings.h"
 #include "DebugCC.h"
+#include "ExecuteCommand.h"
+
+Control GetControlByScancode(int iDXScancode)
+{
+	for (Control &vControl : Controls)
+	{
+		if (vControl.dxScancode == iDXScancode)
+		{
+			return vControl;
+		}
+	}
+	return NULL;
+}
+
+Control GetControlByID(UInt32 vControlID)
+{
+	for (Control &vControl : Controls)
+	{
+		if (vControl.ControlID == vControlID)
+		{
+			return vControl;
+		}
+	}
+	return NULL;
+}
 
 bool IsDisabled(Control vControl)
 {
 	return !vControl.cModIndices_Disables.empty();
 }
 
-void SetOutcome(Control vControl)
-{
-	if (IsDisabled(vControl))
-	{
-		DebugCC(4, "Disabling Control:" + TMC::Narrate(vControl.ControlID) + " dxScancode:" + TMC::Narrate(vControl.dxScancode));
-		ExecuteCommand(DisableKey_OriginalExecute, vControl.dxScancode);
-	}
-	else
-	{
-		ExecuteCommand(EnableKey_OriginalExecute, vControl.dxScancode);
-		DebugCC(4, "Enabling Control:" + TMC::Narrate(vControl.ControlID) + " dxScancode:" + TMC::Narrate(vControl.dxScancode));
-	}
-}
-
 void SetOutcomeForAllControls(std::vector<Control> cControls)
 {
-	DebugCC(4, "SetOutcomeForAllControls`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	for (auto vControl : cControls)
 	{
-		SetOutcome(vControl);
+		vControl.SetOutcome();
 	}
-	DebugCC(4, "cControls:"+TMC::Narrate(Controls));
-	DebugCC(4, "SetOutcomeForAllControls`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 }
 
 std::string StringizeControls(std::vector<Control> cControls)
@@ -94,58 +104,16 @@ void SafeConsolePrint(std::string sString)
 	}
 }
 
-double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
-{
-	int iDataTypeCode = 0x7A; //doubleTypeID, apparently
-	double result2 = 0;
-	UInt8* pData = new UInt8[3 + sizeof(double)];
-	UInt16* vNumArgs = (UInt16*)pData;
-	*vNumArgs = 1;
-	pData[2] = iDataTypeCode;
-	double* fArgsVal = (double*)&pData[3];
-	*fArgsVal = vArg;
-	UInt32 opOffsetPtr2 = 0;
-	vCmdExecute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr2);
-	delete[] pData;
-	return result2;
-}
-double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
-{
-	ParamInfo * paramInfo = NULL;
-	void * arg1 = 0;
-	TESObjectREFR * thisObj = NULL;
-	UInt32 arg3 = 0;
-	if (!pBlankScript)
-	{
-		DebugCC(6, "ExecuteCommand`pBlankScript INIT");
-		pBlankScript = (Script*)CreateFormInstance(13);
-		pBlankScriptEventList = (*pBlankScript).CreateEventList();
-	}
-	Script * scriptObj = pBlankScript;
-	ScriptEventList * eventList = pBlankScriptEventList;
-	double * result = 0;
-	UInt32 * opcodeOffsetPtr = 0;
-	return ExecuteCommand(vCmdExecute, vArg, PASS_COMMAND_ARGS);
-}
-double ExecuteCommand(const CommandInfo* vCmd, double vArg, COMMAND_ARGS)
-{
-	return ExecuteCommand(vCmd->execute, vArg, PASS_COMMAND_ARGS);
-}
-double ExecuteCommand(const CommandInfo* vCmd, double vArg)
-{
-	return ExecuteCommand(vCmd->execute, vArg);
-}
-
 std::vector<Control> InitializeControls()
 {
-	DebugCC(5, "InitializeControls`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	std::vector<Control> cControls;
 	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
 	{
 		cControls.push_back(Control(ExecuteCommand(GetControl, i), i));
 	}
-	DebugCC(6, "InitializeControls`cControls:" + TMC::Narrate(cControls)); //verbose
-	DebugCC(5, "InitializeControls`Close");
+	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(cControls)); //verbose
+	DebugCC(5, std::string(__func__) + "`Close");
 	return cControls;
 }
 

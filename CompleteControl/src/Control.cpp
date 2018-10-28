@@ -4,6 +4,26 @@
 #include "TM_CommonCPP/Narrate.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include <sstream>
+#include "ExecuteCommand.h"
+#include "Globals.h"
+
+
+bool Control::IsDisabled()
+{
+	return !this->cModIndices_Disables.empty();
+}
+
+void Control::SetOutcome()
+{
+	if (this->IsDisabled())
+	{
+		ExecuteCommand(DisableKey_OriginalExecute, this->dxScancode);
+	}
+	else
+	{
+		ExecuteCommand(EnableKey_OriginalExecute, this->dxScancode);
+	}
+}
 
 Control::Control(int _dxScancode, UInt32 _ControlID)
 {

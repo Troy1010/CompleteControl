@@ -22,6 +22,7 @@
 
 #include "DebugCC.h"
 #include "CopyPastedFromOBSE.h"
+#include "Misc.h"
 
 bool Cmd_CommandTemplate_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_CommandTemplate);

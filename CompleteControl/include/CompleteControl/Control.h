@@ -53,6 +53,8 @@ public:
 	//---
 	std::string ToString();
 	std::string Narrate();
+	bool IsDisabled();
+	void SetOutcome();
 	//---Members
 	int dxScancode;
 	std::set<UInt8> cModIndices_Disables;
