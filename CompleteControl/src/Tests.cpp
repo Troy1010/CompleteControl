@@ -116,7 +116,7 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 {
 	DebugCC(4, std::string(__func__) + "`Open");
 	double endResult;
-	endResult = ExecuteCommand(GetControl, 2, PASS_COMMAND_ARGS);
+	endResult = ExecuteCommand(GetControl_CmdInfo, 2, PASS_COMMAND_ARGS);
 	// Report
 	//DebugCC(5,"TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
 	DebugCC(4, "endResult:" + TMC::Narrate(endResult));
@@ -129,7 +129,7 @@ bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TES
 {
 	DebugCC(4, std::string(__func__) + "`Open");
 	double endResult;
-	endResult = ExecuteCommand(GetControl, 2);
+	endResult = ExecuteCommand(GetControl_CmdInfo, 2);
 	// Report
 	//DebugCC(5,"TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
 	DebugCC(5, "endResult:" + TMC::Narrate(endResult));

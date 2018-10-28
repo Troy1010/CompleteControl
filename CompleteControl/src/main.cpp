@@ -80,8 +80,12 @@ void Handler_Load(void * reserved)
 			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
-	//-For savegames written before CC install.
-	if (Controls.empty())
+	// ResolveModIndices
+	if (!Controls.empty())
+	{
+		ResolveModIndicesForControls(Controls);
+	}
+	else //-For savegames written before CC install.
 	{
 		Controls = InitializeControls();
 	}
@@ -231,10 +235,11 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:00001431
 		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
 		// Get GetControl
-		GetControl = g_commandTableIntfc->GetByName("GetControl");
+		GetControl_CmdInfo = g_commandTableIntfc->GetByName("GetControl");
 		//GetControl->
 		//
 		DisableKey_CmdInfo = g_commandTableIntfc->GetByOpcode(0x1430);
+		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByName("ResolveModIndex");
 		//DisableKey_CmdInfo->execute();
 	}
 

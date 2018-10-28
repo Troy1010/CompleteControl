@@ -22,6 +22,7 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
+void ResolveModIndicesForControls(std::vector<Control>& cControls);
 Control GetControlByScancode(int iDXScancode);
 Control GetControlByID(UInt32 vControlID);
 void SetOutcomeForAllControls(std::vector<Control> cControls);
