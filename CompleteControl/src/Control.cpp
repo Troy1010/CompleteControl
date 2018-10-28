@@ -10,7 +10,14 @@
 
 int Control::GetDXScancode()
 {
-	return ExecuteCommand(GetControl_CmdInfo, ControlID);
+	if (ControlID < VanillaControlID_EnumSize)
+	{
+		return ExecuteCommand(GetControl_CmdInfo, ControlID);
+	}
+	else
+	{
+		return dxScancode_NonVanilla;
+	}
 }
 
 void Control::ResolveModIndices()
@@ -46,12 +53,18 @@ void Control::SetOutcome()
 	}
 }
 
+
+Control::Control(UInt32 _ControlID, int _dxScancode_NonVanilla)
+{
+	cModIndices_Disables = std::set<UInt8>();
+	ControlID = _ControlID;
+	dxScancode_NonVanilla = _dxScancode_NonVanilla;
+}
 Control::Control(UInt32 _ControlID)
 {
 	cModIndices_Disables = std::set<UInt8>();
 	ControlID = _ControlID;
 }
-
 Control::Control(std::string sString)
 {
 	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");

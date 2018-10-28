@@ -214,6 +214,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_serialization->SetPreloadCallback(g_pluginHandle, Handler_Preload);
 	}
 	obse->SetOpcodeBase(0x28B0);
+	obse->RegisterCommand(&kCommandInfo_RegisterControl);
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly2);

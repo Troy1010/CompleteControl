@@ -24,13 +24,15 @@
 #include "CopyPastedFromOBSE.h"
 #include "Misc.h"
 
-bool Cmd_CommandTemplate_Execute(COMMAND_ARGS);
+//bool Cmd_CommandTemplate_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_CommandTemplate);
-bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+//bool Cmd_DisableKey_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_DisableKey_Replacing);
-bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+//bool Cmd_EnableKey_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_EnableKey_Replacing);
-bool Cmd_DisableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+//bool Cmd_DisableControl_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_DisableControl_Replacing);
-bool Cmd_EnableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+//bool Cmd_EnableControl_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_EnableControl_Replacing);
+//bool Cmd_RegisterControl_Replacing_Execute(COMMAND_ARGS);
+extern CommandInfo(kCommandInfo_RegisterControl);

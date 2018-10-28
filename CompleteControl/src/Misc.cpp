@@ -108,7 +108,7 @@ std::vector<Control> InitializeControls()
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	std::vector<Control> cControls;
-	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
+	for (int i = 0; i < Control::VanillaControlID_EnumSize; ++i)
 	{
 		cControls.push_back(Control(i));
 	}

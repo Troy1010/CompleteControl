@@ -6,8 +6,10 @@
 
 class Control
 {
+private:
+	int dxScancode_NonVanilla;
 public:
-	static const int VanillaControlID_Count = 29;
+	static const int VanillaControlID_EnumSize = 29;
 	enum VanillaControlID
 	{
 		Forward,
@@ -47,6 +49,7 @@ public:
 		MenuMode,
 	};
 	//---Constructors
+	Control(UInt32 _ControlID, int _dxScancode_NonVanilla);
 	Control(UInt32 _ControlID);
 	Control(std::string sString);
 	~Control(void);

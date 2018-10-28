@@ -84,4 +84,16 @@ bool Cmd_EnableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TES
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(EnableControl_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
-
+//### RegisterControl
+bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	int dxScancode = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID, &dxScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	Controls.push_back(Control(vControlID, dxScancode));
+	DebugCC(4, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control.", 0, 2, kParams_TwoInts)
