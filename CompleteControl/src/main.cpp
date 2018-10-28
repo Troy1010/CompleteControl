@@ -233,18 +233,18 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
 		// replace DisableKey
-		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:00001430
+		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:0x1430
 		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
 		// replace EnableKey
-		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:00001431
+		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:0x1431
 		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
-		// Get GetControl
-		GetControl_CmdInfo = g_commandTableIntfc->GetByName("GetControl");
-		//GetControl->
-		//
-		DisableKey_CmdInfo = g_commandTableIntfc->GetByOpcode(0x1430);
-		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByName("ResolveModIndex");
-		//DisableKey_CmdInfo->execute();
+		// replace DisableControl
+		g_commandTableIntfc->Replace(0x15A7, &kCommandInfo_DisableControl_Replacing); //DisableControl_opcode:0x15A7
+		// replace EnableControl
+		g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
+		// Get Some Commands
+		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
+		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8
 	}
 
 	// register to receive messages from OBSE

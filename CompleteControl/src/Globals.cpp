@@ -10,7 +10,6 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
-const CommandInfo* DisableKey_CmdInfo; //DisableKey command
 const CommandInfo* GetControl_CmdInfo; //GetControl command
 const CommandInfo* ResolveModIndex_CmdInfo;
 std::vector<Control> Controls;

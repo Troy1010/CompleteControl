@@ -28,7 +28,6 @@ extern OBSEScriptInterface * g_scriptIntfc; //For command argument extraction
 
 extern Cmd_Execute DisableKey_OriginalExecute; //Execute of replaced DisableKey command
 extern Cmd_Execute EnableKey_OriginalExecute; //Execute of replaced EnableKey command
-extern const CommandInfo* DisableKey_CmdInfo; //DisableKey command
 extern const CommandInfo* GetControl_CmdInfo; //GetControl command
 extern const CommandInfo* ResolveModIndex_CmdInfo; //GetControl command
 extern std::vector<Control> Controls;

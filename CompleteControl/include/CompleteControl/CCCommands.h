@@ -30,3 +30,7 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 extern CommandInfo(kCommandInfo_DisableKey_Replacing);
 bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
 extern CommandInfo(kCommandInfo_EnableKey_Replacing);
+bool Cmd_DisableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+extern CommandInfo(kCommandInfo_DisableControl_Replacing);
+bool Cmd_EnableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr);
+extern CommandInfo(kCommandInfo_EnableControl_Replacing);
