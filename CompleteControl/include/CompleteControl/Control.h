@@ -55,6 +55,7 @@ public:
 	std::string Narrate();
 	bool IsDisabled();
 	void SetOutcome();
+	void ResolveModIndices();
 	//---Members
 	int dxScancode;
 	std::set<UInt8> cModIndices_Disables;

@@ -8,6 +8,22 @@
 #include "Globals.h"
 
 
+void Control::ResolveModIndices()
+{
+	decltype(cModIndices_Disables) cModIndices_Disables_NEW;
+	for (auto iModIndex : cModIndices_Disables)
+	{
+		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
+		UInt8 iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
+		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
+		if (iNewModIndex != 255)
+		{
+			cModIndices_Disables_NEW.insert(iNewModIndex);
+		}
+	}
+	cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
+}
+
 bool Control::IsDisabled()
 {
 	return !this->cModIndices_Disables.empty();

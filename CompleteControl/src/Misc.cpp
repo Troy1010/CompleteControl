@@ -27,30 +27,6 @@
 #include "DebugCC.h"
 #include "ExecuteCommand.h"
 
-void ResolveModIndicesForControls(std::vector<Control>& cControls)
-{
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(4, std::string(__func__) + "`cControls_BEFORE:" + TMC::Narrate(cControls));
-
-	for (auto& vControl : cControls)
-	{
-		decltype(vControl.cModIndices_Disables) cModIndices_Disables_NEW;
-		for (auto iModIndex : vControl.cModIndices_Disables)
-		{
-			DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
-			UInt8 iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
-			DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
-			if (iNewModIndex != 255)
-			{
-				cModIndices_Disables_NEW.insert(iNewModIndex);
-			}
-		}
-		vControl.cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
-	}
-	DebugCC(4, std::string(__func__) + "`cControls_AFTER:" + TMC::Narrate(cControls));
-	DebugCC(5, std::string(__func__) + "`Close");
-}
-
 Control GetControlByScancode(int iDXScancode)
 {
 	for (Control &vControl : Controls)

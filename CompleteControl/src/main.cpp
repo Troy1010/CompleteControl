@@ -83,7 +83,10 @@ void Handler_Load(void * reserved)
 	// ResolveModIndices
 	if (!Controls.empty())
 	{
-		ResolveModIndicesForControls(Controls);
+		for (auto& vControl : Controls)
+		{
+			vControl.ResolveModIndices();
+		}
 	}
 	else //-For savegames written before CC install.
 	{
