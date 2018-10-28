@@ -11,17 +11,7 @@ namespace TMC
 	}
 	std::string Narrate(std::vector<Control> Controls)
 	{
-		std::ostringstream vReturning;
-		TMC::Narrator::iIndent++;
-		vReturning << "Collection(Count:" << Narrate((int)Controls.size()) << ")..";
-		int i = 0;
-		for (Control vControl : Controls)
-		{
-			vReturning << "\n" << TMC::Narrator::Indent() << i << ":" << TMC::Narrate(vControl);
-			i++;
-		}
-		TMC::Narrator::iIndent--;
-		return vReturning.str();
+		return Narrator::Narrate_Collection(Controls);
 	}
 	std::string Narrate(std::set<UInt8> cSet)
 	{

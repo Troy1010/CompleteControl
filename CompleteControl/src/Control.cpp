@@ -64,9 +64,9 @@ std::string Control::Narrate()
 	vReturning << "Control..";
 	TMC::Narrator::iIndent++;
 	vReturning <<
-		"\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode << 
-		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables) <<
-		"\n" << TMC::Narrator::Indent() << "ControlID:" << ControlID;
+		"\n" << TMC::Narrator::Indent() << "ControlID:" << ControlID <<
+		"\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode <<
+		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
 	TMC::Narrator::iIndent--;
 	return vReturning.str();
 }
