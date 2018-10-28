@@ -8,6 +8,11 @@
 #include "Globals.h"
 
 
+int Control::GetDXScancode()
+{
+	return ExecuteCommand(GetControl_CmdInfo, ControlID);
+}
+
 void Control::ResolveModIndices()
 {
 	decltype(cModIndices_Disables) cModIndices_Disables_NEW;
@@ -33,17 +38,16 @@ void Control::SetOutcome()
 {
 	if (this->IsDisabled())
 	{
-		ExecuteCommand(DisableKey_OriginalExecute, this->dxScancode);
+		ExecuteCommand(DisableKey_OriginalExecute, this->GetDXScancode());
 	}
 	else
 	{
-		ExecuteCommand(EnableKey_OriginalExecute, this->dxScancode);
+		ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
 	}
 }
 
-Control::Control(int _dxScancode, UInt32 _ControlID)
+Control::Control(UInt32 _ControlID)
 {
-	dxScancode = _dxScancode;
 	cModIndices_Disables = std::set<UInt8>();
 	ControlID = _ControlID;
 }
@@ -51,26 +55,26 @@ Control::Control(int _dxScancode, UInt32 _ControlID)
 Control::Control(std::string sString)
 {
 	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");
-	dxScancode = TMC::IntFromString(cStrings[0]);
+	DebugCC(7,"cStrings:" + TMC::Narrate(cStrings));
+	ControlID = TMC::IntFromString(cStrings[0]);
 	cModIndices_Disables = std::set<UInt8>();
 	for (std::string s : TMC::SplitString(cStrings[1], ":"))
 	{
 		if (s.empty()) continue;
 		cModIndices_Disables.insert(TMC::IntFromString(s));
 	}
-	ControlID = TMC::IntFromString(cStrings[2]);
 }
 
 std::string Control::ToString()
 {
+	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	std::stringstream ss;
-	ss << dxScancode;
-	ss << ",";
+	ss << ControlID << ",";
 	for (UInt8 iInt : cModIndices_Disables)
 	{
 		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
 	}
-	ss << "," << ControlID;
+	DebugCC(7, std::string(__func__) + "`ss.str():" + ss.str());
 	return ss.str();
 }
 
@@ -81,7 +85,7 @@ std::string Control::Narrate()
 	TMC::Narrator::iIndent++;
 	vReturning <<
 		"\n" << TMC::Narrator::Indent() << "ControlID:" << ControlID <<
-		"\n" << TMC::Narrator::Indent() << "dxScancode:" << dxScancode <<
+		"\n" << TMC::Narrator::Indent() << "dxScancode:" << this->GetDXScancode() <<
 		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
 	TMC::Narrator::iIndent--;
 	return vReturning.str();

@@ -21,8 +21,8 @@ bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObj
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	//-Register iModIndex in vControl.cModIndices. SetOutcome.
 	auto vControl = GetControlByScancode(dxScancode);
-	vControl.cModIndices_Disables.insert(iModIndex);
-	vControl.SetOutcome();
+	vControl->cModIndices_Disables.insert(iModIndex);
+	vControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -39,9 +39,9 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	//-Unregister disable. SetOutcome.
-	auto vControl = GetControlByScancode(dxScancode);
-	vControl.cModIndices_Disables.erase(iModIndex);
-	vControl.SetOutcome();
+	auto pControl = GetControlByScancode(dxScancode);
+	pControl->cModIndices_Disables.erase(iModIndex);
+	pControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -58,9 +58,9 @@ bool Cmd_DisableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TE
 	//-Get iModIndex
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	//-Register iModIndex in vControl.cModIndices. SetOutcome.
-	auto vControl = GetControlByID(vControlID);
-	vControl.cModIndices_Disables.insert(iModIndex);
-	vControl.SetOutcome();
+	auto pControl = GetControlByID(vControlID);
+	pControl->cModIndices_Disables.insert(iModIndex);
+	pControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -78,8 +78,8 @@ bool Cmd_EnableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TES
 	iModIndex = (UInt8)(scriptObj->refID >> 24);
 	//-Unregister disable. SetOutcome.
 	auto vControl = GetControlByID(vControlID);
-	vControl.cModIndices_Disables.erase(iModIndex);
-	vControl.SetOutcome();
+	vControl->cModIndices_Disables.erase(iModIndex);
+	vControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }

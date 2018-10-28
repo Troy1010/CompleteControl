@@ -27,25 +27,25 @@
 #include "DebugCC.h"
 #include "ExecuteCommand.h"
 
-Control GetControlByScancode(int iDXScancode)
+Control* GetControlByScancode(int iDXScancode)
 {
 	for (Control &vControl : Controls)
 	{
-		if (vControl.dxScancode == iDXScancode)
+		if (vControl.GetDXScancode() == iDXScancode)
 		{
-			return vControl;
+			return &vControl;
 		}
 	}
 	return NULL;
 }
 
-Control GetControlByID(UInt32 vControlID)
+Control* GetControlByID(UInt32 vControlID)
 {
 	for (Control &vControl : Controls)
 	{
 		if (vControl.ControlID == vControlID)
 		{
-			return vControl;
+			return &vControl;
 		}
 	}
 	return NULL;
@@ -110,7 +110,7 @@ std::vector<Control> InitializeControls()
 	std::vector<Control> cControls;
 	for (int i = 0; i < Control::VanillaControlID_Count; ++i)
 	{
-		cControls.push_back(Control(ExecuteCommand(GetControl_CmdInfo, i), i));
+		cControls.push_back(Control(i));
 	}
 	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(cControls));
 	DebugCC(5, std::string(__func__) + "`Close");

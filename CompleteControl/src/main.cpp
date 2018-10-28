@@ -58,6 +58,7 @@ void Handler_Save(void * reserved)
 void Handler_Load(void * reserved)
 {
 	DebugCC(5, "Handler_Load`Open");
+	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 	NewGameOrLoadGame();
 	//-Serialization
 	UInt32	type, version, length;
@@ -73,7 +74,6 @@ void Handler_Load(void * reserved)
 			buf[length] = 0;
 			DebugCC(5, "buf:" + TMC::Narrate(buf));
 			Controls = ControlsFromString(std::string(buf));
-			DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 			delete buf;
 			break;
 		default:
@@ -92,6 +92,7 @@ void Handler_Load(void * reserved)
 	{
 		Controls = InitializeControls();
 	}
+	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 	//---Refresh Disables
 	SetOutcomeForAllControls(Controls);
 	DebugCC(5, "Handler_Load`Close");

@@ -47,7 +47,7 @@ public:
 		MenuMode,
 	};
 	//---Constructors
-	Control(int _dxScancode, UInt32 _ControlID);
+	Control(UInt32 _ControlID);
 	Control(std::string sString);
 	~Control(void);
 	//---
@@ -56,8 +56,8 @@ public:
 	bool IsDisabled();
 	void SetOutcome();
 	void ResolveModIndices();
+	int GetDXScancode();
 	//---Members
-	int dxScancode;
 	std::set<UInt8> cModIndices_Disables;
 	UInt32 ControlID;
 

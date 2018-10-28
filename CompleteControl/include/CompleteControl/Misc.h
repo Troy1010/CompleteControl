@@ -22,8 +22,8 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
-Control GetControlByScancode(int iDXScancode);
-Control GetControlByID(UInt32 vControlID);
+Control* GetControlByScancode(int iDXScancode);
+Control* GetControlByID(UInt32 vControlID);
 void SetOutcomeForAllControls(std::vector<Control> cControls);
 std::string StringizeControls(std::vector<Control> cControls);
 std::vector<Control> ControlsFromString(std::string sBigString);
