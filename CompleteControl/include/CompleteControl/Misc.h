@@ -22,6 +22,7 @@
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
+const bool Contains(std::set<UInt32> cSet, UInt32 vItem);
 const bool Contains(std::set<UInt8> cSet, UInt8 vItem);
 Control* GetControlByScancode(int iDXScancode);
 Control* GetControlByID(UInt32 vControlID);

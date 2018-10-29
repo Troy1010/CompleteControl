@@ -162,10 +162,9 @@ DEFINE_COMMAND_PLUGIN(UnreportedEnable, "Unregisters disable of this mod. Enable
 bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
+	UInt32	vControlID = -1;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	auto pControl = GetControlByID(vControlID);
-	*result = ExecuteCommand(IsKeyPressed3_CmdInfo, pControl->GetDXScancode()) && !pControl->IsDisabled();
+	*result = GetControlByID(vControlID)->IsEngaged();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -178,18 +177,17 @@ bool Cmd_OnControlDown2_Execute(COMMAND_ARGS)
 	*result = 0; //Is this necessary?
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
 	auto pControl = GetControlByID(vControlID);
-	auto iModIndex = (UInt8)(scriptObj->refID >> 24);
 	if (pControl->IsPressed())
 	{
-		if (!Contains(pControl->cModIndices_ReceivedOnControlDown, iModIndex))
+		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
 		{
-			pControl->cModIndices_ReceivedOnControlDown.insert(iModIndex);
+			pControl->cScriptRefs_ReceivedOnControlDown.insert(scriptObj->refID);
 			*result = 1;
 		}
 	}
-	else if (Contains(pControl->cModIndices_ReceivedOnControlDown, iModIndex))
+	else if (Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
 	{
-		pControl->cModIndices_ReceivedOnControlDown.erase(iModIndex);
+		pControl->cScriptRefs_ReceivedOnControlDown.erase(scriptObj->refID);
 	}
 	DebugCC(8, std::string(__func__) + "`Close");
 	return true;

@@ -27,6 +27,10 @@
 #include "DebugCC.h"
 #include "ExecuteCommand.h"
 
+const bool Contains(std::set<UInt32> cSet, UInt32 vItem)
+{
+	return cSet.find(vItem) != cSet.end();
+}
 const bool Contains(std::set<UInt8> cSet, UInt8 vItem)
 {
 	return cSet.find(vItem) != cSet.end();

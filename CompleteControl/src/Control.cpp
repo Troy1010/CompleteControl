@@ -7,9 +7,19 @@
 #include "ExecuteCommand.h"
 #include "Globals.h"
 
+const bool Control::IsEngaged()
+{
+	return IsPressed() && !IsDisabled();
+}
+
 const bool Control::IsPressed()
 {
 	return ExecuteCommand(IsKeyPressed3_CmdInfo, GetDXScancode());
+}
+
+const bool Control::IsDisabled()
+{
+	return !cModIndices_Disables.empty();
 }
 
 int Control::GetDXScancode()
@@ -40,11 +50,6 @@ void Control::ResolveModIndices()
 	cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
 }
 
-bool Control::IsDisabled()
-{
-	return !this->cModIndices_Disables.empty();
-}
-
 void Control::SetOutcome()
 {
 	if (eMenuModeType == MenuModeType::Both || (bMenuMode && eMenuModeType == MenuModeType::MenuMode) || (!bMenuMode && eMenuModeType == MenuModeType::GameMode))
@@ -68,7 +73,7 @@ Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::
 	dxScancode_NonVanilla = _dxScancode_NonVanilla;
 	cModIndices_Disables = std::set<UInt8>();
 	cModIndices_UnreportedDisables = std::set<UInt8>();
-	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
+	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
 }
 Control::Control(UInt32 _ControlID)
 {
@@ -77,7 +82,7 @@ Control::Control(UInt32 _ControlID)
 	dxScancode_NonVanilla = 0;
 	cModIndices_Disables = std::set<UInt8>();
 	cModIndices_UnreportedDisables = std::set<UInt8>();
-	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
+	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
 }
 Control::Control(std::string sString)
 {
@@ -98,7 +103,7 @@ Control::Control(std::string sString)
 		if (s.empty()) continue;
 		cModIndices_UnreportedDisables.insert(TMC::IntFromString(s));
 	}
-	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
+	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
 }
 
 

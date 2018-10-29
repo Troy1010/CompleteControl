@@ -57,15 +57,16 @@ public:
 	//---
 	std::string ToString();
 	std::string Narrate();
-	bool IsDisabled();
+	const bool IsDisabled();
 	void SetOutcome();
 	void ResolveModIndices();
 	int GetDXScancode();
 	const bool IsPressed();
+	const bool IsEngaged();
 	//---Members
 	std::set<UInt8> cModIndices_Disables;
 	std::set<UInt8> cModIndices_UnreportedDisables;
 	UInt32 ControlID;
 	MenuModeType eMenuModeType; //Some controls should only be disabled during gamemode, etc.
-	std::set<UInt8> cModIndices_ReceivedOnControlDown;
+	std::set<UInt32> cScriptRefs_ReceivedOnControlDown;
 };

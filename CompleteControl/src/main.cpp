@@ -91,14 +91,14 @@ void Handler_Load(void * reserved)
 	char* buf;
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
+		DebugCC(6, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
 		switch (type)
 		{
 		case 'CTRL':
 			buf = new char[length + 1]; //c strings require a null at the end.
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
-			DebugCC(5, "buf:" + TMC::Narrate(buf));
+			DebugCC(6, "buf:" + TMC::Narrate(buf));
 			Controls = ControlsFromString(std::string(buf));
 			delete buf;
 			break;
