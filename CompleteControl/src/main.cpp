@@ -47,18 +47,26 @@ DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0
 //### HandleOnGameMode
 bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(7, std::string(__func__) + "`Open");
 	bMenuMode = false;
-	DebugCC(5, std::string(__func__) + "`Close");
+	for (auto vControl : Controls)
+	{
+		vControl.SetOutcome();
+	}
+	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
 //### HandleOnMenuMode
 bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(7, std::string(__func__) + "`Open");
 	bMenuMode = true;
-	DebugCC(5, std::string(__func__) + "`Close");
+	for (auto vControl : Controls)
+	{
+		vControl.SetOutcome();
+	}
+	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
