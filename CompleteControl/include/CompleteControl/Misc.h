@@ -38,3 +38,10 @@ static ParamInfo kParams_ThreeInts[3] =
 	{	"int", kParamType_Integer, 0 },
 	{	"int", kParamType_Integer, 0 },
 };
+
+static ParamInfo kParams_OneRefTwoInts[3] =
+{
+	{	"int", kParamType_InventoryObject, 0},
+	{	"int", kParamType_Integer, 0 },
+	{	"int", kParamType_Integer, 0 },
+};

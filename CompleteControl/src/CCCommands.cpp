@@ -78,16 +78,16 @@ DEFINE_COMMAND_PLUGIN(EnableControl_Replacing, "Unregisters disable of this mod.
 bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
+	TESForm* vControlID_Form = 0;
 	int dxScancode = 0;
 	Control::MenuModeType eMenuModeType;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID, &dxScancode, &eMenuModeType)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	Controls.push_back(Control(vControlID, eMenuModeType, dxScancode));
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form, &dxScancode, &eMenuModeType)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	Controls.push_back(Control(vControlID_Form->refID, eMenuModeType, dxScancode));
 	DebugCC(4, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control.", 0, 3, kParams_ThreeInts)
+DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control.", 0, 3, kParams_OneRefTwoInts)
 //### IsDisabled
 bool Cmd_IsDisabled_Execute(COMMAND_ARGS)
 {
@@ -186,8 +186,25 @@ DEFINE_COMMAND_PLUGIN(OnControlDown2, "OnControlDown2 command", 0, 1, kParams_On
 //### OnControlDown2_Ref
 bool Cmd_OnControlDown2_Ref_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(5, std::string(__func__) + "`Close");
+	DebugCC(7, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	*result = 0; //Is this necessary?
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	auto pControl = GetControlByID(vControlID_Form->refID);
+	if (!pControl) { DebugCC(5, std::string(__func__) + "`Received unregistered control:" + TMC::Narrate(vControlID_Form->refID)); return true; }
+	if (pControl->IsPressed())
+	{
+		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
+		{
+			pControl->cScriptRefs_ReceivedOnControlDown.insert(scriptObj->refID);
+			*result = 1;
+		}
+	}
+	else if (Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
+	{
+		pControl->cScriptRefs_ReceivedOnControlDown.erase(scriptObj->refID);
+	}
+	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(OnControlDown2_Ref, "OnControlDown2_Ref command", 0, 1, kParams_OneInventoryObject) //Is this the correct Params for a ref?
