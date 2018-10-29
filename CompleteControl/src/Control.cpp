@@ -106,14 +106,6 @@ Control::Control(std::string sString)
 	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
 }
 
-
-//ControlID = _ControlID;
-//eMenuModeType = MenuModeType::GameMode;
-//dxScancode_NonVanilla = 0;
-//cModIndices_Disables = std::set<UInt8>();
-//cModIndices_UnreportedDisables = std::set<UInt8>();
-//cModIndices_ReceivedOnControlDown = std::set<UInt8>();
-
 std::string Control::ToString()
 {
 	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));

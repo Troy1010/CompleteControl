@@ -32,15 +32,10 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	UInt32	dxScancode = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get dxScancode
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//-Unregister disable. SetOutcome.
 	auto pControl = GetControlByScancode(dxScancode);
-	pControl->cModIndices_Disables.erase(iModIndex);
+	//-Unregister disable. SetOutcome.
+	pControl->cModIndices_Disables.erase((UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	pControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
@@ -51,15 +46,10 @@ bool Cmd_DisableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TE
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	UInt32	vControlID = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get vControlID
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//-Register iModIndex in vControl.cModIndices. SetOutcome.
 	auto pControl = GetControlByID(vControlID);
-	pControl->cModIndices_Disables.insert(iModIndex);
+	//-Register iModIndex in pControl.cModIndices. SetOutcome.
+	pControl->cModIndices_Disables.insert((UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	pControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
