@@ -29,3 +29,10 @@ std::string StringizeControls(std::vector<Control> cControls);
 std::vector<Control> ControlsFromString(std::string sBigString);
 void SafeConsolePrint(std::string sString);
 std::vector<Control> InitializeControls();
+
+static ParamInfo kParams_ThreeInts[3] =
+{
+	{	"int", kParamType_Integer, 0 },
+	{	"int", kParamType_Integer, 0 },
+	{	"int", kParamType_Integer, 0 },
+};

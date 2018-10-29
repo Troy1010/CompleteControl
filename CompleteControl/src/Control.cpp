@@ -43,27 +43,33 @@ bool Control::IsDisabled()
 
 void Control::SetOutcome()
 {
-	if (this->IsDisabled())
+	if (eMenuModeType == MenuModeType::Both || (bMenuMode && eMenuModeType == MenuModeType::MenuMode) || (!bMenuMode && eMenuModeType == MenuModeType::GameMode))
 	{
-		ExecuteCommand(DisableKey_OriginalExecute, this->GetDXScancode());
-	}
-	else
-	{
-		ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
+		if (this->IsDisabled())
+		{
+			ExecuteCommand(DisableKey_OriginalExecute, this->GetDXScancode());
+		}
+		else
+		{
+			ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
+		}
 	}
 }
 
 
-Control::Control(UInt32 _ControlID, int _dxScancode_NonVanilla)
+Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::GameMode, int _dxScancode_NonVanilla = 0)
 {
-	cModIndices_Disables = std::set<UInt8>();
 	ControlID = _ControlID;
+	eMenuModeType = _eMenuModeType;
 	dxScancode_NonVanilla = _dxScancode_NonVanilla;
+	cModIndices_Disables = std::set<UInt8>();
 }
 Control::Control(UInt32 _ControlID)
 {
-	cModIndices_Disables = std::set<UInt8>();
 	ControlID = _ControlID;
+	eMenuModeType = MenuModeType::GameMode;
+	dxScancode_NonVanilla = 0;
+	cModIndices_Disables = std::set<UInt8>();
 }
 Control::Control(std::string sString)
 {
@@ -76,6 +82,7 @@ Control::Control(std::string sString)
 		if (s.empty()) continue;
 		cModIndices_Disables.insert(TMC::IntFromString(s));
 	}
+	dxScancode_NonVanilla = TMC::IntFromString(cStrings[2]);
 }
 
 std::string Control::ToString()
@@ -87,6 +94,7 @@ std::string Control::ToString()
 	{
 		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
 	}
+	ss << "," << dxScancode_NonVanilla;
 	DebugCC(7, std::string(__func__) + "`ss.str():" + ss.str());
 	return ss.str();
 }

@@ -23,16 +23,18 @@
 #include "DebugCC.h"
 #include "CopyPastedFromOBSE.h"
 #include "Misc.h"
+#include "ExecuteCommand.h"
 
-//bool Cmd_CommandTemplate_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_CommandTemplate);
-//bool Cmd_DisableKey_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_DisableKey_Replacing);
-//bool Cmd_EnableKey_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_EnableKey_Replacing);
-//bool Cmd_DisableControl_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_DisableControl_Replacing);
-//bool Cmd_EnableControl_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_EnableControl_Replacing);
-//bool Cmd_RegisterControl_Replacing_Execute(COMMAND_ARGS);
 extern CommandInfo(kCommandInfo_RegisterControl);
+extern CommandInfo(kCommandInfo_IsDisabled);
+extern CommandInfo(kCommandInfo_GetKey);
+extern CommandInfo(kCommandInfo_UnreportedDisable);
+extern CommandInfo(kCommandInfo_UnreportedEnable);
+extern CommandInfo(kCommandInfo_IsEngaged);
+extern CommandInfo(kCommandInfo_OnControlDown);
+extern CommandInfo(kCommandInfo_OnControlDown_Ref);

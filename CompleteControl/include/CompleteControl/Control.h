@@ -42,14 +42,15 @@ public:
 		QuickLoad,
 		Grab
 	};
+	static const int MenuModeType_EnumSize = 3;
 	enum MenuModeType
 	{
-		Both = 0,
 		GameMode,
 		MenuMode,
+		Both,
 	};
 	//---Constructors
-	Control(UInt32 _ControlID, int _dxScancode_NonVanilla);
+	Control(UInt32 _ControlID, MenuModeType eMenuModeType, int _dxScancode_NonVanilla);
 	Control(UInt32 _ControlID);
 	Control(std::string sString);
 	~Control(void);
@@ -62,8 +63,7 @@ public:
 	int GetDXScancode();
 	//---Members
 	std::set<UInt8> cModIndices_Disables;
-	UInt32 ControlID;
-
 	std::set<UInt8> cModIndices_UnreportedDisables;
-	MenuModeType eMenuModeType;
+	UInt32 ControlID;
+	MenuModeType eMenuModeType; //Some controls should only be disabled during gamemode, etc.
 };

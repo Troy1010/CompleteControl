@@ -90,10 +90,99 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 	DebugCC(5, std::string(__func__) + "`Open");
 	UInt32	vControlID = 0;
 	int dxScancode = 0;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID, &dxScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	Controls.push_back(Control(vControlID, dxScancode));
+	Control::MenuModeType eMenuModeType;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID, &dxScancode, &eMenuModeType)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	Controls.push_back(Control(vControlID, eMenuModeType, dxScancode));
 	DebugCC(4, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control.", 0, 2, kParams_TwoInts)
+DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control.", 0, 3, kParams_ThreeInts)
+//### IsDisabled
+bool Cmd_IsDisabled_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = GetControlByID(vControlID)->IsDisabled();
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsDisabled, "True if the key -should- be disabled.", 0, 1, kParams_OneInt)
+//### GetKey
+bool Cmd_GetKey_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = GetControlByID(vControlID)->GetDXScancode();
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(GetKey, "GetKey command", 0, 1, kParams_OneInt)
+//### UnreportedDisable
+bool Cmd_UnreportedDisable_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	UInt8	iModIndex = 0;
+	//---Register in Controls
+	//-Get vControlID
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	//-Get iModIndex
+	iModIndex = (UInt8)(scriptObj->refID >> 24);
+	//-Register iModIndex in vControl.cModIndices. SetOutcome.
+	auto pControl = GetControlByID(vControlID);
+	pControl->cModIndices_UnreportedDisables.insert(iModIndex);
+	pControl->SetOutcome();
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(UnreportedDisable, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
+//### UnreportedEnable
+bool Cmd_UnreportedEnable_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	UInt8	iModIndex = 0;
+	//---Register in Controls
+	//-Get dxScancode
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	//-Get iModIndex
+	iModIndex = (UInt8)(scriptObj->refID >> 24);
+	//-Unregister disable. SetOutcome.
+	auto pControl = GetControlByID(vControlID);
+	pControl->cModIndices_UnreportedDisables.erase(iModIndex);
+	pControl->SetOutcome();
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(UnreportedEnable, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
+//### IsEngaged
+bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	auto pControl = GetControlByID(vControlID);
+	*result = ExecuteCommand(IsKeyPressed3_CmdInfo, pControl->GetDXScancode()) && !pControl->IsDisabled();
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsEngaged, "Is the key pressed and not disabled?", 0, 1, kParams_OneInt)
+//### OnControlDown
+bool Cmd_OnControlDown_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(OnControlDown, "OnControlDown command", 0, 1, kParams_OneInt)
+//### OnControlDown_Ref
+bool Cmd_OnControlDown_Ref_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(OnControlDown_Ref, "OnControlDown_Ref command", 0, 1, kParams_OneInventoryObject) //Is this the correct Params for a ref?

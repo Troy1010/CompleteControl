@@ -108,9 +108,14 @@ std::vector<Control> InitializeControls()
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	std::vector<Control> cControls;
-	for (int i = 0; i < Control::VanillaControlID_EnumSize; ++i)
+	for (UInt32 i = 0; i < Control::VanillaControlID_EnumSize; ++i)
 	{
-		cControls.push_back(Control(i));
+		auto vControl = Control(i);
+		if (i == 17)
+		{
+			vControl.eMenuModeType = Control::MenuModeType::Both;
+		}
+		cControls.push_back(vControl);
 	}
 	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(cControls));
 	DebugCC(5, std::string(__func__) + "`Close");

@@ -12,10 +12,13 @@ Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey 
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
 const CommandInfo* GetControl_CmdInfo; //GetControl command
 const CommandInfo* ResolveModIndex_CmdInfo;
+const CommandInfo* IsKeyPressed3_CmdInfo;
 std::vector<Control> Controls;
 
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;
-bool bOblivionLoaded = false;
 OBSESerializationInterface	* g_serialization = NULL;
 PluginHandle				g_pluginHandle = kPluginHandle_Invalid;
+
+bool bOblivionLoaded = false; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
+bool bMenuMode = true; //As far as I know, I must use a helper mod for this.

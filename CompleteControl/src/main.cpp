@@ -30,11 +30,11 @@
 
 inline void NewGameOrLoadGame()
 {
-	bOblivionLoaded = true; //Because there is no OblivionLoaded event, I think this is the closest I can get.
+	bOblivionLoaded = true; //Because there is no OblivionLoaded event, I think this is the closest I can get. (without using mod helper)
 }
 
 #pragma region ModHandlers
-//This 'handler' is literally just a command called by the CompleteControl.esp mod when its own OblivionLoaded event is fired.
+//These 'handlers' are literally just commands called by the CompleteControlHelper.esp mod when its own event is fired.
 bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, "HandleOblivionLoaded`Open");
@@ -44,6 +44,24 @@ bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
+//### HandleOnGameMode
+bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	bMenuMode = false;
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
+//### HandleOnMenuMode
+bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	bMenuMode = true;
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
 #pragma endregion
 #pragma region SerializationIntfcHandlers
 void Handler_Save(void * reserved)
@@ -215,6 +233,17 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	}
 	obse->SetOpcodeBase(0x28B0);
 	obse->RegisterCommand(&kCommandInfo_RegisterControl);
+	obse->RegisterCommand(&kCommandInfo_IsDisabled);
+	obse->RegisterCommand(&kCommandInfo_GetKey);
+	obse->RegisterCommand(&kCommandInfo_UnreportedDisable);
+	obse->RegisterCommand(&kCommandInfo_UnreportedEnable);
+	obse->RegisterCommand(&kCommandInfo_OnControlDown);
+	obse->RegisterCommand(&kCommandInfo_OnControlDown_Ref);
+
+	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
+	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);
+	obse->RegisterCommand(&kCommandInfo_HandleOnMenuMode);
+
 	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
 	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly2);
@@ -223,7 +252,6 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestDisableKeyCopyPasta);
 	obse->RegisterCommand(&kCommandInfo_TestCeil);
-	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_PrintControls);
 	obse->RegisterCommand(&kCommandInfo_TestControlToString);
 	obse->RegisterCommand(&kCommandInfo_TestControlsFromString);
@@ -246,6 +274,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		// Get Some Commands
 		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
 		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8
+		IsKeyPressed3_CmdInfo = g_commandTableIntfc->GetByName("IsKeyPressed3");
 	}
 
 	// register to receive messages from OBSE
