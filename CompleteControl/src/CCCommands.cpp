@@ -80,14 +80,15 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 	DebugCC(5, std::string(__func__) + "`Open");
 	TESForm* vControlID_Form = 0;
 	int dxScancode = 0;
-	Control::MenuModeType eMenuModeType;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form, &dxScancode, &eMenuModeType)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	int iMenuModeType = -1;
+	auto eMenuModeType = Control::MenuModeType(0);
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form, &dxScancode, &iMenuModeType)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
 	//-Defaults for optional params
 	if (!dxScancode) { dxScancode = 0xFF; } //0xFF = unassigned
-	if (!eMenuModeType) { eMenuModeType = Control::MenuModeType(0); }
+	if (iMenuModeType != -1) { eMenuModeType = Control::MenuModeType(iMenuModeType); }
 	//-
 	Controls.push_back(Control(vControlID_Form->refID, eMenuModeType, dxScancode));
-	DebugCC(6, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
+	DebugCC(4, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
