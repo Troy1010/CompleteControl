@@ -36,5 +36,6 @@ extern CommandInfo(kCommandInfo_GetKey);
 extern CommandInfo(kCommandInfo_UnreportedDisable);
 extern CommandInfo(kCommandInfo_UnreportedEnable);
 extern CommandInfo(kCommandInfo_IsEngaged);
+extern CommandInfo(kCommandInfo_IsEngaged_ByRef);
 extern CommandInfo(kCommandInfo_OnControlDown2);
-extern CommandInfo(kCommandInfo_OnControlDown2_Ref);
+extern CommandInfo(kCommandInfo_OnControlDown2_ByRef);

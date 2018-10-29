@@ -45,11 +45,33 @@ int Control::GetDXScancode() //perhaps I could remake this to go faster
 
 void Control::ResolveModIndices()
 {
+	UInt8 iNewModIndex;
+	if (ControlID >= VanillaControlID_EnumSize)
+	{
+		DebugCC(7, std::string(__func__) + "`ControlID OLD:" + TMC::Narrate(ControlID));
+		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, ControlID >> 24); // iModIndex:ControlID >> 24
+		if (iNewModIndex != 0xFF)
+		{
+			ControlID &= ~UInt32(0xFF000000); // Clear out whatever is at the first two hex digits.
+			DebugCC(7, std::string(__func__) + "`ControlID CLEARED:" + TMC::Narrate(ControlID));
+			ControlID |= UInt32(iNewModIndex) << 24; // Apply mask.
+			DebugCC(7, std::string(__func__) + "`ControlID NEW:" + TMC::Narrate(ControlID));
+		}
+		else
+		{
+			DebugCC(7, "Controls BEFORE:" + TMC::Narrate(Controls));
+			bDeleteMe = true; // Ugly
+			Controls.erase(std::remove_if(Controls.begin(), Controls.end(), [](const Control & o) { return o.bDeleteMe; }), Controls.end()); // Dangerous, Ugly. Why?
+			DebugCC(7, "Controls AFTER:" + TMC::Narrate(Controls));
+			return;
+		}
+	}
+	//-cModIndices_Disables
 	decltype(cModIndices_Disables) cModIndices_Disables_NEW;
 	for (auto iModIndex : cModIndices_Disables)
 	{
 		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
-		UInt8 iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
+		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
 		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
@@ -57,11 +79,12 @@ void Control::ResolveModIndices()
 		}
 	}
 	cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
+	//-cModIndices_UnreportedDisables
 	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
 	for (auto iModIndex : cModIndices_UnreportedDisables)
 	{
 		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
-		UInt8 iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
+		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
 		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
@@ -95,6 +118,7 @@ Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::
 	cModIndices_Disables = std::set<UInt8>();
 	cModIndices_UnreportedDisables = std::set<UInt8>();
 	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
+	bDeleteMe = false;
 }
 Control::Control(UInt32 _ControlID)
 {
@@ -104,6 +128,7 @@ Control::Control(UInt32 _ControlID)
 	cModIndices_Disables = std::set<UInt8>();
 	cModIndices_UnreportedDisables = std::set<UInt8>();
 	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
+	bDeleteMe = false;
 }
 Control::Control(std::string sString)
 {
@@ -125,6 +150,7 @@ Control::Control(std::string sString)
 		cModIndices_UnreportedDisables.insert(TMC::IntFromString(s));
 	}
 	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
+	bDeleteMe = false;
 }
 
 std::string Control::ToString()

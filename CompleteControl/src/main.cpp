@@ -245,8 +245,10 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_GetKey);
 	obse->RegisterCommand(&kCommandInfo_UnreportedDisable);
 	obse->RegisterCommand(&kCommandInfo_UnreportedEnable);
+	obse->RegisterCommand(&kCommandInfo_IsEngaged);
+	obse->RegisterCommand(&kCommandInfo_IsEngaged_ByRef);
 	obse->RegisterCommand(&kCommandInfo_OnControlDown2);
-	obse->RegisterCommand(&kCommandInfo_OnControlDown2_Ref);
+	obse->RegisterCommand(&kCommandInfo_OnControlDown2_ByRef);
 
 	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);

@@ -69,4 +69,5 @@ public:
 	UInt32 ControlID;
 	MenuModeType eMenuModeType; //Some controls should only be disabled during gamemode, etc.
 	std::set<UInt32> cScriptRefs_ReceivedOnControlDown;
+	bool bDeleteMe; // Ugly
 };

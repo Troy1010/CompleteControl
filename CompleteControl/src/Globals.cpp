@@ -17,10 +17,10 @@ ScriptEventList * pBlankScriptEventList = NULL;
 OBSESerializationInterface	* g_serialization = NULL;
 PluginHandle				g_pluginHandle = kPluginHandle_Invalid;
 
-extern const CommandInfo* GetControl_CmdInfo = NULL;
-extern const CommandInfo* GetAltControl2_CmdInfo = NULL;
-extern const CommandInfo* ResolveModIndex_CmdInfo = NULL;
-extern const CommandInfo* IsKeyPressed3_CmdInfo = NULL;
+const CommandInfo* GetControl_CmdInfo = NULL;
+const CommandInfo* GetAltControl2_CmdInfo = NULL;
+const CommandInfo* ResolveModIndex_CmdInfo = NULL;
+const CommandInfo* IsKeyPressed3_CmdInfo = NULL;
 
 bool bOblivionLoaded = false; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
 bool bMenuMode = true; //As far as I know, I must use a helper mod for this.
