@@ -281,6 +281,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
 		// Get Some Commands
 		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
+		GetAltControl2_CmdInfo = g_commandTableIntfc->GetByName("GetAltControl2");
 		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8
 		IsKeyPressed3_CmdInfo = g_commandTableIntfc->GetByName("IsKeyPressed3");
 	}

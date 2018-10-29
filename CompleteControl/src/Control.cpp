@@ -22,14 +22,23 @@ const bool Control::IsDisabled()
 	return !cModIndices_Disables.empty();
 }
 
-int Control::GetDXScancode()
+int Control::GetDXScancode() //perhaps I could remake this to go faster
 {
+	DebugCC(7, std::string(__func__) + "`Open. ControlID:" + TMC::Narrate(ControlID));
 	if (ControlID < VanillaControlID_EnumSize)
 	{
-		return ExecuteCommand(GetControl_CmdInfo, ControlID);
+		int dxScancode = ExecuteCommand(GetControl_CmdInfo, ControlID);
+		if (dxScancode == 0xFF)
+		{
+			dxScancode = ExecuteCommand(GetAltControl2_CmdInfo, ControlID);
+			DebugCC(7, "dxScancode was 0xFF! Tryagain:" + TMC::Narrate(dxScancode));
+		}
+		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::Narrate(dxScancode));
+		return dxScancode;
 	}
 	else
 	{
+		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::Narrate(dxScancode_NonVanilla));
 		return dxScancode_NonVanilla;
 	}
 }
@@ -48,6 +57,18 @@ void Control::ResolveModIndices()
 		}
 	}
 	cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
+	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
+	for (auto iModIndex : cModIndices_UnreportedDisables)
+	{
+		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
+		UInt8 iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
+		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
+		if (iNewModIndex != 255)
+		{
+			cModIndices_UnreportedDisables_NEW.insert(iNewModIndex);
+		}
+	}
+	cModIndices_UnreportedDisables = cModIndices_UnreportedDisables_NEW; // leaking?
 }
 
 void Control::SetOutcome()
@@ -134,8 +155,10 @@ std::string Control::Narrate()
 	TMC::Narrator::iIndent++;
 	vReturning <<
 		"\n" << TMC::Narrator::Indent() << "ControlID:" << ControlID <<
-		"\n" << TMC::Narrator::Indent() << "dxScancode:" << this->GetDXScancode() <<
-		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables);
+		"\n" << TMC::Narrator::Indent() << "dxScancode:" << GetDXScancode() <<
+		"\n" << TMC::Narrator::Indent() << "eMenuModeType:" << eMenuModeType <<
+		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables) <<
+		"\n" << TMC::Narrator::Indent() << "cModIndices_Unregistered:" << TMC::Narrate(cModIndices_UnreportedDisables);
 	TMC::Narrator::iIndent--;
 	return vReturning.str();
 }

@@ -28,15 +28,17 @@ extern OBSEScriptInterface * g_scriptIntfc; //For command argument extraction
 
 extern Cmd_Execute DisableKey_OriginalExecute; //Execute of replaced DisableKey command
 extern Cmd_Execute EnableKey_OriginalExecute; //Execute of replaced EnableKey command
-extern const CommandInfo* GetControl_CmdInfo; //GetControl command
-extern const CommandInfo* ResolveModIndex_CmdInfo;
-extern const CommandInfo* IsKeyPressed3_CmdInfo;
 extern std::vector<Control> Controls;
 
 extern Script* pBlankScript; // For use in ExecuteCommand
 extern ScriptEventList * pBlankScriptEventList; // For use in ExecuteCommand
 extern OBSESerializationInterface	* g_serialization;
 extern PluginHandle				g_pluginHandle;
+
+extern const CommandInfo* GetControl_CmdInfo;
+extern const CommandInfo* GetAltControl2_CmdInfo;
+extern const CommandInfo* ResolveModIndex_CmdInfo;
+extern const CommandInfo* IsKeyPressed3_CmdInfo;
 
 extern bool bOblivionLoaded; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
 extern bool bMenuMode; //As far as I know, I must use a helper mod for this.
