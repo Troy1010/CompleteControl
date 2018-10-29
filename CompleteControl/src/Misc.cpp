@@ -27,6 +27,11 @@
 #include "DebugCC.h"
 #include "ExecuteCommand.h"
 
+const bool Contains(std::set<UInt8> cSet, UInt8 vItem)
+{
+	return cSet.find(vItem) != cSet.end();
+}
+
 Control* GetControlByScancode(int iDXScancode)
 {
 	for (Control &vControl : Controls)

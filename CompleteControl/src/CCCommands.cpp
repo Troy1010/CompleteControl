@@ -170,19 +170,36 @@ bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(IsEngaged, "Is the key pressed and not disabled?", 0, 1, kParams_OneInt)
-//### OnControlDown
-bool Cmd_OnControlDown_Execute(COMMAND_ARGS)
+//### OnControlDown2
+bool Cmd_OnControlDown2_Execute(COMMAND_ARGS)
+{
+	DebugCC(8, std::string(__func__) + "`Open");
+	UInt32	vControlID = 0;
+	*result = 0; //Is this necessary?
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	auto pControl = GetControlByID(vControlID);
+	auto iModIndex = (UInt8)(scriptObj->refID >> 24);
+	if (pControl->IsPressed())
+	{
+		if (!Contains(pControl->cModIndices_ReceivedOnControlDown, iModIndex))
+		{
+			pControl->cModIndices_ReceivedOnControlDown.insert(iModIndex);
+			*result = 1;
+		}
+	}
+	else if (Contains(pControl->cModIndices_ReceivedOnControlDown, iModIndex))
+	{
+		pControl->cModIndices_ReceivedOnControlDown.erase(iModIndex);
+	}
+	DebugCC(8, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(OnControlDown2, "OnControlDown2 command", 0, 1, kParams_OneInt)
+//### OnControlDown2_Ref
+bool Cmd_OnControlDown2_Ref_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(OnControlDown, "OnControlDown command", 0, 1, kParams_OneInt)
-//### OnControlDown_Ref
-bool Cmd_OnControlDown_Ref_Execute(COMMAND_ARGS)
-{
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(5, std::string(__func__) + "`Close");
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(OnControlDown_Ref, "OnControlDown_Ref command", 0, 1, kParams_OneInventoryObject) //Is this the correct Params for a ref?
+DEFINE_COMMAND_PLUGIN(OnControlDown2_Ref, "OnControlDown2_Ref command", 0, 1, kParams_OneInventoryObject) //Is this the correct Params for a ref?

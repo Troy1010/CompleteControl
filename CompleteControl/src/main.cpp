@@ -91,7 +91,7 @@ void Handler_Load(void * reserved)
 	char* buf;
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length));
+		DebugCC(5, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
 		switch (type)
 		{
 		case 'CTRL':
@@ -106,7 +106,7 @@ void Handler_Load(void * reserved)
 			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
-	// ResolveModIndices
+	//-ResolveModIndices
 	if (!Controls.empty())
 	{
 		for (auto& vControl : Controls)
@@ -245,8 +245,8 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_GetKey);
 	obse->RegisterCommand(&kCommandInfo_UnreportedDisable);
 	obse->RegisterCommand(&kCommandInfo_UnreportedEnable);
-	obse->RegisterCommand(&kCommandInfo_OnControlDown);
-	obse->RegisterCommand(&kCommandInfo_OnControlDown_Ref);
+	obse->RegisterCommand(&kCommandInfo_OnControlDown2);
+	obse->RegisterCommand(&kCommandInfo_OnControlDown2_Ref);
 
 	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);

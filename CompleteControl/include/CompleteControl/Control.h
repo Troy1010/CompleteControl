@@ -61,9 +61,11 @@ public:
 	void SetOutcome();
 	void ResolveModIndices();
 	int GetDXScancode();
+	const bool IsPressed();
 	//---Members
 	std::set<UInt8> cModIndices_Disables;
 	std::set<UInt8> cModIndices_UnreportedDisables;
 	UInt32 ControlID;
 	MenuModeType eMenuModeType; //Some controls should only be disabled during gamemode, etc.
+	std::set<UInt8> cModIndices_ReceivedOnControlDown;
 };

@@ -7,6 +7,10 @@
 #include "ExecuteCommand.h"
 #include "Globals.h"
 
+const bool Control::IsPressed()
+{
+	return ExecuteCommand(IsKeyPressed3_CmdInfo, GetDXScancode());
+}
 
 int Control::GetDXScancode()
 {
@@ -63,6 +67,8 @@ Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::
 	eMenuModeType = _eMenuModeType;
 	dxScancode_NonVanilla = _dxScancode_NonVanilla;
 	cModIndices_Disables = std::set<UInt8>();
+	cModIndices_UnreportedDisables = std::set<UInt8>();
+	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
 }
 Control::Control(UInt32 _ControlID)
 {
@@ -70,31 +76,56 @@ Control::Control(UInt32 _ControlID)
 	eMenuModeType = MenuModeType::GameMode;
 	dxScancode_NonVanilla = 0;
 	cModIndices_Disables = std::set<UInt8>();
+	cModIndices_UnreportedDisables = std::set<UInt8>();
+	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
 }
 Control::Control(std::string sString)
 {
 	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");
 	DebugCC(7,"cStrings:" + TMC::Narrate(cStrings));
 	ControlID = TMC::IntFromString(cStrings[0]);
+	eMenuModeType = Control::MenuModeType(TMC::IntFromString(cStrings[1]));
+	dxScancode_NonVanilla = TMC::IntFromString(cStrings[2]);
 	cModIndices_Disables = std::set<UInt8>();
-	for (std::string s : TMC::SplitString(cStrings[1], ":"))
+	for (std::string s : TMC::SplitString(cStrings[3], ":"))
 	{
 		if (s.empty()) continue;
 		cModIndices_Disables.insert(TMC::IntFromString(s));
 	}
-	dxScancode_NonVanilla = TMC::IntFromString(cStrings[2]);
+	cModIndices_UnreportedDisables = std::set<UInt8>();
+	for (std::string s : TMC::SplitString(cStrings[4], ":"))
+	{
+		if (s.empty()) continue;
+		cModIndices_UnreportedDisables.insert(TMC::IntFromString(s));
+	}
+	cModIndices_ReceivedOnControlDown = std::set<UInt8>();
 }
+
+
+//ControlID = _ControlID;
+//eMenuModeType = MenuModeType::GameMode;
+//dxScancode_NonVanilla = 0;
+//cModIndices_Disables = std::set<UInt8>();
+//cModIndices_UnreportedDisables = std::set<UInt8>();
+//cModIndices_ReceivedOnControlDown = std::set<UInt8>();
 
 std::string Control::ToString()
 {
 	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	std::stringstream ss;
-	ss << ControlID << ",";
+	ss << ControlID;
+	ss << "," << eMenuModeType;
+	ss << "," << dxScancode_NonVanilla;
+	ss << ",";
 	for (UInt8 iInt : cModIndices_Disables)
 	{
 		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
 	}
-	ss << "," << dxScancode_NonVanilla;
+	ss << ",";
+	for (UInt8 iInt : cModIndices_UnreportedDisables)
+	{
+		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
+	}
 	DebugCC(7, std::string(__func__) + "`ss.str():" + ss.str());
 	return ss.str();
 }
