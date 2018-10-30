@@ -132,6 +132,7 @@ void Handler_Preload(void * reserved)
 
 void Handler_NewGame(void * reserved)
 {
+	bOblivionLoaded = true; // for sanity, to see following debug message.
 	DebugCC(5, "Handler_NewGame`Open");
 	NewGameOrLoadGame();
 	Controls = InitializeControls();
