@@ -158,8 +158,10 @@ bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	UInt32	vControlID = -1;
+	Control* pControl;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	*result = GetControlByID(vControlID)->IsEngaged();
+	if (!(pControl = GetControlByID(vControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" +TMC::Narrate(vControlID)); return true; }
+	*result = pControl->IsEngaged();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -169,8 +171,10 @@ bool Cmd_IsEngaged_ByRef_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	TESForm* vControlID_Form = 0;
+	Control* pControl;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	*result = GetControlByID(vControlID_Form->refID)->IsEngaged();
+	if (!(pControl = GetControlByID(vControlID_Form->refID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID_Form->refID)); return true; }
+	*result = pControl->IsEngaged();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -180,9 +184,10 @@ bool Cmd_OnControlDown2_Execute(COMMAND_ARGS)
 {
 	DebugCC(8, std::string(__func__) + "`Open");
 	UInt32	vControlID = 0;
-	*result = 0; //Is this necessary?
+	Control* pControl;
+	*result = 0;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	auto pControl = GetControlByID(vControlID);
+	if (!(pControl = GetControlByID(vControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID)); return true; }
 	if (pControl->IsPressed())
 	{
 		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
@@ -204,10 +209,10 @@ bool Cmd_OnControlDown2_ByRef_Execute(COMMAND_ARGS)
 {
 	DebugCC(7, std::string(__func__) + "`Open");
 	TESForm* vControlID_Form = 0;
-	*result = 0; //Is this necessary?
+	Control* pControl;
+	*result = 0;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	auto pControl = GetControlByID(vControlID_Form->refID);
-	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered control:" + TMC::Narrate(vControlID_Form->refID)); return true; }
+	if (!(pControl = GetControlByID(vControlID_Form->refID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID_Form->refID)); return true; }
 	if (pControl->IsPressed())
 	{
 		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
