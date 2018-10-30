@@ -41,7 +41,7 @@ static ParamInfo kParams_ThreeInts[3] =
 
 static ParamInfo kParams_RegisterControl[3] =
 {
-	{	"ref. ControlRef", kParamType_InventoryObject, 0},
+	{	"ref", kParamType_InventoryObject, 0},
 	{	"dxScancode", kParamType_Integer, 1 },
 	{	"MenuModeType. 0:Game 1:Menu 2:Both", kParamType_Integer, 1 },
 };
@@ -53,6 +53,5 @@ static ParamInfo kParams_OneControlID[1] =
 
 static ParamInfo kParams_OneControlRef[1] =
 {
-	{	"ref. ControlRef", kParamType_InventoryObject, 0},
+	{	"ref", kParamType_InventoryObject, 0},
 };
-

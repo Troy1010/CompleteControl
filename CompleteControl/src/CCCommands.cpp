@@ -88,7 +88,7 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 	if (iMenuModeType != -1) { eMenuModeType = Control::MenuModeType(iMenuModeType); }
 	//-
 	Controls.push_back(Control(vControlID_Form->refID, eMenuModeType, dxScancode));
-	DebugCC(4, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
+	DebugCC(6, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
