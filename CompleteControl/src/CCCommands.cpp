@@ -178,7 +178,12 @@ bool Cmd_IsEngaged_ByRef_Execute(COMMAND_ARGS)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlRef)
+bool BlankParse(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
+{
+	return true;
+}
+//DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlRef)
+CommandInfo (kCommandInfo_IsEngaged_ByRef) = { "IsEngaged_ByRef", "", 0, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlRef, HANDLER(Cmd_IsEngaged_ByRef_Execute), NULL, NULL, 0 };
 //### OnControlDown2
 bool Cmd_OnControlDown2_Execute(COMMAND_ARGS)
 {
