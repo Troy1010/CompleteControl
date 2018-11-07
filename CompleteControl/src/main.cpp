@@ -74,16 +74,16 @@ DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
 #pragma region SerializationIntfcHandlers
 void Handler_Save(void * reserved)
 {
-	DebugCC(5, "Handler_Save`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	//-Write Control
 	std::string sControls = StringizeControls(Controls);
 	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
-	DebugCC(5, "Handler_Save`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 }
 
 void Handler_Load(void * reserved)
 {
-	DebugCC(5, "Handler_Load`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 	NewGameOrLoadGame();
 	//-Serialization
@@ -121,22 +121,22 @@ void Handler_Load(void * reserved)
 	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 	//---Refresh Disables
 	SetOutcomeForAllControls(Controls);
-	DebugCC(5, "Handler_Load`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 }
 
 void Handler_Preload(void * reserved)
 {
-	DebugCC(5, "Handler_Preload`Open");
-	DebugCC(5, "Handler_Preload`Close");
+	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(5, std::string(__func__) + "`Close");
 }
 
 void Handler_NewGame(void * reserved)
 {
 	bOblivionLoaded = true; // for sanity, to see following debug message.
-	DebugCC(5, "Handler_NewGame`Open");
+	DebugCC(5, std::string(__func__) + "`Open");
 	NewGameOrLoadGame();
 	Controls = InitializeControls();
-	DebugCC(5, "Handler_NewGame`Close");
+	DebugCC(5, std::string(__func__) + "`Close");
 }
 #pragma endregion
 #pragma region MessageHandler
