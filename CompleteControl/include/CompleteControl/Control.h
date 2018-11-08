@@ -59,6 +59,7 @@ public:
 	std::string Narrate();
 	const bool IsDisabled();
 	void SetOutcome();
+	void Enable();
 	void ResolveModIndices();
 	int GetDXScancode();
 	const bool IsPressed();

@@ -23,3 +23,5 @@ const CommandInfo* ResolveModIndex_CmdInfo = NULL;
 const CommandInfo* IsKeyPressed3_CmdInfo = NULL;
 
 bool bOblivionLoaded = false; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
+
+extern OBSEArrayVarInterface* g_arrayIntfc = NULL;

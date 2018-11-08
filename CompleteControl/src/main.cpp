@@ -50,6 +50,7 @@ bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 	DebugCC(7, std::string(__func__) + "`Open");
 	for (auto vControl : Controls)
 	{
+		vControl.Enable();
 		vControl.SetOutcome();
 	}
 	DebugCC(7, std::string(__func__) + "`Close");
@@ -62,6 +63,7 @@ bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 	DebugCC(7, std::string(__func__) + "`Open");
 	for (auto vControl : Controls)
 	{
+		vControl.Enable();
 		vControl.SetOutcome();
 	}
 	DebugCC(7, std::string(__func__) + "`Close");
@@ -204,6 +206,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 			return false;
 		}
 #endif	
+		g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar);
+		if (!g_arrayIntfc)
+		{
+			_ERROR("Array interface not found");
+			return false;
+		}
 	}
 
 	if (obse->obseVersion < OBSE_VERSION_INTEGER)
@@ -242,6 +250,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_DisableControl_ByRef);
 	obse->RegisterCommand(&kCommandInfo_DisableControls);
 	obse->RegisterCommand(&kCommandInfo_EnableControl_ByRef);
+	obse->RegisterCommand(&kCommandInfo_EnableControls);
 	obse->RegisterCommand(&kCommandInfo_RegisterControl);
 	obse->RegisterCommand(&kCommandInfo_IsDisabled);
 	obse->RegisterCommand(&kCommandInfo_IsDisabled_ByRef);

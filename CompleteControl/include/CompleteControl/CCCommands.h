@@ -32,6 +32,7 @@ extern CommandInfo(kCommandInfo_DisableControl_ByRef);
 extern CommandInfo(kCommandInfo_DisableControls);
 extern CommandInfo(kCommandInfo_EnableControl_Replacing);
 extern CommandInfo(kCommandInfo_EnableControl_ByRef);
+extern CommandInfo(kCommandInfo_EnableControls);
 extern CommandInfo(kCommandInfo_RegisterControl);
 extern CommandInfo(kCommandInfo_IsDisabled);
 extern CommandInfo(kCommandInfo_IsDisabled_ByRef);

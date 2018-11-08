@@ -17,7 +17,7 @@ const bool Control::IsPressed()
 	return ExecuteCommand(IsKeyPressed3_CmdInfo, GetDXScancode());
 }
 
-const bool Control::IsDisabled()
+const bool Control::IsDisabled() //ShouldBeDisabled might be a more appropriate name.
 {
 	return !cModIndices_Disables.empty();
 }
@@ -78,7 +78,7 @@ void Control::ResolveModIndices()
 			cModIndices_Disables_NEW.insert(iNewModIndex);
 		}
 	}
-	cModIndices_Disables = cModIndices_Disables_NEW;
+	cModIndices_Disables = cModIndices_Disables_NEW; //leaking?
 	//-cModIndices_UnreportedDisables
 	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
 	for (auto iModIndex : cModIndices_UnreportedDisables)
@@ -91,14 +91,14 @@ void Control::ResolveModIndices()
 			cModIndices_UnreportedDisables_NEW.insert(iNewModIndex);
 		}
 	}
-	cModIndices_UnreportedDisables = cModIndices_UnreportedDisables_NEW;
+	cModIndices_UnreportedDisables = cModIndices_UnreportedDisables_NEW; //leaking?
 }
 
 void Control::SetOutcome()
 {
 	if (eMenuModeType == MenuModeType::Both || (IsMenuMode() && eMenuModeType == MenuModeType::MenuMode) || (!IsMenuMode() && eMenuModeType == MenuModeType::GameMode))
 	{
-		if (this->IsDisabled())
+		if (this->IsDisabled() || !cModIndices_UnreportedDisables.empty())
 		{
 			ExecuteCommand(DisableKey_OriginalExecute, this->GetDXScancode());
 		}
@@ -107,6 +107,11 @@ void Control::SetOutcome()
 			ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
 		}
 	}
+}
+
+void Control::Enable()
+{
+	ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
 }
 
 

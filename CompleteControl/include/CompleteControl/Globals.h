@@ -43,3 +43,7 @@ extern const CommandInfo* IsKeyPressed3_CmdInfo;
 extern bool bOblivionLoaded; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
 typedef bool(*_IsMenuMode)(void);
 const _IsMenuMode IsMenuMode = (_IsMenuMode)0x00578F60;
+
+extern OBSEArrayVarInterface* g_arrayIntfc;
+typedef OBSEArrayVarInterface::Array	OBSEArray;
+typedef OBSEArrayVarInterface::Element	OBSEElement;
