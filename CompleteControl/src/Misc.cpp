@@ -48,7 +48,7 @@ Control* GetControlByScancode(int iDXScancode)
 	return NULL;
 }
 
-Control* GetControlByID(UInt32 vControlID)
+Control* GetControlByID(UInt32 vControlID) //Could definately help to make this faster
 {
 	for (Control &vControl : Controls)
 	{

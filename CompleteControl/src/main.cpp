@@ -239,11 +239,18 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 		g_serialization->SetPreloadCallback(g_pluginHandle, Handler_Preload);
 	}
 	obse->SetOpcodeBase(0x28B0);
+	obse->RegisterCommand(&kCommandInfo_DisableControl_ByRef);
+	obse->RegisterCommand(&kCommandInfo_DisableControls);
+	obse->RegisterCommand(&kCommandInfo_EnableControl_ByRef);
 	obse->RegisterCommand(&kCommandInfo_RegisterControl);
 	obse->RegisterCommand(&kCommandInfo_IsDisabled);
+	obse->RegisterCommand(&kCommandInfo_IsDisabled_ByRef);
 	obse->RegisterCommand(&kCommandInfo_GetKey);
+	obse->RegisterCommand(&kCommandInfo_GetKey_ByRef);
 	obse->RegisterCommand(&kCommandInfo_UnreportedDisable);
+	obse->RegisterCommand(&kCommandInfo_UnreportedDisable_ByRef);
 	obse->RegisterCommand(&kCommandInfo_UnreportedEnable);
+	obse->RegisterCommand(&kCommandInfo_UnreportedEnable_ByRef);
 	obse->RegisterCommand(&kCommandInfo_IsEngaged);
 	obse->RegisterCommand(&kCommandInfo_IsEngaged_ByRef);
 	obse->RegisterCommand(&kCommandInfo_OnControlDown2);
@@ -252,19 +259,6 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
 	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);
 	obse->RegisterCommand(&kCommandInfo_HandleOnMenuMode);
-
-	obse->RegisterCommand(&kCommandInfo_BasicRuntimeTests);
-	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly);
-	obse->RegisterCommand(&kCommandInfo_TestGetControlDirectly2);
-	obse->RegisterCommand(&kCommandInfo_GenerateEnum);
-	obse->RegisterCommand(&kCommandInfo_CommandTemplate);
-	obse->RegisterCommand(&kCommandInfo_TestGetControlCopyPasta);
-	obse->RegisterCommand(&kCommandInfo_TestDisableKeyCopyPasta);
-	obse->RegisterCommand(&kCommandInfo_TestCeil);
-	obse->RegisterCommand(&kCommandInfo_PrintControls);
-	obse->RegisterCommand(&kCommandInfo_TestControlToString);
-	obse->RegisterCommand(&kCommandInfo_TestControlsFromString);
-	obse->RegisterCommand(&kCommandInfo_Test1);
 
 	if (!obse->isEditor)
 	{

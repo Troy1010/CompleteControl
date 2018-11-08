@@ -50,3 +50,51 @@ static ParamInfo kParams_OneRef[1] =
 {
 	{	"ref", kParamType_InventoryObject, 0},
 };
+
+static ParamInfo kParams_20OptionalInts[20] =
+{
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+	{	"int", kParamType_Integer, 1 },
+};
+
+static ParamInfo kParams_20OptionalRefs[20] =
+{
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+	{	"ref", kParamType_InventoryObject, 1},
+};
