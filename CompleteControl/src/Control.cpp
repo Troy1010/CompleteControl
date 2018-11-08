@@ -78,7 +78,7 @@ void Control::ResolveModIndices()
 			cModIndices_Disables_NEW.insert(iNewModIndex);
 		}
 	}
-	cModIndices_Disables = cModIndices_Disables_NEW; // leaking?
+	cModIndices_Disables = cModIndices_Disables_NEW;
 	//-cModIndices_UnreportedDisables
 	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
 	for (auto iModIndex : cModIndices_UnreportedDisables)
@@ -91,7 +91,7 @@ void Control::ResolveModIndices()
 			cModIndices_UnreportedDisables_NEW.insert(iNewModIndex);
 		}
 	}
-	cModIndices_UnreportedDisables = cModIndices_UnreportedDisables_NEW; // leaking?
+	cModIndices_UnreportedDisables = cModIndices_UnreportedDisables_NEW;
 }
 
 void Control::SetOutcome()

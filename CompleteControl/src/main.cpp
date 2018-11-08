@@ -130,7 +130,7 @@ void Handler_Preload(void * reserved)
 
 void Handler_NewGame(void * reserved)
 {
-	bOblivionLoaded = true; // for sanity, to see following debug message.
+	bOblivionLoaded = true; // for sanity, to see the following debug message.
 	DebugCC(5, std::string(__func__) + "`Open");
 	NewGameOrLoadGame();
 	Controls = InitializeControls();
