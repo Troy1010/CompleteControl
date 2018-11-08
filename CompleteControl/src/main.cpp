@@ -38,7 +38,7 @@ inline void NewGameOrLoadGame()
 bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, "HandleOblivionLoaded`Open");
-	//bOblivionLoaded = true;	//This would be a very good place to set this variable. However, I am trying to get rid of CC's reliance on a helper mod.
+	//bOblivionLoaded = true;	//This would be a nice place to set this variable. However, I am trying to get rid of CC's reliance on a helper mod.
 	//Controls = InitializeControls();
 	DebugCC(5, "HandleOblivionLoaded`Close");
 	return true;

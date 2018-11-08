@@ -48,7 +48,7 @@ static ParamInfo kParams_RegisterControl[3] =
 
 static ParamInfo kParams_OneControlID[1] =
 {
-	{	"int. ControlID", kParamType_Integer, 0 },
+	{	"int", kParamType_Integer, 1 },
 };
 
 static ParamInfo kParams_OneControlRef[1] =
