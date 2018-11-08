@@ -30,7 +30,22 @@
 
 
 
-
+//### CommandTemplate
+bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
+//### Test1
+bool Cmd_Test1_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`IsMenuMode():"+ TMC::Narrate(IsMenuMode()));
+	*result = IsMenuMode();
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(Test1, "Test1 command", 0, 0, NULL)
 //### TestControlsFromString
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {

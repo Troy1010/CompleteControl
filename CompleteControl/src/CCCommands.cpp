@@ -1,13 +1,5 @@
 #include "CCCommands.h"
 
-//### CommandTemplate
-bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
-{
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(5, std::string(__func__) + "`Close");
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
 //### DisableKey_Replacing
 bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {

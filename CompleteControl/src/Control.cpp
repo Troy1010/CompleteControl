@@ -96,7 +96,7 @@ void Control::ResolveModIndices()
 
 void Control::SetOutcome()
 {
-	if (eMenuModeType == MenuModeType::Both || (bMenuMode && eMenuModeType == MenuModeType::MenuMode) || (!bMenuMode && eMenuModeType == MenuModeType::GameMode))
+	if (eMenuModeType == MenuModeType::Both || (IsMenuMode() && eMenuModeType == MenuModeType::MenuMode) || (!IsMenuMode() && eMenuModeType == MenuModeType::GameMode))
 	{
 		if (this->IsDisabled())
 		{

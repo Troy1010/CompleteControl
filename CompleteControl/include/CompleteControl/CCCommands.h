@@ -25,7 +25,6 @@
 #include "Misc.h"
 #include "ExecuteCommand.h"
 
-extern CommandInfo(kCommandInfo_CommandTemplate);
 extern CommandInfo(kCommandInfo_DisableKey_Replacing);
 extern CommandInfo(kCommandInfo_EnableKey_Replacing);
 extern CommandInfo(kCommandInfo_DisableControl_Replacing);

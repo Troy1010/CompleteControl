@@ -48,7 +48,6 @@ DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0
 bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 {
 	DebugCC(7, std::string(__func__) + "`Open");
-	bMenuMode = false;
 	for (auto vControl : Controls)
 	{
 		vControl.SetOutcome();
@@ -61,7 +60,6 @@ DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
 bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 {
 	DebugCC(7, std::string(__func__) + "`Open");
-	bMenuMode = true;
 	for (auto vControl : Controls)
 	{
 		vControl.SetOutcome();
@@ -266,6 +264,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_PrintControls);
 	obse->RegisterCommand(&kCommandInfo_TestControlToString);
 	obse->RegisterCommand(&kCommandInfo_TestControlsFromString);
+	obse->RegisterCommand(&kCommandInfo_Test1);
 
 	if (!obse->isEditor)
 	{

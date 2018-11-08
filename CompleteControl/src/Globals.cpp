@@ -23,4 +23,3 @@ const CommandInfo* ResolveModIndex_CmdInfo = NULL;
 const CommandInfo* IsKeyPressed3_CmdInfo = NULL;
 
 bool bOblivionLoaded = false; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
-bool bMenuMode = true; //As far as I know, I must use a helper mod for this.

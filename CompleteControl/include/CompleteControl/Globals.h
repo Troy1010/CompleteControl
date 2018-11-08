@@ -41,4 +41,5 @@ extern const CommandInfo* ResolveModIndex_CmdInfo;
 extern const CommandInfo* IsKeyPressed3_CmdInfo;
 
 extern bool bOblivionLoaded; //Because there is no OblivionLoaded event, this variable is set true later than it should be. (without a helper mod)
-extern bool bMenuMode; //As far as I know, I must use a helper mod for this.
+typedef bool(*_IsMenuMode)(void);
+const _IsMenuMode IsMenuMode = (_IsMenuMode)0x00578F60;
