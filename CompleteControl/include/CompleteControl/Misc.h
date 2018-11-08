@@ -46,12 +46,7 @@ static ParamInfo kParams_RegisterControl[3] =
 	{	"MenuModeType. 0:Game 1:Menu 2:Both", kParamType_Integer, 1 },
 };
 
-static ParamInfo kParams_OneControlID[1] =
-{
-	{	"int", kParamType_Integer, 1 },
-};
-
-static ParamInfo kParams_OneControlRef[1] =
+static ParamInfo kParams_OneRef[1] =
 {
 	{	"ref", kParamType_InventoryObject, 0},
 };

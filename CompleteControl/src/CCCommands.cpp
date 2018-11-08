@@ -41,39 +41,60 @@ bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObje
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
-//### DisableControl_Replacing
-bool Cmd_DisableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+//### DisableControl
+void DisableControl_Helper(UInt32 iControlID, UInt8 iModIndex)
+{
+	auto pControl = GetControlByID(iControlID);
+	pControl->cModIndices_Disables.insert(iModIndex);
+	pControl->SetOutcome();
+}
+bool Cmd_DisableControl_Replacing_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	auto pControl = GetControlByID(vControlID);
-	//-Register iModIndex in pControl.cModIndices. SetOutcome.
-	pControl->cModIndices_Disables.insert((UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
-	pControl->SetOutcome();
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	DisableControl_Helper(iControlID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(DisableControl_Replacing, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
-//### EnableControl_Replacing
+bool Cmd_DisableControl_ByRef_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	DisableControl_Helper(vControlID_Form->refID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(DisableControl_ByRef, "Disables a key and registers a disable", 0, 1, kParams_OneRef)
+//### EnableControl
+void EnableControl_Helper(UInt32 iControlID, UInt8 iModIndex)
+{
+	auto pControl = GetControlByID(iControlID);
+	pControl->cModIndices_Disables.erase(iModIndex);
+	pControl->SetOutcome();
+}
 bool Cmd_EnableControl_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get vControlID
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//-Unregister disable. SetOutcome.
-	auto vControl = GetControlByID(vControlID);
-	vControl->cModIndices_Disables.erase(iModIndex);
-	vControl->SetOutcome();
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	EnableControl_Helper(iControlID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(EnableControl_Replacing, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
+bool Cmd_EnableControl_ByRef_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	EnableControl_Helper(vControlID_Form->refID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(EnableControl_ByRef, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneRef)
 //### RegisterControl
 bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 {
@@ -94,143 +115,176 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 }
 DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control. Uses any ref as its ID.", 0, 3, kParams_RegisterControl)
 //### IsDisabled
+bool IsDisabled_Helper(UInt32 vControlID)
+{
+	Control* pControl;
+	if (!(pControl = GetControlByID(vControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID)); return false; }
+	return pControl->IsDisabled();
+}
 bool Cmd_IsDisabled_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	UInt32	vControlID = 0;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	*result = GetControlByID(vControlID)->IsDisabled();
+	*result = IsDisabled_Helper(vControlID);
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(IsDisabled, "True if the key -should- be disabled.", 0, 1, kParams_OneInt)
+bool Cmd_IsDisabled_ByRef_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = IsDisabled_Helper(vControlID_Form->refID);
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsDisabled_ByRef, "True if the key -should- be disabled.", 0, 1, kParams_OneRef)
 //### GetKey
+double GetKey_Helper(UInt32 iControlID)
+{
+	Control* pControl;
+	if (!(pControl = GetControlByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return 0xFF; }
+	return pControl->GetDXScancode();
+}
 bool Cmd_GetKey_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	*result = GetControlByID(vControlID)->GetDXScancode();
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = GetKey_Helper(iControlID);
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(GetKey, "GetKey command", 0, 1, kParams_OneInt)
+bool Cmd_GetKey_ByRef_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = GetKey_Helper(vControlID_Form->refID);
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(GetKey_ByRef, "GetKey_ByRef command", 0, 1, kParams_OneRef)
 //### UnreportedDisable
+void UnreportedDisable_Helper(UInt32 iControlID, UInt8 iModIndex)
+{
+	auto pControl = GetControlByID(iControlID);
+	pControl->cModIndices_UnreportedDisables.insert(iModIndex);
+	pControl->SetOutcome();
+}
 bool Cmd_UnreportedDisable_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get vControlID
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//-Register iModIndex in vControl.cModIndices. SetOutcome.
-	auto pControl = GetControlByID(vControlID);
-	pControl->cModIndices_UnreportedDisables.insert(iModIndex);
-	pControl->SetOutcome();
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	UnreportedDisable_Helper(iControlID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(UnreportedDisable, "Disables a key and registers a disable", 0, 1, kParams_OneInt)
-//### UnreportedEnable
-bool Cmd_UnreportedEnable_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
+bool Cmd_UnreportedDisable_ByRef_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get dxScancode
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
-	//-Unregister disable. SetOutcome.
-	auto pControl = GetControlByID(vControlID);
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	UnreportedDisable_Helper(vControlID_Form->refID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(UnreportedDisable_ByRef, "Disables a key and registers a disable", 0, 1, kParams_OneRef)
+//### UnreportedEnable
+void UnreportedEnable_Helper(UInt32 iControlID, UInt8 iModIndex)
+{
+	auto pControl = GetControlByID(iControlID);
 	pControl->cModIndices_UnreportedDisables.erase(iModIndex);
 	pControl->SetOutcome();
+}
+bool Cmd_UnreportedEnable_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open");
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	UnreportedEnable_Helper(iControlID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(UnreportedEnable, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneInt)
-//### IsEngaged
-bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
+bool Cmd_UnreportedEnable_ByRef_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	vControlID = -1;
-	Control* pControl;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	if (!(pControl = GetControlByID(vControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" +TMC::Narrate(vControlID)); return true; }
-	*result = pControl->IsEngaged();
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	UnreportedEnable_Helper(vControlID_Form->refID, (UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(IsEngaged, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlID)
-//### IsEngaged_ByRef
+DEFINE_COMMAND_PLUGIN(UnreportedEnable_ByRef, "Unregisters disable of this mod. Enables key if there are no disables registered.", 0, 1, kParams_OneRef)
+//### IsEngaged
+bool IsEngaged_Helper(UInt32 iControlID)
+{
+	Control* pControl;
+	if (!(pControl = GetControlByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	return pControl->IsEngaged();
+}
+bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
+{
+	DebugCC(5, std::string(__func__) + "`Open. scriptObjRefID:"+ TMC::Narrate(scriptObj->refID));
+	UInt32	iControlID = -1;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = IsEngaged_Helper(iControlID);
+	DebugCC(5, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsEngaged, "Is the control pressed and not disabled?", 0, 1, kParams_OneInt)
 bool Cmd_IsEngaged_ByRef_Execute(COMMAND_ARGS)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	TESForm* vControlID_Form = 0;
-	Control* pControl;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	if (!(pControl = GetControlByID(vControlID_Form->refID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID_Form->refID)); return true; }
-	*result = pControl->IsEngaged();
+	*result = IsEngaged_Helper(vControlID_Form->refID);
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-bool BlankParse(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
-{
-	return true;
-}
-//DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlRef)
-CommandInfo (kCommandInfo_IsEngaged_ByRef) = { "IsEngaged_ByRef", "", 0, "Is the control pressed and not disabled?", 0, 1, kParams_OneControlRef, HANDLER(Cmd_IsEngaged_ByRef_Execute), NULL, NULL, 0 };
+DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?", 0, 1, kParams_OneRef)
 //### OnControlDown2
+bool OnControlDown2_Helper(UInt32 iControlID, UInt32 iRefID)
+{
+	Control* pControl;
+	if (!(pControl = GetControlByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	if (pControl->IsPressed())
+	{
+		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, iRefID))
+		{
+			pControl->cScriptRefs_ReceivedOnControlDown.insert(iRefID);
+			return true;
+		}
+	}
+	else if (Contains(pControl->cScriptRefs_ReceivedOnControlDown, iRefID))
+	{
+		pControl->cScriptRefs_ReceivedOnControlDown.erase(iRefID);
+	}
+	return false;
+}
 bool Cmd_OnControlDown2_Execute(COMMAND_ARGS)
 {
 	DebugCC(8, std::string(__func__) + "`Open");
-	UInt32	vControlID = 0;
-	Control* pControl;
-	*result = 0;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	if (!(pControl = GetControlByID(vControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID)); return true; }
-	if (pControl->IsPressed())
-	{
-		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
-		{
-			pControl->cScriptRefs_ReceivedOnControlDown.insert(scriptObj->refID);
-			*result = 1;
-		}
-	}
-	else if (Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
-	{
-		pControl->cScriptRefs_ReceivedOnControlDown.erase(scriptObj->refID);
-	}
+	UInt32	iControlID = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = OnControlDown2_Helper(iControlID, scriptObj->refID);
 	DebugCC(8, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(OnControlDown2, "OnControlDown2 command", 0, 1, kParams_OneControlID)
-//### OnControlDown2_ByRef
+DEFINE_COMMAND_PLUGIN(OnControlDown2, "OnControlDown2 command", 0, 1, kParams_OneInt)
 bool Cmd_OnControlDown2_ByRef_Execute(COMMAND_ARGS)
 {
-	DebugCC(7, std::string(__func__) + "`Open");
+	DebugCC(8, std::string(__func__) + "`Open");
 	TESForm* vControlID_Form = 0;
-	Control* pControl;
-	*result = 0;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	if (!(pControl = GetControlByID(vControlID_Form->refID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(vControlID_Form->refID)); return true; }
-	if (pControl->IsPressed())
-	{
-		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
-		{
-			pControl->cScriptRefs_ReceivedOnControlDown.insert(scriptObj->refID);
-			*result = 1;
-		}
-	}
-	else if (Contains(pControl->cScriptRefs_ReceivedOnControlDown, scriptObj->refID))
-	{
-		pControl->cScriptRefs_ReceivedOnControlDown.erase(scriptObj->refID);
-	}
-	DebugCC(7, std::string(__func__) + "`Close");
+	*result = OnControlDown2_Helper(vControlID_Form->refID, scriptObj->refID);
+	DebugCC(8, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(OnControlDown2_ByRef, "OnControlDown2_ByRef command", 0, 1, kParams_OneControlRef)
+DEFINE_COMMAND_PLUGIN(OnControlDown2_ByRef, "OnControlDown2 command", 0, 1, kParams_OneRef)
