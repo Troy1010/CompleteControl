@@ -72,12 +72,13 @@ Control* ControlCollection::FindByScancode(int iDXScancode)
 	return NULL;
 }
 
-Control* ControlCollection::FindByID(UInt32 vControlID) //Could definately help to make this faster
+Control* ControlCollection::FindByID(UInt32 iControlID)
 {
 	try {
-		return &Items[vControlID];
+		return &Items.at(iControlID);
 	}
-	catch (...) { //fix
-
+	catch (const std::out_of_range& e) {
+		DebugCC(4, std::string(__func__) + "`Received invalid iControlID:" + TMC::Narrate(iControlID));
+		return NULL;
 	}
 }
