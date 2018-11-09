@@ -1,6 +1,4 @@
 #include "TM_CommonCPP_NarrateOverloads.h"
-#include "TM_CommonCPP/Narrate.h"
-#include "Control.h"
 #include <sstream>
 
 namespace TMC
@@ -13,7 +11,7 @@ namespace TMC
 	{
 		return Narrator::Narrate_Collection(Controls);
 	}
-	std::string Narrate(std::map<int, Control> Controls)
+	std::string Narrate(std::map<UInt32, Control> Controls)
 	{
 		return Narrator::Narrate_Collection(Controls);
 	}
@@ -29,8 +27,12 @@ namespace TMC
 	{
 		return std::to_string(vUInt32);
 	}
-	std::string Narrate(std::pair<int, Control> vPair)
+	std::string Narrate(std::pair<UInt32, Control> vPair)
 	{
 		return Narrate(vPair.first) + ":" + Narrate(vPair.second);
+	}
+	std::string Narrate(ControlCollection Controls)
+	{
+		return Narrator::Narrate_Collection(Controls.Items);
 	}
 }

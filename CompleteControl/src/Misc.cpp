@@ -36,55 +36,6 @@ const bool Contains(std::set<UInt8> cSet, UInt8 vItem)
 	return cSet.find(vItem) != cSet.end();
 }
 
-Control* GetControlByScancode(int iDXScancode)
-{
-	for (auto &vControl : Controls)
-	{
-		if (vControl.second.GetDXScancode() == iDXScancode)
-		{
-			return &vControl.second;
-		}
-	}
-	return NULL;
-}
-
-Control* GetControlByID(UInt32 vControlID) //Could definately help to make this faster
-{
-	for (auto &vControl : Controls)
-	{
-		if (vControl.second.ControlID == vControlID)
-		{
-			return &vControl.second;
-		}
-	}
-	return NULL;
-}
-
-bool IsDisabled(Control vControl)
-{
-	return !vControl.cModIndices_Disables.empty();
-}
-
-void SetOutcomeForAllControls(std::map<int, Control> cControls)
-{
-	DebugCC(5, std::string(__func__) + "`Open");
-	for (auto vControl : cControls)
-	{
-		vControl.second.SetOutcome();
-	}
-	DebugCC(5, std::string(__func__) + "`Close");
-}
-
-std::string StringizeControls(std::map<int,Control> cControls)
-{
-	std::stringstream ss;
-	for (auto vControl : cControls)
-	{
-		ss << "`" << vControl.second.ToString();
-	}
-	return ss.str();
-}
-
 void SafeConsolePrint(std::string sString)
 {
 	if (!bOblivionLoaded) // Trying to print to console without Oblivion loaded causes CTD.
@@ -100,35 +51,5 @@ void SafeConsolePrint(std::string sString)
 		Console_Print(sString.substr(0, 1000).c_str());
 		Console_Print("<MessageTooLarge>");
 	}
-}
-
-std::map<int, Control> InitializeControls()
-{
-	DebugCC(5, std::string(__func__) + "`Open");
-	std::map<int, Control> cControls;
-	for (UInt32 i = 0; i < Control::VanillaControlID_EnumSize; ++i)
-	{
-		auto vControl = Control(i);
-		if (i == 17)
-		{
-			vControl.eMenuModeType = Control::MenuModeType::Both;
-		}
-		cControls.insert({ vControl.ControlID ,vControl });
-	}
-	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(cControls));
-	DebugCC(5, std::string(__func__) + "`Close");
-	return cControls;
-}
-
-std::map<int, Control> ControlsFromString(std::string sBigString)
-{
-	std::map<int, Control> cReturningControls;
-	for (auto s : TMC::SplitString(sBigString, "`"))
-	{
-		if (s.empty()) { continue; }
-		auto vControl = Control(s);
-		cReturningControls.insert({ vControl.ControlID ,vControl });
-	}
-	return cReturningControls;
 }
 

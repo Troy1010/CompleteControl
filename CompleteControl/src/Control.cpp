@@ -60,7 +60,7 @@ void Control::ResolveModIndices()
 		else
 		{
 			DebugCC(7, "Controls BEFORE:" + TMC::Narrate(Controls));
-			Controls.erase(ControlID);
+			Controls.Items.erase(ControlID);
 			DebugCC(7, "Controls AFTER:" + TMC::Narrate(Controls));
 			return;
 		}

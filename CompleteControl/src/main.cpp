@@ -48,11 +48,8 @@ DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0
 bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 {
 	DebugCC(7, std::string(__func__) + "`Open");
-	for (auto vControl : Controls)
-	{
-		vControl.second.Enable();
-		vControl.second.SetOutcome();
-	}
+	Controls.EnableAll();
+	Controls.SetOutcomes();
 	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
 }
@@ -61,11 +58,8 @@ DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
 bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 {
 	DebugCC(7, std::string(__func__) + "`Open");
-	for (auto vControl : Controls)
-	{
-		vControl.second.Enable();
-		vControl.second.SetOutcome();
-	}
+	Controls.EnableAll();
+	Controls.SetOutcomes();
 	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
 }
@@ -76,7 +70,7 @@ void Handler_Save(void * reserved)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	//-Write Control
-	std::string sControls = StringizeControls(Controls);
+	std::string sControls = Controls.Stringize();
 	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
 	DebugCC(5, std::string(__func__) + "`Close");
 }
@@ -99,7 +93,7 @@ void Handler_Load(void * reserved)
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
 			DebugCC(6, "buf:" + TMC::Narrate(buf));
-			Controls = ControlsFromString(std::string(buf));
+			Controls = ControlCollection(std::string(buf));
 			delete buf;
 			break;
 		default:
@@ -107,20 +101,20 @@ void Handler_Load(void * reserved)
 		}
 	}
 	//-ResolveModIndices
-	if (!Controls.empty())
+	if (!Controls.Items.empty())
 	{
-		for (auto& vControl : Controls)
+		for (auto& vControl : Controls.Items)
 		{
 			vControl.second.ResolveModIndices();
 		}
 	}
 	else //-For savegames written before CC install.
 	{
-		Controls = InitializeControls();
+		Controls.RegisterVanillaControls();
 	}
 	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
 	//---Refresh Disables
-	SetOutcomeForAllControls(Controls);
+	Controls.SetOutcomes();
 	DebugCC(5, std::string(__func__) + "`Close");
 }
 
@@ -135,7 +129,7 @@ void Handler_NewGame(void * reserved)
 	bOblivionLoaded = true; // for sanity, to see the following debug message.
 	DebugCC(5, std::string(__func__) + "`Open");
 	NewGameOrLoadGame();
-	Controls = InitializeControls();
+	Controls.RegisterVanillaControls();
 	DebugCC(5, std::string(__func__) + "`Close");
 }
 #pragma endregion

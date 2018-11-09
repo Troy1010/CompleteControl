@@ -10,7 +10,7 @@ OBSEScriptInterface * g_scriptIntfc = NULL; //For command argument extraction
 
 Cmd_Execute DisableKey_OriginalExecute = NULL; //Execute of replaced DisableKey command
 Cmd_Execute EnableKey_OriginalExecute = NULL; //Execute of replaced EnableKey command
-std::map<int,Control> Controls;
+ControlCollection Controls;
 
 Script* pBlankScript = NULL;
 ScriptEventList * pBlankScriptEventList = NULL;

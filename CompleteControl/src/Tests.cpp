@@ -51,9 +51,9 @@ bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {
 	DebugCC(4, std::string(__func__) + "`Open");
 	DebugCC(4, "Controls:" + TMC::Narrate(Controls));
-	std::string sControls = StringizeControls(Controls);
+	std::string sControls = Controls.Stringize();
 	DebugCC(4, "sControls:" + sControls);
-	std::map<int, Control> cReturningControls = ControlsFromString(sControls);
+	auto cReturningControls = ControlCollection(sControls);
 	DebugCC(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
 	DebugCC(4, std::string(__func__) + "`Close");
 	return true;
@@ -63,7 +63,7 @@ DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
 	DebugCC(4, std::string(__func__) + "`Open");
-	std::string sControl = Controls[0].ToString();
+	std::string sControl = Controls.Items[0].ToString();
 	DebugCC(4, "sControl:" + sControl);
 	std::vector<std::string> cStrings = TMC::SplitString(sControl, ",");
 	DebugCC(4, "cStrings:" + TMC::Narrate(cStrings));

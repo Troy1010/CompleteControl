@@ -1,6 +1,6 @@
 #pragma once
 #include "Misc.h"
-#include "Globals.h"
+//#include "Globals.h"
 #include "Settings.h"
 
 extern IDebugLog		gLog; //Log
