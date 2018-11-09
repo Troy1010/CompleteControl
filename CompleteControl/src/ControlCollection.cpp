@@ -78,7 +78,7 @@ Control* ControlCollection::FindByID(UInt32 iControlID)
 		return &Items.at(iControlID);
 	}
 	catch (const std::out_of_range& e) {
-		DebugCC(4, std::string(__func__) + "`Received invalid iControlID:" + TMC::Narrate(iControlID));
+		DebugCC(5, std::string(__func__) + "`Received invalid iControlID:" + TMC::Narrate(iControlID));
 		return NULL;
 	}
 }

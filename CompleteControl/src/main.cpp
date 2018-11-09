@@ -185,36 +185,17 @@ extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	/*InterfaceManager* intfc = InterfaceManager::GetSingleton();
-	DebugCC(5, "IsConsoleMode:"+ TMC::Narrate(intfc->IsGameMode()));*/
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
-	// version checks
 	if(!obse->isEditor)
 	{
 #if OBLIVION
-		if(obse->oblivionVersion != OBLIVION_VERSION)
-		{
-			_ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION);
-			return false;
-		}
+		if (obse->oblivionVersion != OBLIVION_VERSION) { _ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION); return false; }
 #endif	
-		g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar);
-		if (!g_arrayIntfc)
-		{
-			_ERROR("Array interface not found");
-			return false;
-		}
+		if (!(g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar))) { _ERROR("Array interface not found"); return false; }
 	}
-
-	if (obse->obseVersion < OBSE_VERSION_INTEGER)
-	{
-		_MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER);
-		_MESSAGE("OBSE version too old (got %i expected at least %i)", obse->obseVersion, OBSE_VERSION_INTEGER);
-		//return false;
-	}
-
+	if (obse->obseVersion < OBSE_VERSION_INTEGER) { _MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER); return false; }
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -224,17 +205,8 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	g_pluginHandle = obse->GetPluginHandle();
 	if (!obse->isEditor)
 	{
-		g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
-		if (!g_serialization)
-		{
-			_ERROR("serialization interface not found");
-			return false;
-		}
-		if (g_serialization->version < OBSESerializationInterface::kVersion)
-		{
-			_ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
-			return false;
-		}
+		if (!(g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization))) { _ERROR("serialization interface not found"); return false; }
+		if (g_serialization->version < OBSESerializationInterface::kVersion) { _ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion); return false; }
 		g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
 		g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
 		g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
@@ -265,27 +237,26 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 
 	if (!obse->isEditor)
 	{
-		// get an OBSEScriptInterface to use for argument extraction
+		//-get an OBSEScriptInterface to use for argument extraction
 		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-		// replace DisableKey
+		//-Get original execute functions of DisableKey, EnableKey
 		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:0x1430
-		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
-		// replace EnableKey
 		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:0x1431
+		//-Replace DisableKey, EnableKey
+		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
 		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
-		// replace DisableControl
+		//-Replace DisableControl, EnableControl
 		g_commandTableIntfc->Replace(0x15A7, &kCommandInfo_DisableControl_Replacing); //DisableControl_opcode:0x15A7
-		// replace EnableControl
 		g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
-		// Get Some Commands
+		//-Get some commands we might use with ExecuteCommand
 		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
 		GetAltControl2_CmdInfo = g_commandTableIntfc->GetByName("GetAltControl2");
 		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8
 		IsKeyPressed3_CmdInfo = g_commandTableIntfc->GetByName("IsKeyPressed3");
 	}
 
-	// register to receive messages from OBSE
+	//-Register to receive messages from OBSE
 	OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
 	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
 	g_msg = msgIntfc;

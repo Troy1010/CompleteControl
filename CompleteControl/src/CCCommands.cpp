@@ -4,17 +4,13 @@
 bool Cmd_DisableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	dxScancode = 0;
-	UInt8	iModIndex = 0;
-	//---Register in Controls
-	//-Get dxScancode
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	//-Get iModIndex
-	iModIndex = (UInt8)(scriptObj->refID >> 24);
+	UInt32	iDXScancode = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iDXScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	auto pControl = Controls.FindByScancode(iDXScancode);
+	if (!pControl) { DebugCC(5, std::string(__func__) + "`Could not retrieve pControl with iDXScancode:" + TMC::Narrate(iDXScancode)); return true; }
 	//-Register iModIndex in vControl.cModIndices. SetOutcome.
-	auto vControl = Controls.FindByScancode(dxScancode);
-	vControl->cModIndices_Disables.insert(iModIndex);
-	vControl->SetOutcome();
+	pControl->cModIndices_Disables.insert((UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
+	pControl->SetOutcome();
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
@@ -23,9 +19,10 @@ DEFINE_COMMAND_PLUGIN(DisableKey_Replacing, "Disables a key and registers a disa
 bool Cmd_EnableKey_Replacing_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, UInt32 arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	UInt32	dxScancode = 0;
-	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &dxScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
-	auto pControl = Controls.FindByScancode(dxScancode);
+	UInt32	iDXScancode = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iDXScancode)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	auto pControl = Controls.FindByScancode(iDXScancode);
+	if (!pControl) { DebugCC(5, std::string(__func__) + "`Could not retrieve pControl with iDXScancode:" + TMC::Narrate(iDXScancode)); return true; }
 	//-Unregister disable. SetOutcome.
 	pControl->cModIndices_Disables.erase((UInt8)(scriptObj->refID >> 24)); //iModIndex:(UInt8)(scriptObj->refID >> 24)
 	pControl->SetOutcome();
@@ -36,8 +33,8 @@ DEFINE_COMMAND_PLUGIN(EnableKey_Replacing, "Unregisters disable of this mod. Ena
 //### DisableControl
 void DisableControl_Helper(UInt32 iControlID, UInt8 iModIndex)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
 	pControl->cModIndices_Disables.insert(iModIndex);
 	pControl->SetOutcome();
 }
@@ -102,8 +99,8 @@ DEFINE_COMMAND_PLUGIN(DisableControls, "Takes an array of ControlIDs or ControlR
 //### EnableControl
 void EnableControl_Helper(UInt32 iControlID, UInt8 iModIndex)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
 	pControl->cModIndices_Disables.erase(iModIndex);
 	pControl->SetOutcome();
 }
@@ -184,12 +181,12 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control. Uses any ref as its ID. Must be called after PostLoad.", 0, 3, kParams_RegisterControl)
+DEFINE_COMMAND_PLUGIN(RegisterControl, "Registers a non-vanilla Control. Uses any ref as its ID. Recommended to call at InitGameMode0.", 0, 3, kParams_RegisterControl)
 //### IsDisabled
 bool IsDisabled_Helper(UInt32 iControlID)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
 	return pControl->IsDisabled();
 }
 bool Cmd_IsDisabled_Execute(COMMAND_ARGS)
@@ -215,8 +212,8 @@ DEFINE_COMMAND_PLUGIN(IsDisabled_ByRef, "True if the key -should- be disabled.",
 //### GetKey
 double GetKey_Helper(UInt32 iControlID)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return 0xFF; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return 0xFF; }
 	return pControl->GetDXScancode();
 }
 bool Cmd_GetKey_Execute(COMMAND_ARGS)
@@ -243,6 +240,7 @@ DEFINE_COMMAND_PLUGIN(GetKey_ByRef, "GetKey_ByRef command", 0, 1, kParams_OneRef
 void UnreportedDisable_Helper(UInt32 iControlID, UInt8 iModIndex)
 {
 	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
 	pControl->cModIndices_UnreportedDisables.insert(iModIndex);
 	pControl->SetOutcome();
 }
@@ -270,6 +268,7 @@ DEFINE_COMMAND_PLUGIN(UnreportedDisable_ByRef, "Disables a key and registers a d
 void UnreportedEnable_Helper(UInt32 iControlID, UInt8 iModIndex)
 {
 	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return; }
 	pControl->cModIndices_UnreportedDisables.erase(iModIndex);
 	pControl->SetOutcome();
 }
@@ -296,8 +295,8 @@ DEFINE_COMMAND_PLUGIN(UnreportedEnable_ByRef, "Unregisters disable of this mod. 
 //### IsEngaged
 bool IsEngaged_Helper(UInt32 iControlID)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
 	return pControl->IsEngaged();
 }
 bool Cmd_IsEngaged_Execute(COMMAND_ARGS)
@@ -323,8 +322,8 @@ DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?
 //### OnControlDown2
 bool OnControlDown2_Helper(UInt32 iControlID, UInt32 iRefID)
 {
-	Control* pControl;
-	if (!(pControl = Controls.FindByID(iControlID))) { DebugCC(5, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
 	if (pControl->IsPressed())
 	{
 		if (!Contains(pControl->cScriptRefs_ReceivedOnControlDown, iRefID))
