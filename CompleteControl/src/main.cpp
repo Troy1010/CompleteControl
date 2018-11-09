@@ -50,8 +50,8 @@ bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 	DebugCC(7, std::string(__func__) + "`Open");
 	for (auto vControl : Controls)
 	{
-		vControl.Enable();
-		vControl.SetOutcome();
+		vControl.second.Enable();
+		vControl.second.SetOutcome();
 	}
 	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
@@ -63,8 +63,8 @@ bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 	DebugCC(7, std::string(__func__) + "`Open");
 	for (auto vControl : Controls)
 	{
-		vControl.Enable();
-		vControl.SetOutcome();
+		vControl.second.Enable();
+		vControl.second.SetOutcome();
 	}
 	DebugCC(7, std::string(__func__) + "`Close");
 	return true;
@@ -111,7 +111,7 @@ void Handler_Load(void * reserved)
 	{
 		for (auto& vControl : Controls)
 		{
-			vControl.ResolveModIndices();
+			vControl.second.ResolveModIndices();
 		}
 	}
 	else //-For savegames written before CC install.

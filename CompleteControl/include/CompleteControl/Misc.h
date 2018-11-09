@@ -26,11 +26,11 @@ const bool Contains(std::set<UInt32> cSet, UInt32 vItem);
 const bool Contains(std::set<UInt8> cSet, UInt8 vItem);
 Control* GetControlByScancode(int iDXScancode);
 Control* GetControlByID(UInt32 vControlID);
-void SetOutcomeForAllControls(std::vector<Control> cControls);
-std::string StringizeControls(std::vector<Control> cControls);
-std::vector<Control> ControlsFromString(std::string sBigString);
+void SetOutcomeForAllControls(std::map<int, Control> cControls);
+std::string StringizeControls(std::map<int, Control> cControls);
+std::map<int, Control> ControlsFromString(std::string sBigString);
 void SafeConsolePrint(std::string sString);
-std::vector<Control> InitializeControls();
+std::map<int, Control> InitializeControls();
 
 static ParamInfo kParams_ThreeInts[3] =
 {

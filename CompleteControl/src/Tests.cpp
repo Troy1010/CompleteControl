@@ -53,7 +53,7 @@ bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 	DebugCC(4, "Controls:" + TMC::Narrate(Controls));
 	std::string sControls = StringizeControls(Controls);
 	DebugCC(4, "sControls:" + sControls);
-	std::vector<Control> cReturningControls = ControlsFromString(sControls);
+	std::map<int, Control> cReturningControls = ControlsFromString(sControls);
 	DebugCC(4, "cReturningControls:" + TMC::Narrate(cReturningControls));
 	DebugCC(4, std::string(__func__) + "`Close");
 	return true;

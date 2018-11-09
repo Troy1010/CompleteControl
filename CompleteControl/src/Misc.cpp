@@ -38,11 +38,11 @@ const bool Contains(std::set<UInt8> cSet, UInt8 vItem)
 
 Control* GetControlByScancode(int iDXScancode)
 {
-	for (Control &vControl : Controls)
+	for (auto &vControl : Controls)
 	{
-		if (vControl.GetDXScancode() == iDXScancode)
+		if (vControl.second.GetDXScancode() == iDXScancode)
 		{
-			return &vControl;
+			return &vControl.second;
 		}
 	}
 	return NULL;
@@ -50,11 +50,11 @@ Control* GetControlByScancode(int iDXScancode)
 
 Control* GetControlByID(UInt32 vControlID) //Could definately help to make this faster
 {
-	for (Control &vControl : Controls)
+	for (auto &vControl : Controls)
 	{
-		if (vControl.ControlID == vControlID)
+		if (vControl.second.ControlID == vControlID)
 		{
-			return &vControl;
+			return &vControl.second;
 		}
 	}
 	return NULL;
@@ -65,35 +65,24 @@ bool IsDisabled(Control vControl)
 	return !vControl.cModIndices_Disables.empty();
 }
 
-void SetOutcomeForAllControls(std::vector<Control> cControls)
+void SetOutcomeForAllControls(std::map<int, Control> cControls)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
 	for (auto vControl : cControls)
 	{
-		vControl.SetOutcome();
+		vControl.second.SetOutcome();
 	}
 	DebugCC(5, std::string(__func__) + "`Close");
 }
 
-std::string StringizeControls(std::vector<Control> cControls)
+std::string StringizeControls(std::map<int,Control> cControls)
 {
 	std::stringstream ss;
 	for (auto vControl : cControls)
 	{
-		ss << "`" << vControl.ToString();
+		ss << "`" << vControl.second.ToString();
 	}
 	return ss.str();
-}
-
-std::vector<Control> ControlsFromString(std::string sBigString)
-{
-	std::vector<Control> cReturningControls;
-	for (auto s : TMC::SplitString(sBigString, "`"))
-	{
-		if (s.empty()) { continue; }
-		cReturningControls.push_back(Control(s));
-	}
-	return cReturningControls;
 }
 
 void SafeConsolePrint(std::string sString)
@@ -113,10 +102,10 @@ void SafeConsolePrint(std::string sString)
 	}
 }
 
-std::vector<Control> InitializeControls()
+std::map<int, Control> InitializeControls()
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	std::vector<Control> cControls;
+	std::map<int, Control> cControls;
 	for (UInt32 i = 0; i < Control::VanillaControlID_EnumSize; ++i)
 	{
 		auto vControl = Control(i);
@@ -124,10 +113,22 @@ std::vector<Control> InitializeControls()
 		{
 			vControl.eMenuModeType = Control::MenuModeType::Both;
 		}
-		cControls.push_back(vControl);
+		cControls.insert({ vControl.ControlID ,vControl });
 	}
 	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(cControls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return cControls;
+}
+
+std::map<int, Control> ControlsFromString(std::string sBigString)
+{
+	std::map<int, Control> cReturningControls;
+	for (auto s : TMC::SplitString(sBigString, "`"))
+	{
+		if (s.empty()) { continue; }
+		auto vControl = Control(s);
+		cReturningControls.insert({ vControl.ControlID ,vControl });
+	}
+	return cReturningControls;
 }
 

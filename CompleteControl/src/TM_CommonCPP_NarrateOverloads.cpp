@@ -13,6 +13,10 @@ namespace TMC
 	{
 		return Narrator::Narrate_Collection(Controls);
 	}
+	std::string Narrate(std::map<int, Control> Controls)
+	{
+		return Narrator::Narrate_Collection(Controls);
+	}
 	std::string Narrate(std::set<UInt8> cSet)
 	{
 		return Narrator::Narrate_Collection(cSet);
@@ -24,5 +28,9 @@ namespace TMC
 	std::string Narrate(UInt32 vUInt32)
 	{
 		return std::to_string(vUInt32);
+	}
+	std::string Narrate(std::pair<int, Control> vPair)
+	{
+		return Narrate(vPair.first) + ":" + Narrate(vPair.second);
 	}
 }

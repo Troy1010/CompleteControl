@@ -18,6 +18,7 @@
 #include "obse/Script.h"
 #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
+#include <map>
 
 #if OBLIVION
 extern OBSECommandTableInterface * g_commandTableIntfc; // assigned in OBSEPlugin_Load
@@ -28,7 +29,7 @@ extern OBSEScriptInterface * g_scriptIntfc; //For command argument extraction
 
 extern Cmd_Execute DisableKey_OriginalExecute; //Execute of replaced DisableKey command
 extern Cmd_Execute EnableKey_OriginalExecute; //Execute of replaced EnableKey command
-extern std::vector<Control> Controls;
+extern std::map<int, Control> Controls;
 
 extern Script* pBlankScript; // For use in ExecuteCommand
 extern ScriptEventList * pBlankScriptEventList; // For use in ExecuteCommand

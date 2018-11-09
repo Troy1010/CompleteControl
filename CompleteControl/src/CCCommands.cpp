@@ -178,7 +178,8 @@ bool Cmd_RegisterControl_Execute(COMMAND_ARGS)
 	if (!dxScancode) { dxScancode = 0xFF; } //0xFF = unassigned
 	if (iMenuModeType != -1) { eMenuModeType = Control::MenuModeType(iMenuModeType); }
 	//-
-	Controls.push_back(Control(vControlID_Form->refID, eMenuModeType, dxScancode));
+	auto vControl = Control(vControlID_Form->refID, eMenuModeType, dxScancode);
+	Controls.insert({ vControl.ControlID ,vControl });
 	DebugCC(6, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
 	DebugCC(5, std::string(__func__) + "`Close");
 	return true;

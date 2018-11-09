@@ -60,8 +60,7 @@ void Control::ResolveModIndices()
 		else
 		{
 			DebugCC(7, "Controls BEFORE:" + TMC::Narrate(Controls));
-			bDeleteMe = true; // Ugly
-			Controls.erase(std::remove_if(Controls.begin(), Controls.end(), [](const Control & o) { return o.bDeleteMe; }), Controls.end()); // Dangerous, Ugly. Why?
+			Controls.erase(ControlID);
 			DebugCC(7, "Controls AFTER:" + TMC::Narrate(Controls));
 			return;
 		}
@@ -114,7 +113,10 @@ void Control::Enable()
 	ExecuteCommand(EnableKey_OriginalExecute, this->GetDXScancode());
 }
 
-
+Control::Control()
+{
+	DebugCC(1,"Warning: Control's default constructor was called.")
+}
 Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::GameMode, int _dxScancode_NonVanilla = 0)
 {
 	ControlID = _ControlID;

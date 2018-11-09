@@ -50,6 +50,7 @@ public:
 		Both,
 	};
 	//---Constructors
+	Control();
 	Control(UInt32 _ControlID, MenuModeType eMenuModeType, int _dxScancode_NonVanilla);
 	Control(UInt32 _ControlID);
 	Control(std::string sString);
