@@ -24,7 +24,7 @@ try:
     vCommandSet = TM.CommandSet.TryLoad()
     QueActions(vCommandSet)
     print("Executing CommandSet..")
-    vCommandSet.Execute(bRedo=True)
+    vCommandSet.Execute()
     vCommandSet.Save()
 except Exception as e:
     TM.DisplayException(e)
