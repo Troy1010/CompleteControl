@@ -113,6 +113,21 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameActorValues.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameAPI.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameBSExtraData.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameData.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameExtraData.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameForms.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameObjects.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTasks.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTypes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiAPI.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiNodes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiRTTI.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Script.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\StdAfx.cpp" />
     <ClCompile Include="dllmain.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
@@ -132,6 +147,23 @@
     <ClCompile Include="src\TM_CommonCPP_NarrateOverloads.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameActorValues.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameAPI.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameBSExtraData.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameData.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameExtraData.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameForms.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameObjects.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTasks.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTypes.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiAPI.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiNodes.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiRTTI.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\ParamInfos.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\PluginAPI.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Script.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\StdAfx.h" />
     <ClInclude Include="include\CompleteControl\CCCommands.h" />
     <ClInclude Include="include\CompleteControl\Control.h" />
     <ClInclude Include="include\CompleteControl\ControlCollection.h" />
@@ -145,7 +177,15 @@
     <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_1.inl" />
+    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_2.inl" />
+    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_2_416.inl" />
     <None Include="exports.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\common\common.vcxproj">
+      <Project>{20c6411c-596f-4b85-be4e-8bc91f59d8a6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
