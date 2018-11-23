@@ -65,7 +65,7 @@ bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 	DebugCC(4, std::string(__func__) + "`Open");
 	std::string sControl = Controls.Items[0].ToString();
 	DebugCC(4, "sControl:" + sControl);
-	std::vector<std::string> cStrings = TMC::SplitString(sControl, ",");
+	std::vector<std::string> cStrings = TMC::Str::Split(sControl, ",");
 	DebugCC(4, "cStrings:" + TMC::Narrate(cStrings));
 	Control vControl = Control(sControl);
 	DebugCC(4, "vControl:" + vControl.Narrate());
@@ -167,20 +167,6 @@ bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 1, kParams_OneInt)
-//### TestDisableKeyCopyPasta
-bool Cmd_TestDisableKeyCopyPasta_Execute(COMMAND_ARGS)
-{
-	DebugCC(4, std::string(__func__) + "`Open");
-	*result = 0;
-	UInt32	keycode = 0;
-	//
-	if (!ExtractArgs(paramInfo, arg1, opcodeOffsetPtr, thisObj, arg3, scriptObj, eventList, &keycode)) return true;
-	if (keycode % 256 == 255 && keycode < 2048) keycode = 255 + (keycode + 1) / 256;
-	if (IsKeycodeValid(keycode)) DI_data.DisallowStates[keycode] = 0x00;
-	DebugCC(4, std::string(__func__) + "`Close");
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(TestDisableKeyCopyPasta, "TestDisableKeyCopyPasta command", 0, 0, NULL)
 //### GenerateEnum
 bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 {

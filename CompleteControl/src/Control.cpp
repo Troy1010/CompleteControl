@@ -139,19 +139,19 @@ Control::Control(UInt32 _ControlID)
 }
 Control::Control(std::string sString)
 {
-	std::vector<std::string> cStrings = TMC::SplitString(sString, ",");
+	std::vector<std::string> cStrings = TMC::Str::Split(sString, ",");
 	DebugCC(7,"cStrings:" + TMC::Narrate(cStrings));
 	ControlID = TMC::IntFromString(cStrings[0]);
 	eMenuModeType = Control::MenuModeType(TMC::IntFromString(cStrings[1]));
 	dxScancode_NonVanilla = TMC::IntFromString(cStrings[2]);
 	cModIndices_Disables = std::set<UInt8>();
-	for (std::string s : TMC::SplitString(cStrings[3], ":"))
+	for (std::string s : TMC::Str::Split(cStrings[3], ":"))
 	{
 		if (s.empty()) continue;
 		cModIndices_Disables.insert(TMC::IntFromString(s));
 	}
 	cModIndices_UnreportedDisables = std::set<UInt8>();
-	for (std::string s : TMC::SplitString(cStrings[4], ":"))
+	for (std::string s : TMC::Str::Split(cStrings[4], ":"))
 	{
 		if (s.empty()) continue;
 		cModIndices_UnreportedDisables.insert(TMC::IntFromString(s));
