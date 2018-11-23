@@ -28,7 +28,7 @@ ControlCollection::ControlCollection()
 }
 ControlCollection::ControlCollection(const std::string& sControls)
 {
-	for (auto s : TMC::SplitString(sControls, "`"))
+	for (auto s : TMC::Str::Split(sControls, "`"))
 	{
 		if (s.empty()) { continue; }
 		Items.insert(KeyValuePair(Control(s)));

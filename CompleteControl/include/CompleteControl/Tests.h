@@ -34,5 +34,4 @@ extern CommandInfo(kCommandInfo_BasicRuntimeTests);
 extern CommandInfo(kCommandInfo_TestGetControlDirectly);
 extern CommandInfo(kCommandInfo_TestGetControlDirectly2);
 extern CommandInfo(kCommandInfo_TestGetControlCopyPasta);
-extern CommandInfo(kCommandInfo_TestDisableKeyCopyPasta);
 extern CommandInfo(kCommandInfo_GenerateEnum);

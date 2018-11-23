@@ -151,7 +151,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		break;
 	case OBSEMessagingInterface::kMessage_LoadGame:
 	case OBSEMessagingInterface::kMessage_SaveGame:
-		DebugCC(5, "MessageHandler`received save/load message with file name:" + TMC::RSplitString(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
+		DebugCC(5, "MessageHandler`received save/load message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_Precompile:
 	{
@@ -160,7 +160,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		break;
 	}
 	case OBSEMessagingInterface::kMessage_PreLoadGame:
-		DebugCC(5, "MessageHandler`received pre-loadgame message with file name:" + TMC::RSplitString(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
+		DebugCC(5, "MessageHandler`received pre-loadgame message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_ExitGame_Console:
 		DebugCC(5, "MessageHandler`received quit game from console message");
