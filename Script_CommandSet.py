@@ -13,7 +13,7 @@ def QueActions(vCommandSet):
     #---TMDefaultSettings
     vCommandSet.Que((VS.SetTMDefaultVSSettings.Do,VS.SetTMDefaultVSSettings.Undo),sProj)
     #---Integrate Conan-installed packages
-    for sRoot in TM.GetDependencyRoots("conanbuildinfo.txt"):
+    for sRoot in TM.conan.GetDependencyRoots("conanbuildinfo.txt"):
         sPossibleRecommendedIntegrationPath = os.path.join(sRoot,"RecommendedIntegration.py")
         if os.path.isfile(sPossibleRecommendedIntegrationPath):
             vCommandSet.QueScript(sPossibleRecommendedIntegrationPath,[sRoot,sProj,sSln])
