@@ -4,7 +4,9 @@ CompleteControl/Release
 Debug/
 Release/
 common/
-.vs/
+.vs
+.vscode
+bin
 conanbuildinfo.*
 conaninfo.txt
 
