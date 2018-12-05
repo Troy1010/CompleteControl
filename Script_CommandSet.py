@@ -1,23 +1,27 @@
-##region Settings
+import sys
+import os
+import VisualStudioAutomation as VS
+import TM_CommonPy as TM
+# Settings
 bPause = True
 sProj = "CompleteControl/CompleteControl.vcxproj"
 sSln = "CompleteControl.sln"
-##endregion
-##region Imports
-import os, sys
-import TM_CommonPy as TM
-import VisualStudioAutomation as VS
-##endregion
+
 
 def QueActions(vCommandSet):
-    #---TMDefaultSettings
-    vCommandSet.Que((VS.SetTMDefaultVSSettings.Do,VS.SetTMDefaultVSSettings.Undo),sProj)
-    #---Integrate Conan-installed packages
+    # ---TMDefaultSettings
+    vCommandSet.Que((VS.SetTMDefaultVSSettings.Do,
+                     VS.SetTMDefaultVSSettings.Undo), sProj)
+    # ---Integrate Conan-installed packages
     for sRoot in TM.conan.GetDependencyRoots("conanbuildinfo.txt"):
-        sPossibleRecommendedIntegrationPath = os.path.join(sRoot,"RecommendedIntegration.py")
-        if os.path.isfile(sPossibleRecommendedIntegrationPath):
-            vCommandSet.QueScript(sPossibleRecommendedIntegrationPath,[sRoot,sProj,sSln])
-    vCommandSet.Que([VS.IntegrateProps,VS.IntegrateProps_Undo],[sProj,"conanbuildinfo.props"])
+        sPossibleSourceCodeIntegration = os.path.join(
+            sRoot, "SourceCodeIntegration_VS.py")
+        if os.path.isfile(sPossibleSourceCodeIntegration):
+            vCommandSet.QueScript(sPossibleSourceCodeIntegration, [
+                                  sRoot, sProj, sSln])
+    vCommandSet.Que([VS.IntegrateProps, VS.IntegrateProps_Undo], [
+                    sProj, "conanbuildinfo.props"])
+
 
 try:
     TM.Run("conan install . -pr conanprofile_OBSEPlugin")
