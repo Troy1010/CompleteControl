@@ -228,6 +228,8 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_UnreportedEnable_ByRef);
 	obse->RegisterCommand(&kCommandInfo_IsEngaged);
 	obse->RegisterCommand(&kCommandInfo_IsEngaged_ByRef);
+	obse->RegisterCommand(&kCommandInfo_IsPressed);
+	obse->RegisterCommand(&kCommandInfo_IsPressed_ByRef);
 	obse->RegisterCommand(&kCommandInfo_OnControlDown2);
 	obse->RegisterCommand(&kCommandInfo_OnControlDown2_ByRef);
 

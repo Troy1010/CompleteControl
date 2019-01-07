@@ -44,5 +44,7 @@ extern CommandInfo(kCommandInfo_UnreportedEnable);
 extern CommandInfo(kCommandInfo_UnreportedEnable_ByRef);
 extern CommandInfo(kCommandInfo_IsEngaged);
 extern CommandInfo(kCommandInfo_IsEngaged_ByRef);
+extern CommandInfo(kCommandInfo_IsPressed);
+extern CommandInfo(kCommandInfo_IsPressed_ByRef);
 extern CommandInfo(kCommandInfo_OnControlDown2);
 extern CommandInfo(kCommandInfo_OnControlDown2_ByRef);

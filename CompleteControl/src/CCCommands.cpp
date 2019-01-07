@@ -319,6 +319,33 @@ bool Cmd_IsEngaged_ByRef_Execute(COMMAND_ARGS)
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(IsEngaged_ByRef, "Is the control pressed and not disabled?", 0, 1, kParams_OneRef)
+//### IsPressed
+bool IsPressed_Helper(UInt32 iControlID)
+{
+	auto pControl = Controls.FindByID(iControlID);
+	if (!pControl) { DebugCC(7, std::string(__func__) + "`Received unregistered ControlID:" + TMC::Narrate(iControlID)); return false; }
+	return pControl->IsPressed();
+}
+bool Cmd_IsPressed_Execute(COMMAND_ARGS)
+{
+	DebugCC(6, std::string(__func__) + "`Open. scriptObjRefID:" + TMC::Narrate(scriptObj->refID));
+	UInt32	iControlID = -1;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &iControlID)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = IsPressed_Helper(iControlID);
+	DebugCC(6, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsPressed, "Is the control pressed regardless of if it's disabled?", 0, 1, kParams_OneInt)
+bool Cmd_IsPressed_ByRef_Execute(COMMAND_ARGS)
+{
+	DebugCC(6, std::string(__func__) + "`Open");
+	TESForm* vControlID_Form = 0;
+	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &vControlID_Form)) { DebugCC(5, std::string(__func__) + "`Failed arg extraction"); return false; }
+	*result = IsPressed_Helper(vControlID_Form->refID);
+	DebugCC(6, std::string(__func__) + "`Close");
+	return true;
+}
+DEFINE_COMMAND_PLUGIN(IsPressed_ByRef, "Is the control pressed regardless of if it's disabled?", 0, 1, kParams_OneRef)
 //### OnControlDown2
 bool OnControlDown2_Helper(UInt32 iControlID, UInt32 iRefID)
 {
