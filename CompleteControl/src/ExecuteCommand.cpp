@@ -11,7 +11,7 @@ double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 	double* fArgsVal = (double*)&pData[3];
 	*fArgsVal = vArg;
 	UInt32 opOffsetPtr2 = 0;
-	vCmdExecute(kParams_OneInt, pData, thisObj, arg3, scriptObj, eventList, &result2, &opOffsetPtr2);
+	vCmdExecute(kParams_OneInt, pData, thisObj, contObj, scriptObj, eventList, &result2, &opOffsetPtr2);
 	delete[] pData;
 	return result2;
 }
@@ -20,7 +20,7 @@ double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
 	ParamInfo * paramInfo = NULL;
 	void * arg1 = 0;
 	TESObjectREFR * thisObj = NULL;
-	UInt32 arg3 = 0;
+	TESObjectREFR * contObj = NULL;
 	if (!pBlankScript)
 	{
 		DebugCC(6, std::string(__func__) + "`pBlankScript INIT");

@@ -12,12 +12,11 @@
 #include <set>
 #include "Control.h"
 #include <string>
-#include "TM_CommonCPP/Misc.h"
-#include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP/ToLogStr.h"
 #include "TM_CommonCPP/StdStringFromFormatString.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
-#include "obse/Hooks_DirectInput8Create.h"
+// #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
 #include "DebugCC.h"

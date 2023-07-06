@@ -12,12 +12,11 @@
 #include <set>
 #include "Control.h"
 #include <string>
-#include "TM_CommonCPP/Misc.h"
-#include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP/ToLogStr.h"
 #include "TM_CommonCPP/StdStringFromFormatString.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
-#include "obse/Hooks_DirectInput8Create.h"
+// #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 
 #include "DebugCC.h"
@@ -25,12 +24,12 @@
 #include "Misc.h"
 #include "ExecuteCommand.h"
 
-extern CommandInfo(kCommandInfo_DisableKey_Replacing);
-extern CommandInfo(kCommandInfo_EnableKey_Replacing);
-extern CommandInfo(kCommandInfo_DisableControl_Replacing);
+extern CommandInfo(kCommandInfo_DisableKey2);
+extern CommandInfo(kCommandInfo_EnableKey2);
+extern CommandInfo(kCommandInfo_DisableControl2);
 extern CommandInfo(kCommandInfo_DisableControl_ByRef);
 extern CommandInfo(kCommandInfo_DisableControls);
-extern CommandInfo(kCommandInfo_EnableControl_Replacing);
+extern CommandInfo(kCommandInfo_EnableControl2);
 extern CommandInfo(kCommandInfo_EnableControl_ByRef);
 extern CommandInfo(kCommandInfo_EnableControls);
 extern CommandInfo(kCommandInfo_RegisterControl);

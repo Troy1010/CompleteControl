@@ -1,6 +1,5 @@
 #include "ControlCollection.h"
 #include "DebugCC.h"
-#include "TM_CommonCPP/Misc.h"
 
 std::pair<UInt32, Control> ControlCollection::KeyValuePair(Control& vControl)
 {
@@ -19,7 +18,7 @@ void ControlCollection::RegisterVanillaControls()
 		}
 		Items.insert(KeyValuePair(vControl));
 	}
-	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::Narrate(Items));
+	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::ToLogStr(Items));
 	DebugCC(5, std::string(__func__) + "`Close");
 }
 
@@ -31,7 +30,8 @@ ControlCollection::ControlCollection(const std::string& sControls)
 	for (auto s : TMC::Str::Split(sControls, "`"))
 	{
 		if (s.empty()) { continue; }
-		Items.insert(KeyValuePair(Control(s)));
+		Control control(s);
+		Items.insert(KeyValuePair(control));
 	}
 }
 
@@ -78,7 +78,7 @@ Control* ControlCollection::FindByID(UInt32 iControlID)
 		return &Items.at(iControlID);
 	}
 	catch (const std::out_of_range& e) {
-		DebugCC(5, std::string(__func__) + "`Received invalid iControlID:" + TMC::Narrate(iControlID));
+		DebugCC(5, std::string(__func__) + "`Received invalid iControlID:" + TMC::ToLogStr(iControlID));
 		return NULL;
 	}
 }

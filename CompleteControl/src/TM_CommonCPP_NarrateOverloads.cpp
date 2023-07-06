@@ -1,38 +1,48 @@
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include <sstream>
 
+#include "TM_CommonCPP/ToLogStr.h"
+
 namespace TMC
 {
-	std::string Narrate(Control Control)
+	std::string ToLogStr(Control Control)
 	{
-		return Control.Narrate();
+		return "TODO";
+		// return Control.Narrate();
 	}
-	std::string Narrate(std::vector<Control> Controls)
+	std::string ToLogStr(std::vector<Control> Controls)
 	{
-		return Narrator::Narrate_Collection(Controls);
+		return "TODO";
+		// return LogStrFactory::ToLogStr_Collection(Controls);
 	}
-	std::string Narrate(std::map<UInt32, Control> Controls)
+	std::string ToLogStr(std::map<UInt32, Control> Controls)
 	{
-		return Narrator::Narrate_Collection(Controls);
+		return "TODO";
+		// return LogStrFactory::ToLogStr_Collection(Controls);
 	}
-	std::string Narrate(std::set<UInt8> cSet)
+	std::string ToLogStr(std::set<UInt8> cSet)
 	{
-		return Narrator::Narrate_Collection(cSet);
+		return "TODO";
+		// return LogStrFactory::ToLogStr_Collection(cSet);
 	}
-	std::string Narrate(UInt8 vUInt8)
+	std::string ToLogStr(UInt8 vUInt8)
 	{
-		return std::to_string(vUInt8);
+		return "TODO";
+		// return std::to_string(vUInt8);
 	}
-	std::string Narrate(UInt32 vUInt32)
+	std::string ToLogStr(UInt32 vUInt32)
 	{
-		return std::to_string(vUInt32);
+		return "TODO";
+		// return std::to_string(vUInt32);
 	}
-	std::string Narrate(std::pair<UInt32, Control> vPair)
+	std::string ToLogStr(std::pair<UInt32, Control> vPair)
 	{
-		return Narrate(vPair.first) + ":" + Narrate(vPair.second);
+		return "TODO";
+		// return ToLogStr(vPair.first) + ":" + ToLogStr(vPair.second);
 	}
-	std::string Narrate(ControlCollection Controls)
+	std::string ToLogStr(ControlCollection Controls)
 	{
-		return Narrator::Narrate_Collection(Controls.Items);
+		return "TODO";
+		// return LogStrFactory::ToLogStr_Collection(Controls.Items);
 	}
 }

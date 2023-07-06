@@ -12,12 +12,11 @@
 #include <set>
 #include "Control.h"
 #include <string>
-#include "TM_CommonCPP/Misc.h"
-#include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP/ToLogStr.h"
 #include "TM_CommonCPP/StdStringFromFormatString.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
-#include "obse/Hooks_DirectInput8Create.h"
+// #include "obse/Hooks_DirectInput8Create.h"
 #include <sstream>
 #include "DebugCC.h"
 #include "Settings.h"
@@ -78,7 +77,7 @@ void Handler_Save(void * reserved)
 void Handler_Load(void * reserved)
 {
 	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
+	DebugCC(6, "Controls:" + TMC::ToLogStr(Controls));
 	NewGameOrLoadGame();
 	//-Serialization
 	UInt32	type, version, length;
@@ -92,7 +91,7 @@ void Handler_Load(void * reserved)
 			buf = new char[length + 1]; //c strings require a null at the end.
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
-			DebugCC(6, "buf:" + TMC::Narrate(buf));
+			DebugCC(6, "buf:" + TMC::ToLogStr(buf));
 			Controls = ControlCollection(std::string(buf));
 			delete buf;
 			break;
@@ -112,7 +111,7 @@ void Handler_Load(void * reserved)
 	{
 		Controls.RegisterVanillaControls();
 	}
-	DebugCC(6, "Controls:" + TMC::Narrate(Controls));
+	DebugCC(6, "Controls:" + TMC::ToLogStr(Controls));
 	//---Refresh Disables
 	Controls.SetOutcomes();
 	DebugCC(5, std::string(__func__) + "`Close");
@@ -175,7 +174,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 		DebugCC(5, "MessageHandler`received RuntimeScriptError message");
 		break;
 	default:
-		DebugCC(5, "Plugin Example received unknown message. typeID:" + TMC::Narrate(msg->type));
+		DebugCC(5, "Plugin Example received unknown message. typeID:" + TMC::ToLogStr(msg->type));
 		break;
 	}
 }
@@ -237,21 +236,27 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);
 	obse->RegisterCommand(&kCommandInfo_HandleOnMenuMode);
 
+	// TODO: These would be better suited as replacements. However, the g_commandTableIntfc->Replace() command was not working.. so as a duct-tape solution, client mods must use DisableKey2, EnableKey2, etc.
+	obse->RegisterCommand(&kCommandInfo_DisableKey2);
+	obse->RegisterCommand(&kCommandInfo_EnableKey2);
+	obse->RegisterCommand(&kCommandInfo_DisableControl2);
+	obse->RegisterCommand(&kCommandInfo_EnableControl2);
+
 	if (!obse->isEditor)
 	{
-		//-get an OBSEScriptInterface to use for argument extraction
+		// Get an OBSEScriptInterface to use for argument extraction
 		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-		//-Get original execute functions of DisableKey, EnableKey
+		// Get original execute functions of DisableKey, EnableKey
 		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:0x1430
 		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:0x1431
-		//-Replace DisableKey, EnableKey
-		g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
-		g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
-		//-Replace DisableControl, EnableControl
-		g_commandTableIntfc->Replace(0x15A7, &kCommandInfo_DisableControl_Replacing); //DisableControl_opcode:0x15A7
-		g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
-		//-Get some commands we might use with ExecuteCommand
+		// // Replace DisableKey, EnableKey
+		// g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
+		// g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
+		// // Replace DisableControl, EnableControl
+		// g_commandTableIntfc->Replace(0x15A7, &kCommandInfo_DisableControl_Replacing); //DisableControl_opcode:0x15A7
+		// g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
+		// Get some commands we might use with ExecuteCommand
 		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
 		GetAltControl2_CmdInfo = g_commandTableIntfc->GetByName("GetAltControl2");
 		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8

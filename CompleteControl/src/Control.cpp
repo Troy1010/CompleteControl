@@ -1,7 +1,6 @@
 #include "Control.h"
 #include <vector>
-#include "TM_CommonCPP/Misc.h"
-#include "TM_CommonCPP/Narrate.h"
+#include "TM_CommonCPP/ToLogStr.h"
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include <sstream>
 #include "ExecuteCommand.h"
@@ -24,21 +23,21 @@ const bool Control::IsDisabled() //ShouldBeDisabled might be a more appropriate 
 
 int Control::GetDXScancode() //perhaps I could remake this to go faster
 {
-	DebugCC(7, std::string(__func__) + "`Open. ControlID:" + TMC::Narrate(ControlID));
+	DebugCC(7, std::string(__func__) + "`Open. ControlID:" + TMC::ToLogStr(ControlID));
 	if (ControlID < VanillaControlID_EnumSize)
 	{
 		int dxScancode = ExecuteCommand(GetControl_CmdInfo, ControlID);
 		if (dxScancode == 0xFF)
 		{
 			dxScancode = ExecuteCommand(GetAltControl2_CmdInfo, ControlID);
-			DebugCC(7, "dxScancode was 0xFF! Tryagain:" + TMC::Narrate(dxScancode));
+			DebugCC(7, "dxScancode was 0xFF! Tryagain:" + TMC::ToLogStr(dxScancode));
 		}
-		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::Narrate(dxScancode));
+		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode));
 		return dxScancode;
 	}
 	else
 	{
-		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::Narrate(dxScancode_NonVanilla));
+		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode_NonVanilla));
 		return dxScancode_NonVanilla;
 	}
 }
@@ -48,20 +47,20 @@ void Control::ResolveModIndices()
 	UInt8 iNewModIndex;
 	if (ControlID >= VanillaControlID_EnumSize)
 	{
-		DebugCC(7, std::string(__func__) + "`ControlID OLD:" + TMC::Narrate(ControlID));
+		DebugCC(7, std::string(__func__) + "`ControlID OLD:" + TMC::ToLogStr(ControlID));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, ControlID >> 24); // iModIndex:ControlID >> 24
 		if (iNewModIndex != 0xFF)
 		{
 			ControlID &= ~UInt32(0xFF000000); // Clear out whatever is at the first two hex digits.
-			DebugCC(7, std::string(__func__) + "`ControlID CLEARED:" + TMC::Narrate(ControlID));
+			DebugCC(7, std::string(__func__) + "`ControlID CLEARED:" + TMC::ToLogStr(ControlID));
 			ControlID |= UInt32(iNewModIndex) << 24; // Apply mask.
-			DebugCC(7, std::string(__func__) + "`ControlID NEW:" + TMC::Narrate(ControlID));
+			DebugCC(7, std::string(__func__) + "`ControlID NEW:" + TMC::ToLogStr(ControlID));
 		}
 		else
 		{
-			DebugCC(7, "Controls BEFORE:" + TMC::Narrate(Controls));
+			DebugCC(7, "Controls BEFORE:" + TMC::ToLogStr(Controls));
 			Controls.Items.erase(ControlID);
-			DebugCC(7, "Controls AFTER:" + TMC::Narrate(Controls));
+			DebugCC(7, "Controls AFTER:" + TMC::ToLogStr(Controls));
 			return;
 		}
 	}
@@ -69,9 +68,9 @@ void Control::ResolveModIndices()
 	decltype(cModIndices_Disables) cModIndices_Disables_NEW;
 	for (auto iModIndex : cModIndices_Disables)
 	{
-		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
+		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
-		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
+		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
 			cModIndices_Disables_NEW.insert(iNewModIndex);
@@ -82,9 +81,9 @@ void Control::ResolveModIndices()
 	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
 	for (auto iModIndex : cModIndices_UnreportedDisables)
 	{
-		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::Narrate(iModIndex));
+		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
-		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::Narrate(iNewModIndex));
+		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
 			cModIndices_UnreportedDisables_NEW.insert(iNewModIndex);
@@ -140,21 +139,21 @@ Control::Control(UInt32 _ControlID)
 Control::Control(std::string sString)
 {
 	std::vector<std::string> cStrings = TMC::Str::Split(sString, ",");
-	DebugCC(7,"cStrings:" + TMC::Narrate(cStrings));
-	ControlID = TMC::IntFromString(cStrings[0]);
-	eMenuModeType = Control::MenuModeType(TMC::IntFromString(cStrings[1]));
-	dxScancode_NonVanilla = TMC::IntFromString(cStrings[2]);
+	DebugCC(7,"cStrings:" + TMC::ToLogStr(cStrings));
+	ControlID = std::stoi(cStrings[0]);
+	eMenuModeType = Control::MenuModeType(std::stoi(cStrings[1]));
+	dxScancode_NonVanilla = std::stoi(cStrings[2]);
 	cModIndices_Disables = std::set<UInt8>();
 	for (std::string s : TMC::Str::Split(cStrings[3], ":"))
 	{
 		if (s.empty()) continue;
-		cModIndices_Disables.insert(TMC::IntFromString(s));
+		cModIndices_Disables.insert(std::stoi(s));
 	}
 	cModIndices_UnreportedDisables = std::set<UInt8>();
 	for (std::string s : TMC::Str::Split(cStrings[4], ":"))
 	{
 		if (s.empty()) continue;
-		cModIndices_UnreportedDisables.insert(TMC::IntFromString(s));
+		cModIndices_UnreportedDisables.insert(std::stoi(s));
 	}
 	cScriptRefs_ReceivedOnControlDown = std::set<UInt32>();
 	bDeleteMe = false;
@@ -162,7 +161,7 @@ Control::Control(std::string sString)
 
 std::string Control::ToString()
 {
-	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::Narrate(Controls));
+	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::ToLogStr(Controls));
 	std::stringstream ss;
 	ss << ControlID;
 	ss << "," << eMenuModeType;
@@ -185,14 +184,14 @@ std::string Control::Narrate()
 {
 	std::ostringstream vReturning;
 	vReturning << "Control..";
-	TMC::Narrator::iIndent++;
+	TMC::LogStrFactory::iIndent++;
 	vReturning <<
-		"\n" << TMC::Narrator::Indent() << "ControlID:" << ControlID <<
-		"\n" << TMC::Narrator::Indent() << "dxScancode:" << GetDXScancode() <<
-		"\n" << TMC::Narrator::Indent() << "eMenuModeType:" << eMenuModeType <<
-		"\n" << TMC::Narrator::Indent() << "cModIndices:" << TMC::Narrate(cModIndices_Disables) <<
-		"\n" << TMC::Narrator::Indent() << "cModIndices_Unregistered:" << TMC::Narrate(cModIndices_UnreportedDisables);
-	TMC::Narrator::iIndent--;
+		"\n" << TMC::LogStrFactory::Indent() << "ControlID:" << ControlID <<
+		"\n" << TMC::LogStrFactory::Indent() << "dxScancode:" << GetDXScancode() <<
+		"\n" << TMC::LogStrFactory::Indent() << "eMenuModeType:" << eMenuModeType <<
+		"\n" << TMC::LogStrFactory::Indent() << "cModIndices:" << TMC::ToLogStr(cModIndices_Disables) <<
+		"\n" << TMC::LogStrFactory::Indent() << "cModIndices_Unregistered:" << TMC::ToLogStr(cModIndices_UnreportedDisables);
+	TMC::LogStrFactory::iIndent--;
 	return vReturning.str();
 }
 

@@ -1,14 +1,10 @@
-TM_CommonCPP/
 CompleteControl/Debug
 CompleteControl/Release
 Debug/
 Release/
-common/
 .vs
 .vscode
 bin
-conanbuildinfo.*
-conaninfo.txt
 
 Debug
 Release
@@ -26,7 +22,5 @@ Release
 
 
 
-/common/
-/obse/
 
 .idea/

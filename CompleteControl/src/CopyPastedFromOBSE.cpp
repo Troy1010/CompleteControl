@@ -1,5 +1,7 @@
 #include "CopyPastedFromOBSE.h"
 
+#include <GameOSDepend.h>
+
 
 // Copy-pasted from obse's Control_Input
 #define CONTROLSMAPPED 29

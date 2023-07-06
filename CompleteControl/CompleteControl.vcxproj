@@ -20,31 +20,30 @@
     </SccProvider>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>CompleteControl</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-  <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir><IntDir>$(SolutionDir)bin\intermediates\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir></PropertyGroup>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\intermediates\$(MSBuildProjectName)\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Condition="Exists('..\conanbuildinfo.props')" Project="..\conanbuildinfo.props" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="UserSettings.props" />
+    <Import Project="LocalConfig.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="UserSettings.props" />
+    <Import Project="LocalConfig.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -63,17 +62,17 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;$(SolutionDir)\submodules\xOBSE;$(SolutionDir)\submodules\xOBSE\obse\;$(SolutionDir)\submodules\xOBSE\obse\obse\;$(SolutionDir)\submodules\xOBSE\common;$(SolutionDir)\submodules\TM_CommonCPP;$(SolutionDir)\submodules\TM_CommonCPP\TM_CommonCPP;$(SolutionDir)\submodules;$(SolutionDir)\submodules\TM_CommonCPP\TM_CommonCPP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <ForcedIncludeFiles>stdafx.h;obse_common/obse_prefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeaderFile>../obse/stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>obse_common/obse_prefix.h;StdAfx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
@@ -88,13 +87,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\CompleteControl;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;$(SolutionDir)\submodules\xOBSE;$(SolutionDir)\submodules\xOBSE\obse\;$(SolutionDir)\submodules\xOBSE\obse\obse\;$(SolutionDir)\submodules\xOBSE\common;$(SolutionDir)\submodules\TM_CommonCPP;$(SolutionDir)\submodules\TM_CommonCPP\TM_CommonCPP;$(SolutionDir)\submodules;$(SolutionDir)\submodules\TM_CommonCPP\TM_CommonCPP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ForcedIncludeFiles>stdafx.h;obse_common/obse_prefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>obse_common/obse_prefix.h;StdAfx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -111,21 +110,31 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameActorValues.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameAPI.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameBSExtraData.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameData.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameExtraData.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameForms.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameObjects.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTasks.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTypes.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiAPI.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiNodes.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiRTTI.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Script.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Utilities.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\StdAfx.cpp" />
+    <ProjectReference Include="..\submodules\TM_CommonCPP\TM_CommonCPP\TM_CommonCPP_Lib.vcxproj">
+      <Project>{434875ef-3f94-44dd-bfc5-93d69c0de9a2}</Project>
+      <Name>TM_CommonCPP_Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\submodules\xOBSE\common\common.vcxproj">
+      <Project>{20c6411c-596f-4b85-be4e-8bc91f59d8a6}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameActorValues.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameAPI.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameBSExtraData.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameData.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameExtraData.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameForms.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameObjects.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameTasks.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\GameTypes.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\NiAPI.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\NiNodes.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\NiRTTI.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\Script.cpp" />
+    <ClCompile Include="..\submodules\xOBSE\obse\obse\Utilities.cpp" />
     <ClCompile Include="dllmain.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
@@ -145,23 +154,22 @@
     <ClCompile Include="src\TM_CommonCPP_NarrateOverloads.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameActorValues.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameAPI.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameBSExtraData.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameData.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameExtraData.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameForms.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameObjects.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTasks.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameTypes.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiAPI.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiNodes.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\NiRTTI.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\ParamInfos.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\PluginAPI.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Script.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\Utilities.h" />
-    <ClInclude Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\StdAfx.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameActorValues.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameAPI.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameBSExtraData.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameData.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameExtraData.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameForms.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameObjects.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameTasks.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\GameTypes.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\NiAPI.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\NiNodes.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\NiRTTI.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\ParamInfos.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\PluginAPI.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\Script.h" />
+    <ClInclude Include="..\submodules\xOBSE\obse\obse\Utilities.h" />
     <ClInclude Include="include\CompleteControl\CCCommands.h" />
     <ClInclude Include="include\CompleteControl\Control.h" />
     <ClInclude Include="include\CompleteControl\ControlCollection.h" />
@@ -175,15 +183,8 @@
     <ClInclude Include="include\CompleteControl\TM_CommonCPP_NarrateOverloads.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_1.inl" />
-    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_2.inl" />
-    <None Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\obse\obse\GameRTTI_1_2_416.inl" />
+    <None Include="..\submodules\xOBSE\obse\obse\GameRTTI_1_2_416.inl" />
     <None Include="exports.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Users\2troy\.conan\data\OBSEPluginDevPackage\0.1\Troy1010\channel\package\2a0b7ed68eb56c5f3ad8a5651d2edee732783124\include\common\common.vcxproj">
-      <Project>{20c6411c-596f-4b85-be4e-8bc91f59d8a6}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
