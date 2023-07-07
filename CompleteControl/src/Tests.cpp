@@ -35,7 +35,7 @@ bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, nullptr)
 //### Test1
 bool Cmd_Test1_Execute(COMMAND_ARGS)
 {
@@ -43,7 +43,7 @@ bool Cmd_Test1_Execute(COMMAND_ARGS)
 	*result = IsMenuMode();
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(Test1, "Test1 command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(Test1, "Test1 command", 0, 0, nullptr)
 //### TestControlsFromString
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {
@@ -56,7 +56,7 @@ bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, nullptr)
 //### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
@@ -70,14 +70,14 @@ bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, nullptr)
 //### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS)
 {
 	Logd("PrintControls`Controls:" + TMC::ToLogStr(Controls));
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(PrintControls, "PrintControls command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(PrintControls, "PrintControls command", 0, 0, nullptr)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
@@ -97,7 +97,7 @@ bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * th
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, nullptr)
 //### BasicRuntimeTests
 bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 {
@@ -123,7 +123,7 @@ bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(BasicRuntimeTests, "BasicRuntimeTests command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(BasicRuntimeTests, "BasicRuntimeTests command", 0, 0, nullptr)
 //### TestGetControlDirectly
 bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * contObj, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
@@ -136,7 +136,7 @@ bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESO
 	Logd(std::string(__func__) + "`Open");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, nullptr)
 //### TestGetControlDirectly2
 bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
@@ -149,7 +149,7 @@ bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TES
 	Logd(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(TestGetControlDirectly2, "TestGetControlDirectly2 command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(TestGetControlDirectly2, "TestGetControlDirectly2 command", 0, 0, nullptr)
 //### TestGetControlCopyPasta
 bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 {
@@ -170,7 +170,7 @@ bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 {
 	Logd(std::string(__func__) + "`Open");
 	//Extract Args
-	TESForm* rTemp = NULL;
+	TESForm* rTemp = nullptr;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &rTemp)) {
 		Logd(std::string(__func__) + "`Failed arg extraction");
 		return false;

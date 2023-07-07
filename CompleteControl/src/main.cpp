@@ -42,7 +42,7 @@ bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 	Logd("HandleOblivionLoaded`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, nullptr)
 //### HandleOnGameMode
 bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 {
@@ -52,7 +52,7 @@ bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 	Logv(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, nullptr)
 //### HandleOnMenuMode
 bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 {
@@ -62,7 +62,7 @@ bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 	Logv(std::string(__func__) + "`Close");
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
+DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, nullptr)
 #pragma endregion
 #pragma region SerializationIntfcHandlers
 void Handler_Save(void * reserved)

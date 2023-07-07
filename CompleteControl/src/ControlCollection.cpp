@@ -69,7 +69,7 @@ Control* ControlCollection::FindByScancode(int iDXScancode)
 			return &vControl;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 Control* ControlCollection::FindByID(UInt32 iControlID)
@@ -79,6 +79,6 @@ Control* ControlCollection::FindByID(UInt32 iControlID)
 	}
 	catch (const std::out_of_range&) {
 		Logd(std::string(__func__) + "`Received invalid iControlID:" + TMC::ToLogStr(iControlID));
-		return NULL;
+		return nullptr;
 	}
 }

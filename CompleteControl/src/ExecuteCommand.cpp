@@ -17,10 +17,10 @@ double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg, COMMAND_ARGS)
 }
 double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
 {
-	ParamInfo * paramInfo = NULL;
+	ParamInfo * paramInfo = nullptr;
 	void * arg1 = 0;
-	TESObjectREFR * thisObj = NULL;
-	TESObjectREFR * contObj = NULL;
+	TESObjectREFR * thisObj = nullptr;
+	TESObjectREFR * contObj = nullptr;
 	if (!pBlankScript)
 	{
 		Logv(std::string(__func__) + "`pBlankScript INIT");

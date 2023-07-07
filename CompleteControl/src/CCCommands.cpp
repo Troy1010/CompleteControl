@@ -73,7 +73,7 @@ bool Cmd_DisableControls_Execute(COMMAND_ARGS)
 			OBSEElement* keys = new OBSEElement[size];
 
 			if (g_arrayIntfc->GetElements(arr, elems, keys)) {
-				OBSEArray* newArr = g_arrayIntfc->CreateArray(NULL, 0, scriptObj);
+				OBSEArray* newArr = g_arrayIntfc->CreateArray(nullptr, 0, scriptObj);
 				for (UInt32 i = 0; i < size; i++) {
 					if (elems[i].GetType() == OBSEElement::kType_Numeric) {
 						Logv(std::string(__func__) + "`Disabling:"+ TMC::ToLogStr(elems[i].Number()));
@@ -139,7 +139,7 @@ bool Cmd_EnableControls_Execute(COMMAND_ARGS)
 			OBSEElement* keys = new OBSEElement[size];
 
 			if (g_arrayIntfc->GetElements(arr, elems, keys)) {
-				OBSEArray* newArr = g_arrayIntfc->CreateArray(NULL, 0, scriptObj);
+				OBSEArray* newArr = g_arrayIntfc->CreateArray(nullptr, 0, scriptObj);
 				for (UInt32 i = 0; i < size; i++) {
 					if (elems[i].GetType() == OBSEElement::kType_Numeric) {
 						Logv(std::string(__func__) + "`Enabling:" + TMC::ToLogStr(elems[i].Number()));
