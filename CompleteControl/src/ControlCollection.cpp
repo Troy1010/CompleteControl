@@ -8,7 +8,7 @@ std::pair<UInt32, Control> ControlCollection::KeyValuePair(Control& vControl)
 
 void ControlCollection::RegisterVanillaControls()
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	for (UInt32 i = 0; i < Control::VanillaControlID_EnumSize; ++i)
 	{
 		auto vControl = Control(i);
@@ -18,8 +18,8 @@ void ControlCollection::RegisterVanillaControls()
 		}
 		Items.insert(KeyValuePair(vControl));
 	}
-	DebugCC(6, std::string(__func__) + "`cControls:" + TMC::ToLogStr(Items));
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logv(std::string(__func__) + "`cControls:" + TMC::ToLogStr(Items));
+	Logd(std::string(__func__) + "`Close");
 }
 
 ControlCollection::ControlCollection()
@@ -77,8 +77,8 @@ Control* ControlCollection::FindByID(UInt32 iControlID)
 	try {
 		return &Items.at(iControlID);
 	}
-	catch (const std::out_of_range& e) {
-		DebugCC(5, std::string(__func__) + "`Received invalid iControlID:" + TMC::ToLogStr(iControlID));
+	catch (const std::out_of_range&) {
+		Logd(std::string(__func__) + "`Received invalid iControlID:" + TMC::ToLogStr(iControlID));
 		return NULL;
 	}
 }

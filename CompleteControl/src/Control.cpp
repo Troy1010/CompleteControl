@@ -23,21 +23,21 @@ const bool Control::IsDisabled() //ShouldBeDisabled might be a more appropriate 
 
 int Control::GetDXScancode() //perhaps I could remake this to go faster
 {
-	DebugCC(7, std::string(__func__) + "`Open. ControlID:" + TMC::ToLogStr(ControlID));
+	Logv(std::string(__func__) + "`Open. ControlID:" + TMC::ToLogStr(ControlID));
 	if (ControlID < VanillaControlID_EnumSize)
 	{
 		int dxScancode = ExecuteCommand(GetControl_CmdInfo, ControlID);
 		if (dxScancode == 0xFF)
 		{
 			dxScancode = ExecuteCommand(GetAltControl2_CmdInfo, ControlID);
-			DebugCC(7, "dxScancode was 0xFF! Tryagain:" + TMC::ToLogStr(dxScancode));
+			Logv("dxScancode was 0xFF! Tryagain:" + TMC::ToLogStr(dxScancode));
 		}
-		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode));
+		Logv(std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode));
 		return dxScancode;
 	}
 	else
 	{
-		DebugCC(7, std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode_NonVanilla));
+		Logv(std::string(__func__) + "`Close. dxScancode:" + TMC::ToLogStr(dxScancode_NonVanilla));
 		return dxScancode_NonVanilla;
 	}
 }
@@ -47,20 +47,20 @@ void Control::ResolveModIndices()
 	UInt8 iNewModIndex;
 	if (ControlID >= VanillaControlID_EnumSize)
 	{
-		DebugCC(7, std::string(__func__) + "`ControlID OLD:" + TMC::ToLogStr(ControlID));
+		Logv(std::string(__func__) + "`ControlID OLD:" + TMC::ToLogStr(ControlID));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, ControlID >> 24); // iModIndex:ControlID >> 24
 		if (iNewModIndex != 0xFF)
 		{
 			ControlID &= ~UInt32(0xFF000000); // Clear out whatever is at the first two hex digits.
-			DebugCC(7, std::string(__func__) + "`ControlID CLEARED:" + TMC::ToLogStr(ControlID));
+			Logv(std::string(__func__) + "`ControlID CLEARED:" + TMC::ToLogStr(ControlID));
 			ControlID |= UInt32(iNewModIndex) << 24; // Apply mask.
-			DebugCC(7, std::string(__func__) + "`ControlID NEW:" + TMC::ToLogStr(ControlID));
+			Logv(std::string(__func__) + "`ControlID NEW:" + TMC::ToLogStr(ControlID));
 		}
 		else
 		{
-			DebugCC(7, "Controls BEFORE:" + TMC::ToLogStr(Controls));
+			Logv("Controls BEFORE:" + TMC::ToLogStr(Controls));
 			Controls.Items.erase(ControlID);
-			DebugCC(7, "Controls AFTER:" + TMC::ToLogStr(Controls));
+			Logv("Controls AFTER:" + TMC::ToLogStr(Controls));
 			return;
 		}
 	}
@@ -68,9 +68,9 @@ void Control::ResolveModIndices()
 	decltype(cModIndices_Disables) cModIndices_Disables_NEW;
 	for (auto iModIndex : cModIndices_Disables)
 	{
-		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
+		Logv(std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
-		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
+		Logv(std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
 			cModIndices_Disables_NEW.insert(iNewModIndex);
@@ -81,9 +81,9 @@ void Control::ResolveModIndices()
 	decltype(cModIndices_UnreportedDisables) cModIndices_UnreportedDisables_NEW;
 	for (auto iModIndex : cModIndices_UnreportedDisables)
 	{
-		DebugCC(6, std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
+		Logv(std::string(__func__) + "`iModIndexBEFORE:" + TMC::ToLogStr(iModIndex));
 		iNewModIndex = ExecuteCommand(ResolveModIndex_CmdInfo, iModIndex);
-		DebugCC(6, std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
+		Logv(std::string(__func__) + "`iModIndexAFTER:" + TMC::ToLogStr(iNewModIndex));
 		if (iNewModIndex != 255)
 		{
 			cModIndices_UnreportedDisables_NEW.insert(iNewModIndex);
@@ -114,7 +114,7 @@ void Control::Enable()
 
 Control::Control()
 {
-	DebugCC(1,"Warning: Control's default constructor was called.")
+	Logw("Warning: Control's default constructor was called.")
 }
 Control::Control(UInt32 _ControlID, MenuModeType _eMenuModeType = MenuModeType::GameMode, int _dxScancode_NonVanilla = 0)
 {
@@ -139,7 +139,7 @@ Control::Control(UInt32 _ControlID)
 Control::Control(std::string sString)
 {
 	std::vector<std::string> cStrings = TMC::Str::Split(sString, ",");
-	DebugCC(7,"cStrings:" + TMC::ToLogStr(cStrings));
+	Logv("cStrings:" + TMC::ToLogStr(cStrings));
 	ControlID = std::stoi(cStrings[0]);
 	eMenuModeType = Control::MenuModeType(std::stoi(cStrings[1]));
 	dxScancode_NonVanilla = std::stoi(cStrings[2]);
@@ -161,7 +161,7 @@ Control::Control(std::string sString)
 
 std::string Control::ToString()
 {
-	DebugCC(7, std::string(__func__) + "`Controls:" + TMC::ToLogStr(Controls));
+	Logv(std::string(__func__) + "`Controls:" + TMC::ToLogStr(Controls));
 	std::stringstream ss;
 	ss << ControlID;
 	ss << "," << eMenuModeType;
@@ -176,7 +176,7 @@ std::string Control::ToString()
 	{
 		ss << ":" << int(iInt); // iInt requires a cast to int for ss to interpret it correctly.
 	}
-	DebugCC(7, std::string(__func__) + "`ss.str():" + ss.str());
+	Logv(std::string(__func__) + "`ss.str():" + ss.str());
 	return ss.str();
 }
 

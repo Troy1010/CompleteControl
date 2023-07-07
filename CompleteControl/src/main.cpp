@@ -36,30 +36,30 @@ inline void NewGameOrLoadGame()
 //These 'handlers' are literally just commands called by the CompleteControlHelper.esp mod when its own event is fired.
 bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, "HandleOblivionLoaded`Open");
+	Logd("HandleOblivionLoaded`Open");
 	//bOblivionLoaded = true;	//This would be a nice place to set this variable. However, I am trying to get rid of CC's reliance on a helper mod.
 	//Controls = InitializeControls();
-	DebugCC(5, "HandleOblivionLoaded`Close");
+	Logd("HandleOblivionLoaded`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, NULL)
 //### HandleOnGameMode
 bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
 {
-	DebugCC(7, std::string(__func__) + "`Open");
+	Logv(std::string(__func__) + "`Open");
 	Controls.EnableAll();
 	Controls.SetOutcomes();
-	DebugCC(7, std::string(__func__) + "`Close");
+	Logv(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, NULL)
 //### HandleOnMenuMode
 bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
 {
-	DebugCC(7, std::string(__func__) + "`Open");
+	Logv(std::string(__func__) + "`Open");
 	Controls.EnableAll();
 	Controls.SetOutcomes();
-	DebugCC(7, std::string(__func__) + "`Close");
+	Logv(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
@@ -67,36 +67,36 @@ DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, NULL)
 #pragma region SerializationIntfcHandlers
 void Handler_Save(void * reserved)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	//-Write Control
 	std::string sControls = Controls.Stringize();
 	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 }
 
 void Handler_Load(void * reserved)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(6, "Controls:" + TMC::ToLogStr(Controls));
+	Logd(std::string(__func__) + "`Open");
+	Logv("Controls:" + TMC::ToLogStr(Controls));
 	NewGameOrLoadGame();
 	//-Serialization
 	UInt32	type, version, length;
 	char* buf;
 	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
 	{
-		DebugCC(6, TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
+		Logv(TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
 		switch (type)
 		{
 		case 'CTRL':
 			buf = new char[length + 1]; //c strings require a null at the end.
 			g_serialization->ReadRecordData(buf, length);
 			buf[length] = 0;
-			DebugCC(6, "buf:" + TMC::ToLogStr(buf));
+			Logv("buf:" + TMC::ToLogStr(buf));
 			Controls = ControlCollection(std::string(buf));
 			delete buf;
 			break;
 		default:
-			DebugCC(5, TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
+			Logd(TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
 		}
 	}
 	//-ResolveModIndices
@@ -111,25 +111,25 @@ void Handler_Load(void * reserved)
 	{
 		Controls.RegisterVanillaControls();
 	}
-	DebugCC(6, "Controls:" + TMC::ToLogStr(Controls));
+	Logv("Controls:" + TMC::ToLogStr(Controls));
 	//---Refresh Disables
 	Controls.SetOutcomes();
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 }
 
 void Handler_Preload(void * reserved)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Close");
 }
 
 void Handler_NewGame(void * reserved)
 {
 	bOblivionLoaded = true; // for sanity, to see the following debug message.
-	DebugCC(5, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	NewGameOrLoadGame();
 	Controls.RegisterVanillaControls();
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 }
 #pragma endregion
 #pragma region MessageHandler
@@ -140,41 +140,41 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 	switch (msg->type)
 	{
 	case OBSEMessagingInterface::kMessage_ExitGame:
-		DebugCC(5, "MessageHandler`received ExitGame message");
+		Logd("MessageHandler`received ExitGame message");
 		break;
 	case OBSEMessagingInterface::kMessage_ExitToMainMenu:
-		DebugCC(5, "MessageHandler`received ExitToMainMenu message");
+		Logd("MessageHandler`received ExitToMainMenu message");
 		break;
 	case OBSEMessagingInterface::kMessage_PostLoad: //PostPluginsLoad
-		DebugCC(5, "MessageHandler`received PostLoad message");
+		Logd("MessageHandler`received PostLoad message");
 		break;
 	case OBSEMessagingInterface::kMessage_LoadGame:
 	case OBSEMessagingInterface::kMessage_SaveGame:
-		DebugCC(5, "MessageHandler`received save/load message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
+		Logd("MessageHandler`received save/load message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_Precompile:
 	{
 		ScriptBuffer* buffer = (ScriptBuffer*)msg->data;
-		DebugCC(5, TMC::StdStringFromFormatString("MessageHandler`received precompile message. Script Text:\n%s", buffer->scriptText));
+		Logd(TMC::StdStringFromFormatString("MessageHandler`received precompile message. Script Text:\n%s", buffer->scriptText));
 		break;
 	}
 	case OBSEMessagingInterface::kMessage_PreLoadGame:
-		DebugCC(5, "MessageHandler`received pre-loadgame message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
+		Logd("MessageHandler`received pre-loadgame message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
 		break;
 	case OBSEMessagingInterface::kMessage_ExitGame_Console:
-		DebugCC(5, "MessageHandler`received quit game from console message");
+		Logd("MessageHandler`received quit game from console message");
 		break;
 	case OBSEMessagingInterface::kMessage_PostLoadGame:
-		DebugCC(5, "MessageHandler`received PostLoadGame message");
+		Logd("MessageHandler`received PostLoadGame message");
 		break;
 	case OBSEMessagingInterface::kMessage_PostPostLoad:
-		DebugCC(5, "MessageHandler`received PostPostLoad message");
+		Logd("MessageHandler`received PostPostLoad message");
 		break;
 	case OBSEMessagingInterface::kMessage_RuntimeScriptError:
-		DebugCC(5, "MessageHandler`received RuntimeScriptError message");
+		Logd("MessageHandler`received RuntimeScriptError message");
 		break;
 	default:
-		DebugCC(5, "Plugin Example received unknown message. typeID:" + TMC::ToLogStr(msg->type));
+		Logd("Plugin Example received unknown message. typeID:" + TMC::ToLogStr(msg->type));
 		break;
 	}
 }
@@ -183,7 +183,7 @@ void MessageHandler(OBSEMessagingInterface::Message* msg)
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
@@ -195,12 +195,12 @@ bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 		if (!(g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar))) { _ERROR("Array interface not found"); return false; }
 	}
 	if (obse->obseVersion < OBSE_VERSION_INTEGER) { _MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER); return false; }
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	g_pluginHandle = obse->GetPluginHandle();
 	if (!obse->isEditor)
 	{
@@ -268,7 +268,7 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
 	g_msg = msgIntfc;
 
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 };

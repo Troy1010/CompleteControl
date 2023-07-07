@@ -31,15 +31,15 @@
 //### CommandTemplate
 bool Cmd_CommandTemplate_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, std::string(__func__) + "`Open");
-	DebugCC(5, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(CommandTemplate, "CommandTemplate command", 0, 0, NULL)
 //### Test1
 bool Cmd_Test1_Execute(COMMAND_ARGS)
 {
-	DebugCC(5, std::string(__func__) + "`IsMenuMode():"+ TMC::ToLogStr(IsMenuMode()));
+	Logd(std::string(__func__) + "`IsMenuMode():"+ TMC::ToLogStr(IsMenuMode()));
 	*result = IsMenuMode();
 	return true;
 }
@@ -47,41 +47,41 @@ DEFINE_COMMAND_PLUGIN(Test1, "Test1 command", 0, 0, NULL)
 //### TestControlsFromString
 bool Cmd_TestControlsFromString_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
-	DebugCC(4, "Controls:" + TMC::ToLogStr(Controls));
+	Logd(std::string(__func__) + "`Open");
+	Logd("Controls:" + TMC::ToLogStr(Controls));
 	std::string sControls = Controls.Stringize();
-	DebugCC(4, "sControls:" + sControls);
+	Logd("sControls:" + sControls);
 	auto cReturningControls = ControlCollection(sControls);
-	DebugCC(4, "cReturningControls:" + TMC::ToLogStr(cReturningControls));
-	DebugCC(4, std::string(__func__) + "`Close");
+	Logd("cReturningControls:" + TMC::ToLogStr(cReturningControls));
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlsFromString, "TestControlsFromString command", 0, 0, NULL)
 //### TestControlToString
 bool Cmd_TestControlToString_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	std::string sControl = Controls.Items[0].ToString();
-	DebugCC(4, "sControl:" + sControl);
+	Logd("sControl:" + sControl);
 	std::vector<std::string> cStrings = TMC::Str::Split(sControl, ",");
-	DebugCC(4, "cStrings:" + TMC::ToLogStr(cStrings));
+	Logd("cStrings:" + TMC::ToLogStr(cStrings));
 	Control vControl = Control(sControl);
-	DebugCC(4, "vControl:" + vControl.Narrate());
-	DebugCC(4, std::string(__func__) + "`Close");
+	Logd("vControl:" + vControl.Narrate());
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestControlToString, "TestControlToString command", 0, 0, NULL)
 //### PrintControls
 bool Cmd_PrintControls_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, "PrintControls`Controls:" + TMC::ToLogStr(Controls));
+	Logd("PrintControls`Controls:" + TMC::ToLogStr(Controls));
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(PrintControls, "PrintControls command", 0, 0, NULL)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	*result = 0;
 	UInt8* fArgs = new UInt8[3 + sizeof(double)];
 	UInt16* fArgsNumArgs = (UInt16*)fArgs;
@@ -93,67 +93,67 @@ bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * th
 	const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
 	ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
 	delete[] fArgs;
-	DebugCC(4, "TestCeil`opcode:" + TMC::ToLogStr(ceil->opcode) + " *result:" + TMC::ToLogStr(*result) + " result:" + TMC::ToLogStr(result));
-	DebugCC(4, std::string(__func__) + "`Close");
+	Logd("TestCeil`opcode:" + TMC::ToLogStr(ceil->opcode) + " *result:" + TMC::ToLogStr(*result) + " result:" + TMC::ToLogStr(result));
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, NULL)
 //### BasicRuntimeTests
 bool Cmd_BasicRuntimeTests_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	//*result = 0; //Do I need this?
 	int iInt = 5;
-	DebugCC(4, "5:" + TMC::ToLogStr(iInt));
+	Logd("5:" + TMC::ToLogStr(iInt));
 	UInt8 vUInt8 = 3;
-	DebugCC(4, "3:" + TMC::ToLogStr(vUInt8));
+	Logd("3:" + TMC::ToLogStr(vUInt8));
 	std::set<UInt8> cSet;
 	cSet.insert(65);
 	cSet.insert(64);
 	cSet.insert(63);
-	DebugCC(4, "Set:" + TMC::ToLogStr(cSet));
-	DebugCC(4, "ActualControls:" + TMC::ToLogStr(Controls));
+	Logd("Set:" + TMC::ToLogStr(cSet));
+	Logd("ActualControls:" + TMC::ToLogStr(Controls));
 	//static std::vector<Control> Controls_Fake;
 	//Controls_Fake.push_back(Control(15,UInt32(4)));
 	//for (Control &vControl : Controls_Fake)
 	//{
 	//	vControl.cModIndices_Disables.insert(222);
 	//}
-	//DebugCC(5,"FakeControls:" + TMC::Narrate(Controls_Fake));
-	DebugCC(4, std::string(__func__) + "`Close");
+	//Logv("FakeControls:" + TMC::Narrate(Controls_Fake));
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(BasicRuntimeTests, "BasicRuntimeTests command", 0, 0, NULL)
 //### TestGetControlDirectly
 bool Cmd_TestGetControlDirectly_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * contObj, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	double endResult;
 	endResult = ExecuteCommand(GetControl_CmdInfo, 2, PASS_COMMAND_ARGS);
 	// Report
-	//DebugCC(5,"TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
-	DebugCC(4, "endResult:" + TMC::ToLogStr(endResult));
-	DebugCC(4, std::string(__func__) + "`Open");
+	//Logv("TestGetControlDirectly`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	Logd("endResult:" + TMC::ToLogStr(endResult));
+	Logd(std::string(__func__) + "`Open");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlDirectly, "TestGetControlDirectly command", 0, 0, NULL)
 //### TestGetControlDirectly2
 bool Cmd_TestGetControlDirectly2_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	double endResult;
 	endResult = ExecuteCommand(GetControl_CmdInfo, 2);
 	// Report
-	//DebugCC(5,"TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
-	DebugCC(5, "endResult:" + TMC::ToLogStr(endResult));
-	DebugCC(4, std::string(__func__) + "`Close");
+	//Logv("TestGetControlDirectly2`opcode:" + TMC::Narrate(GetControl->opcode) + " *result:" + TMC::Narrate(*result) + " result:" + TMC::Narrate(result));
+	Logd("endResult:" + TMC::ToLogStr(endResult));
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlDirectly2, "TestGetControlDirectly2 command", 0, 0, NULL)
 //### TestGetControlCopyPasta
 bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	*result = 0xFFFF;
 	UInt32	keycode = 0;
 	//ExtractArgs
@@ -161,25 +161,25 @@ bool Cmd_TestGetControlCopyPasta_Execute(COMMAND_ARGS)
 	//
 	if (!InputControls) GetControlMap();
 	*result = InputControls[keycode];
-	DebugCC(4, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestGetControlCopyPasta, "TestGetControlCopyPasta command", 0, 1, kParams_OneInt)
 //### GenerateEnum
 bool Cmd_GenerateEnum_Execute(COMMAND_ARGS)
 {
-	DebugCC(4, std::string(__func__) + "`Open");
+	Logd(std::string(__func__) + "`Open");
 	//Extract Args
 	TESForm* rTemp = NULL;
 	if (!ExtractArgsEx(paramInfo, arg1, opcodeOffsetPtr, scriptObj, eventList, &rTemp)) {
-		DebugCC(5, std::string(__func__) + "`Failed arg extraction");
+		Logd(std::string(__func__) + "`Failed arg extraction");
 		return false;
 	}
 	//Report
-	DebugCC(5, "rTemp:" + TMC::ToLogStr(rTemp->refID));
+	Logd("rTemp:" + TMC::ToLogStr(rTemp->refID));
 	//Return
 	*result = rTemp->refID;
-	DebugCC(4, std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(GenerateEnum, "GenerateEnum command", 0, 1, kParams_OneObjectRef)

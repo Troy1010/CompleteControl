@@ -23,7 +23,7 @@ double ExecuteCommand(Cmd_Execute vCmdExecute, double vArg)
 	TESObjectREFR * contObj = NULL;
 	if (!pBlankScript)
 	{
-		DebugCC(6, std::string(__func__) + "`pBlankScript INIT");
+		Logv(std::string(__func__) + "`pBlankScript INIT");
 		pBlankScript = (Script*)CreateFormInstance(13);
 		pBlankScriptEventList = (*pBlankScript).CreateEventList();
 	}
