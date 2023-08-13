@@ -1,11 +1,9 @@
+#include "Globals.h"
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
 #include "obse_common/SafeWrite.cpp"
 #if OBLIVION
 #include "obse/GameAPI.h"
-OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
-#define ExtractArgsEx(...) g_scriptInterface->ExtractArgsEx(__VA_ARGS__)
-#define ExtractFormatStringArgs(...) g_scriptInterface->ExtractFormatStringArgs(__VA_ARGS__)
 #else
 #include "obse_editor/EditorAPI.h"
 #endif
@@ -18,12 +16,9 @@ OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
 using namespace std;
 IDebugLog		gLog("CompleteControl.log");
 
-OBSECommandTableInterface	* g_commandTableIntfc = NULL;
 const CommandInfo * kCommandInfo_DisableKey = NULL;
 const CommandInfo * kCommandInfo_EnableKey = NULL;
 CommandInfo * kCommandInfo_DisableKey2_Pointer = NULL;
-
-static vector<Control> Controls;
 
 //// called from 004F90A5
 //bool Cmd_Default_Parse2(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
@@ -66,20 +61,6 @@ static vector<Control> Controls;
 //
 //	return g_defaultParseCommand(numParams, paramInfo, lineBuf, scriptBuf);
 //}
-
-// Tester1
-bool Cmd_Tester1_Execute(COMMAND_ARGS)
-{
-	Console_Print("Tester1`Open");
-	*result = 0; //Do I need this?
-	Console_Print("ReplacementCommand`Open");
-	g_commandTableIntfc->Replace(0x1430, kCommandInfo_DisableKey2_Pointer);
-
-	// Report Success
-	return true;
-}
-DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 0, NULL)
-
 
 
 // DisableKey2
@@ -162,14 +143,14 @@ bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
 	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
-	obse->RegisterCommand(&kCommandInfo_Tester1);
 	obse->RegisterCommand(&kCommandInfo_DisableKey2);
 	obse->RegisterCommand(&kCommandInfo_EnableKey2);
 	//obse->RegisterCommand(&kCommandInfo_TestExtractFormatString);
 	if(!obse->isEditor)
 	{
-		// get an OBSEScriptInterface to use for argument extraction
-		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
+		// Get an OBSEScriptInterface to use for argument extraction
+		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
+		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
 	}
 
 	g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);

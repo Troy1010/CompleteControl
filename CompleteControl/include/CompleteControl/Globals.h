@@ -21,7 +21,7 @@
 #include "ControlCollection.h"
 
 #if OBLIVION
-// extern OBSECommandTableInterface * g_commandTableIntfc; // assigned in OBSEPlugin_Load
+extern OBSECommandTableInterface * g_commandTableIntfc; // assigned in OBSEPlugin_Load
 extern OBSEScriptInterface * g_scriptIntfc; //For command argument extraction
 #define ExtractArgsEx(...) g_scriptIntfc->ExtractArgsEx(__VA_ARGS__)
 #define ExtractFormatStringArgs(...) g_scriptIntfc->ExtractFormatStringArgs(__VA_ARGS__)
