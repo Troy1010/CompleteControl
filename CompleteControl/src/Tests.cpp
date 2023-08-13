@@ -81,20 +81,20 @@ DEFINE_COMMAND_PLUGIN(PrintControls, "PrintControls command", 0, 0, nullptr)
 //### TestCeil
 bool Cmd_TestCeil_Execute(ParamInfo * paramInfo, void * arg1, TESObjectREFR * thisObj, TESObjectREFR * arg3, Script * scriptObj, ScriptEventList * eventList, double * result, UInt32 * opcodeOffsetPtr)
 {
-	// Logd(std::string(__func__) + "`Open");
-	// *result = 0;
-	// UInt8* fArgs = new UInt8[3 + sizeof(double)];
-	// UInt16* fArgsNumArgs = (UInt16*)fArgs;
-	// *fArgsNumArgs = 1;
-	// fArgs[2] = 0x7A; // argument type double
-	// double* fArgsVal = (double*)&fArgs[3];
-	// *fArgsVal = 18.42;
-	// UInt32 opOffsetPtr = 0;
-	// const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
-	// ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
-	// delete[] fArgs;
-	// Logd("TestCeil`opcode:" + TMC::ToLogStr(ceil->opcode) + " *result:" + TMC::ToLogStr(*result) + " result:" + TMC::ToLogStr(result));
-	// Logd(std::string(__func__) + "`Close");
+	Logd(std::string(__func__) + "`Open");
+	*result = 0;
+	UInt8* fArgs = new UInt8[3 + sizeof(double)];
+	UInt16* fArgsNumArgs = (UInt16*)fArgs;
+	*fArgsNumArgs = 1;
+	fArgs[2] = 0x7A; // argument type double
+	double* fArgsVal = (double*)&fArgs[3];
+	*fArgsVal = 18.42;
+	UInt32 opOffsetPtr = 0;
+	const CommandInfo* ceil = g_commandTableIntfc->GetByName("Ceil");
+	ceil->execute(kParams_OneFloat, fArgs, thisObj, arg3, scriptObj, eventList, result, &opOffsetPtr);
+	delete[] fArgs;
+	Logd("TestCeil`opcode:" + TMC::ToLogStr(ceil->opcode) + " *result:" + TMC::ToLogStr(*result) + " result:" + TMC::ToLogStr(result));
+	Logd(std::string(__func__) + "`Close");
 	return true;
 }
 DEFINE_COMMAND_PLUGIN(TestCeil, "TestCeil command", 0, 0, nullptr)
