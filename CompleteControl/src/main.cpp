@@ -14,7 +14,6 @@
 
 
 using namespace std;
-IDebugLog		gLog("CompleteControl.log");
 
 const CommandInfo * kCommandInfo_DisableKey = NULL;
 const CommandInfo * kCommandInfo_EnableKey = NULL;
