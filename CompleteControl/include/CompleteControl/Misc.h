@@ -18,6 +18,7 @@
 #include "TM_CommonCPP_NarrateOverloads.h"
 #include "obse/Script.h"
 // #include "obse/Hooks_DirectInput8Create.h"
+#include "obse/Hooks_Input.h"
 #include <sstream>
 
 const bool Contains(std::set<UInt32> cSet, UInt32 vItem);
