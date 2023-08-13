@@ -1,275 +1,246 @@
-#pragma region Includes
 #include "obse/PluginAPI.h"
 #include "obse/CommandTable.h"
 #include "obse_common/SafeWrite.cpp"
 #if OBLIVION
 #include "obse/GameAPI.h"
+OBSEScriptInterface * g_scriptInterface = NULL; // assigned in OBSEPlugin_Load
+#define ExtractArgsEx(...) g_scriptInterface->ExtractArgsEx(__VA_ARGS__)
+#define ExtractFormatStringArgs(...) g_scriptInterface->ExtractFormatStringArgs(__VA_ARGS__)
 #else
 #include "obse_editor/EditorAPI.h"
 #endif
 #include "obse/ParamInfos.h"
 #include <vector>
-#include <set>
 #include "Control.h"
-#include <string>
-#include "TM_CommonCPP/ToLogStr.h"
-#include "TM_CommonCPP/StdStringFromFormatString.h"
-#include "TM_CommonCPP_NarrateOverloads.h"
-#include "obse/Script.h"
 // #include "obse/Hooks_DirectInput8Create.h"
-#include <sstream>
-#include "DebugCC.h"
-#include "Settings.h"
-#include "Globals.h"
-#include "Misc.h"
-#include "CopyPastedFromOBSE.h"
-#include "Tests.h"
-#include "CCCommands.h"
-#pragma endregion
 
-inline void NewGameOrLoadGame()
-{
-	bOblivionLoaded = true; //Because there is no OblivionLoaded event, I think this is the closest I can get. (without using mod helper)
-}
 
-#pragma region ModHandlers
-//These 'handlers' are literally just commands called by the CompleteControlHelper.esp mod when its own event is fired.
-bool Cmd_HandleOblivionLoaded_Execute(COMMAND_ARGS)
+using namespace std;
+IDebugLog		gLog("CompleteControl.log");
+
+OBSECommandTableInterface	* g_commandTableIntfc = NULL;
+const CommandInfo * kCommandInfo_DisableKey = NULL;
+const CommandInfo * kCommandInfo_EnableKey = NULL;
+CommandInfo * kCommandInfo_DisableKey2_Pointer = NULL;
+
+static vector<Control> Controls;
+
+//// called from 004F90A5
+//bool Cmd_Default_Parse2(UInt32 numParams, ParamInfo* paramInfo, ScriptLineBuffer* lineBuf, ScriptBuffer* scriptBuf)
+//{
+//#ifdef _DEBUG
+//#if 0
+//	_MESSAGE("Cmd_Default_Parse: %08X %08X %08X %08X",
+//		arg0, arg1, arg2, arg3);
+//#endif
+//#endif
+//
+//#ifdef OBLIVION
+//
+//#if OBLIVION_VERSION == OBLIVION_VERSION_1_1
+//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F38C0;
+//#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2
+//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDF80;
+//#elif OBLIVION_VERSION == OBLIVION_VERSION_1_2_416
+//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004FDE30;
+//#else
+//#error unsupported version of oblivion
+//#endif
+//
+//#else
+//
+//#if CS_VERSION == CS_VERSION_1_0
+//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x004F69C0;
+//#elif CS_VERSION == CS_VERSION_1_2
+//	static const Cmd_Parse g_defaultParseCommand = (Cmd_Parse)0x00500FF0;
+//#else
+//#error unsupported cs version
+//#endif
+//
+//#endif
+//
+//	// arg0 = idx?
+//	// arg1 = ParamInfo *
+//	// arg2 = ptr to line to parse, skip UInt32 header first
+//	// arg3 = ptr to script info? first UInt32 is ptr to script data
+//
+//	return g_defaultParseCommand(numParams, paramInfo, lineBuf, scriptBuf);
+//}
+
+// Tester1
+bool Cmd_Tester1_Execute(COMMAND_ARGS)
 {
-	Logd("HandleOblivionLoaded`Open");
-	//bOblivionLoaded = true;	//This would be a nice place to set this variable. However, I am trying to get rid of CC's reliance on a helper mod.
-	//Controls = InitializeControls();
-	Logd("HandleOblivionLoaded`Close");
+	Console_Print("Tester1`Open");
+	*result = 0; //Do I need this?
+	Console_Print("ReplacementCommand`Open");
+	g_commandTableIntfc->Replace(0x1430, kCommandInfo_DisableKey2_Pointer);
+
+	// Report Success
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOblivionLoaded, "HandleOblivionLoaded command", 0, 0, nullptr)
-//### HandleOnGameMode
-bool Cmd_HandleOnGameMode_Execute(COMMAND_ARGS)
+DEFINE_COMMAND_PLUGIN(Tester1, "Tester1 command", 0, 0, NULL)
+
+
+
+// DisableKey2
+bool Cmd_DisableKey2_Execute(COMMAND_ARGS)
 {
-	Logv(std::string(__func__) + "`Open");
-	Controls.EnableAll();
-	Controls.SetOutcomes();
-	Logv(std::string(__func__) + "`Close");
+	//Console_Print("Cmd_DisableKey2_Execute`Open");
+	*result = 0; //Do I need this?
+
+//	kCommandInfo_DisableKey = g_commandTableIntfc->GetByOpcode(0x1430); //opcode:00001430
+
+//	Console_Print(strcat3("kCommandInfo_DisableKey->shortName: ", kCommandInfo_DisableKey->shortName));
+//	kCommandInfo_DisableKey->execute(PASS_COMMAND_ARGS);
+	Console_Print("ReplacementCommand`Open");
+
+
+	// Report Success
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOnGameMode, "HandleOnGameMode command", 0, 0, nullptr)
-//### HandleOnMenuMode
-bool Cmd_HandleOnMenuMode_Execute(COMMAND_ARGS)
+//DEFINE_COMMAND_PLUGIN(DisableKey2, "Disables a key and registers this action", 0, 1, kParams_OneInt)
+CommandInfo kCommandInfo_DisableKey2 =
 {
-	Logv(std::string(__func__) + "`Open");
-	Controls.EnableAll();
-	Controls.SetOutcomes();
-	Logv(std::string(__func__) + "`Close");
+	"DisableKey2",
+	"dk2",
+	0,
+	"Prevents a player from using a key2",
+	0,
+	1,
+	kParams_OneInt,
+	HANDLER(Cmd_DisableKey2_Execute),
+	NULL,//Cmd_Default_Parse2,
+	NULL,
+	0
+};
+
+
+// EnableKey2
+bool Cmd_EnableKey2_Execute(COMMAND_ARGS)
+{
+	*result = 0; //Do I need this?
+
+	kCommandInfo_EnableKey->execute(PASS_COMMAND_ARGS);
+
+	// Report Success
 	return true;
 }
-DEFINE_COMMAND_PLUGIN(HandleOnMenuMode, "HandleOnMenuMode command", 0, 0, nullptr)
-#pragma endregion
-#pragma region SerializationIntfcHandlers
-void Handler_Save(void * reserved)
-{
-	Logd(std::string(__func__) + "`Open");
-	//-Write Control
-	std::string sControls = Controls.Stringize();
-	g_serialization->WriteRecord('CTRL', 0, sControls.c_str(), sControls.size());
-	Logd(std::string(__func__) + "`Close");
-}
+DEFINE_COMMAND_PLUGIN(EnableKey2, "Enables a key if 0 mods have it disabled", 0, 1, kParams_OneInt)
 
-void Handler_Load(void * reserved)
-{
-	Logd(std::string(__func__) + "`Open");
-	Logv("Controls:" + TMC::ToLogStr(Controls));
-	NewGameOrLoadGame();
-	//-Serialization
-	UInt32	type, version, length;
-	char* buf;
-	while (g_serialization->GetNextRecordInfo(&type, &version, &length))
-	{
-		Logv(TMC::StdStringFromFormatString("record %08X (%.4s) %08X %08X", type, &type, version, length)); //Record type is.. reversed? why?
-		switch (type)
-		{
-		case 'CTRL':
-			buf = new char[length + 1]; //c strings require a null at the end.
-			g_serialization->ReadRecordData(buf, length);
-			buf[length] = 0;
-			Logv("buf:" + TMC::ToLogStr(buf));
-			Controls = ControlCollection(std::string(buf));
-			delete buf;
-			break;
-		default:
-			Logd(TMC::StdStringFromFormatString("Unknown chunk type %08X", type));
-		}
-	}
-	//-ResolveModIndices
-	if (!Controls.Items.empty())
-	{
-		for (auto& vControl : Controls.Items)
-		{
-			vControl.second.ResolveModIndices();
-		}
-	}
-	else //-For savegames written before CC install.
-	{
-		Controls.RegisterVanillaControls();
-	}
-	Logv("Controls:" + TMC::ToLogStr(Controls));
-	//---Refresh Disables
-	Controls.SetOutcomes();
-	Logd(std::string(__func__) + "`Close");
-}
 
-void Handler_Preload(void * reserved)
-{
-	Logd(std::string(__func__) + "`Open");
-	Logd(std::string(__func__) + "`Close");
-}
-
-void Handler_NewGame(void * reserved)
-{
-	bOblivionLoaded = true; // for sanity, to see the following debug message.
-	Logd(std::string(__func__) + "`Open");
-	NewGameOrLoadGame();
-	Controls.RegisterVanillaControls();
-	Logd(std::string(__func__) + "`Close");
-}
-#pragma endregion
-#pragma region MessageHandler
-OBSEMessagingInterface* g_msg;
-
-void MessageHandler(OBSEMessagingInterface::Message* msg)
-{
-	switch (msg->type)
-	{
-	case OBSEMessagingInterface::kMessage_ExitGame:
-		Logd("MessageHandler`received ExitGame message");
-		break;
-	case OBSEMessagingInterface::kMessage_ExitToMainMenu:
-		Logd("MessageHandler`received ExitToMainMenu message");
-		break;
-	case OBSEMessagingInterface::kMessage_PostLoad: //PostPluginsLoad
-		Logd("MessageHandler`received PostLoad message");
-		break;
-	case OBSEMessagingInterface::kMessage_LoadGame:
-	case OBSEMessagingInterface::kMessage_SaveGame:
-		Logd("MessageHandler`received save/load message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
-		break;
-	case OBSEMessagingInterface::kMessage_Precompile:
-	{
-		ScriptBuffer* buffer = (ScriptBuffer*)msg->data;
-		Logd(TMC::StdStringFromFormatString("MessageHandler`received precompile message. Script Text:\n%s", buffer->scriptText));
-		break;
-	}
-	case OBSEMessagingInterface::kMessage_PreLoadGame:
-		Logd("MessageHandler`received pre-loadgame message with file name:" + TMC::Str::RSplit(TMC::StdStringFromFormatString("%s", msg->data), "\\", 1).back());
-		break;
-	case OBSEMessagingInterface::kMessage_ExitGame_Console:
-		Logd("MessageHandler`received quit game from console message");
-		break;
-	case OBSEMessagingInterface::kMessage_PostLoadGame:
-		Logd("MessageHandler`received PostLoadGame message");
-		break;
-	case OBSEMessagingInterface::kMessage_PostPostLoad:
-		Logd("MessageHandler`received PostPostLoad message");
-		break;
-	case OBSEMessagingInterface::kMessage_RuntimeScriptError:
-		Logd("MessageHandler`received RuntimeScriptError message");
-		break;
-	default:
-		Logd("Plugin Example received unknown message. typeID:" + TMC::ToLogStr(msg->type));
-		break;
-	}
-}
-#pragma endregion
-#pragma region LoadCCHandler
 extern "C" {
 bool OBSEPlugin_Query(const OBSEInterface * obse, PluginInfo * info)
 {
-	Logd(std::string(__func__) + "`Open");
+	_MESSAGE("query");
 	info->infoVersion = PluginInfo::kInfoVersion;
 	info->name = "CompleteControl";
 	info->version = 1;
+	// version checks
 	if(!obse->isEditor)
 	{
 #if OBLIVION
-		if (obse->oblivionVersion != OBLIVION_VERSION) { _ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION); return false; }
+		if(obse->oblivionVersion != OBLIVION_VERSION)
+		{
+			_ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION);
+			return false;
+		}
 #endif	
-		if (!(g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar))) { _ERROR("Array interface not found"); return false; }
 	}
-	if (obse->obseVersion < OBSE_VERSION_INTEGER) { _MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER); return false; }
-	Logd(std::string(__func__) + "`Close");
+
+	_MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER);
+	_MESSAGE("OBSE version too old (got %i expected at least %i)", obse->obseVersion, OBSE_VERSION_INTEGER);
+	if (obse->obseVersion < OBSE_VERSION_INTEGER)
+	{
+		_MESSAGE("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER);
+		_MESSAGE("OBSE version too old (got %i expected at least %i)", obse->obseVersion, OBSE_VERSION_INTEGER);
+		//return false;
+	}
+
 	return true;
 }
 bool OBSEPlugin_Load(const OBSEInterface * obse)
 {
-	Logd(std::string(__func__) + "`Open");
-	g_pluginHandle = obse->GetPluginHandle();
-	if (!obse->isEditor)
-	{
-		if (!(g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization))) { _ERROR("serialization interface not found"); return false; }
-		if (g_serialization->version < OBSESerializationInterface::kVersion) { _ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion); return false; }
-		g_serialization->SetSaveCallback(g_pluginHandle, Handler_Save);
-		g_serialization->SetLoadCallback(g_pluginHandle, Handler_Load);
-		g_serialization->SetNewGameCallback(g_pluginHandle, Handler_NewGame);
-		g_serialization->SetPreloadCallback(g_pluginHandle, Handler_Preload);
-	}
+	_MESSAGE("load");
 	obse->SetOpcodeBase(0x28B0);
-	obse->RegisterCommand(&kCommandInfo_DisableControl_ByRef);
-	obse->RegisterCommand(&kCommandInfo_DisableControls);
-	obse->RegisterCommand(&kCommandInfo_EnableControl_ByRef);
-	obse->RegisterCommand(&kCommandInfo_EnableControls);
-	obse->RegisterCommand(&kCommandInfo_RegisterControl);
-	obse->RegisterCommand(&kCommandInfo_IsDisabled);
-	obse->RegisterCommand(&kCommandInfo_IsDisabled_ByRef);
-	obse->RegisterCommand(&kCommandInfo_GetKey);
-	obse->RegisterCommand(&kCommandInfo_GetKey_ByRef);
-	obse->RegisterCommand(&kCommandInfo_UnreportedDisable);
-	obse->RegisterCommand(&kCommandInfo_UnreportedDisable_ByRef);
-	obse->RegisterCommand(&kCommandInfo_UnreportedEnable);
-	obse->RegisterCommand(&kCommandInfo_UnreportedEnable_ByRef);
-	obse->RegisterCommand(&kCommandInfo_IsEngaged);
-	obse->RegisterCommand(&kCommandInfo_IsEngaged_ByRef);
-	obse->RegisterCommand(&kCommandInfo_IsPressed);
-	obse->RegisterCommand(&kCommandInfo_IsPressed_ByRef);
-	obse->RegisterCommand(&kCommandInfo_OnControlDown2);
-	obse->RegisterCommand(&kCommandInfo_OnControlDown2_ByRef);
-
-	obse->RegisterCommand(&kCommandInfo_HandleOblivionLoaded);
-	obse->RegisterCommand(&kCommandInfo_HandleOnGameMode);
-	obse->RegisterCommand(&kCommandInfo_HandleOnMenuMode);
-
-	// TODO: These would be better suited as replacements. However, the g_commandTableIntfc->Replace() command was not working.. so as a duct-tape solution, client mods must use DisableKey2, EnableKey2, etc.
+	obse->RegisterCommand(&kCommandInfo_Tester1);
 	obse->RegisterCommand(&kCommandInfo_DisableKey2);
 	obse->RegisterCommand(&kCommandInfo_EnableKey2);
-	obse->RegisterCommand(&kCommandInfo_DisableControl2);
-	obse->RegisterCommand(&kCommandInfo_EnableControl2);
-
-	if (!obse->isEditor)
+	//obse->RegisterCommand(&kCommandInfo_TestExtractFormatString);
+	if(!obse->isEditor)
 	{
-		// Get an OBSEScriptInterface to use for argument extraction
-		g_scriptIntfc = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
-		g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-		// Get original execute functions of DisableKey, EnableKey
-		DisableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1430)->execute; //DisableKey_opcode:0x1430
-		EnableKey_OriginalExecute = g_commandTableIntfc->GetByOpcode(0x1431)->execute; //EnableKey_opcode:0x1431
-		// // Replace DisableKey, EnableKey
-		// g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey_Replacing);
-		// g_commandTableIntfc->Replace(0x1431, &kCommandInfo_EnableKey_Replacing);
-		// // Replace DisableControl, EnableControl
-		// g_commandTableIntfc->Replace(0x15A7, &kCommandInfo_DisableControl_Replacing); //DisableControl_opcode:0x15A7
-		// g_commandTableIntfc->Replace(0x15A8, &kCommandInfo_EnableControl_Replacing); //EnableControl_opcode:0x15A8
-		// Get some commands we might use with ExecuteCommand
-		GetControl_CmdInfo = g_commandTableIntfc->GetByOpcode(0x146A); //GetControl_opcode:0x146A
-		GetAltControl2_CmdInfo = g_commandTableIntfc->GetByName("GetAltControl2");
-		ResolveModIndex_CmdInfo = g_commandTableIntfc->GetByOpcode(0x19A8); // ResolveModIndex_opcode:0x19A8
-		IsKeyPressed3_CmdInfo = g_commandTableIntfc->GetByName("IsKeyPressed3");
+		// get an OBSEScriptInterface to use for argument extraction
+		g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
 	}
 
-	//-Register to receive messages from OBSE
-	OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
-	msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
-	g_msg = msgIntfc;
+	g_commandTableIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
+//	kCommandInfo_DisableKey = g_commandTableIntfc->GetByName("DisableKey"); //opcode:00001430
+	kCommandInfo_EnableKey = g_commandTableIntfc->GetByName("EnableKey"); //opcode:00001431
+	kCommandInfo_DisableKey = g_commandTableIntfc->GetByOpcode(0x1430); //opcode:00001430
+//	UInt32 opcode_1 = 0x1430;
+	UInt32 opcode_1 = kCommandInfo_DisableKey->opcode;
+	_MESSAGE("opcode_1: %08X", opcode_1);
+	_MESSAGE("kCommandInfo_DisableKey->longName: %s", kCommandInfo_DisableKey->longName);
 
-	Logd(std::string(__func__) + "`Close");
+
+	/*kCommandInfo_DisableKey2.opcode = 0x00001434;
+	_MESSAGE("kCommandInfo_DisableKey2.opcode: %08X", kCommandInfo_DisableKey2.opcode);
+	kCommandInfo_DisableKey2_Pointer = &kCommandInfo_DisableKey2;
+	_MESSAGE("kCommandInfo_DisableKey2_Pointer->opcode: %08X", kCommandInfo_DisableKey2_Pointer->opcode);
+	kCommandInfo_DisableKey2_Pointer->opcode = 0x00001430;
+	_MESSAGE("kCommandInfo_DisableKey2_Pointer->opcode: %08X", kCommandInfo_DisableKey2_Pointer->opcode);*/
+
+	//kCommandInfo_DisableKey->parse
+	//kCommandInfo_DisableKey2_Pointer
+	kCommandInfo_DisableKey2_Pointer = &kCommandInfo_DisableKey2;
+	_MESSAGE("a");
+	kCommandInfo_DisableKey2_Pointer->eval = kCommandInfo_DisableKey->eval;
+	_MESSAGE("b");
+//	kCommandInfo_DisableKey2_Pointer->execute = kCommandInfo_DisableKey->execute;
+	_MESSAGE("c");
+	kCommandInfo_DisableKey2_Pointer->flags = kCommandInfo_DisableKey->flags;
+	_MESSAGE("d");
+	kCommandInfo_DisableKey2_Pointer->helpText = kCommandInfo_DisableKey->helpText;
+	_MESSAGE("e");
+	kCommandInfo_DisableKey2_Pointer->longName = kCommandInfo_DisableKey->longName;
+	_MESSAGE("f");
+	kCommandInfo_DisableKey2_Pointer->needsParent = kCommandInfo_DisableKey->needsParent;
+	_MESSAGE("g");
+	kCommandInfo_DisableKey2_Pointer->numParams = kCommandInfo_DisableKey->numParams;
+	_MESSAGE("h");
+	kCommandInfo_DisableKey2_Pointer->opcode = kCommandInfo_DisableKey->opcode;
+	_MESSAGE("i");
+	kCommandInfo_DisableKey2_Pointer->params = kCommandInfo_DisableKey->params;
+	_MESSAGE("j");
+	kCommandInfo_DisableKey2_Pointer->shortName = kCommandInfo_DisableKey->shortName;
+	_MESSAGE("k");
+	//kCommandInfo_DisableKey2_Pointer = new CommandInfo(kCommandInfo_DisableKey);
+
+	_MESSAGE("Replace`Open");
+	try
+	{
+		if (!obse->isEditor)
+		{
+			g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey2_Pointer);
+		}
+	}
+	catch (...)
+	{
+		_ERROR("Replace ERROR");
+		throw;
+	}
+	/*catch (exception& e)
+	{
+		_MESSAGE("ERROR:%s", e.what());
+		throw;
+	}*/
+//	g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey2_Pointer);
+//	g_commandTableIntfc->Replace(kCommandInfo_DisableKey->opcode, &kCommandInfo_DisableKey2);
+//	g_commandTableIntfc->Replace(0x1430, &kCommandInfo_DisableKey2); //This one is my fav
+
+//	CommandInfo* kCommandInfo_DisableKey_NotConst = const_cast<CommandInfo*>(kCommandInfo_DisableKey);
+//	g_commandTableIntfc->Replace(opcode_1, kCommandInfo_DisableKey_NotConst);
+	_MESSAGE("Replace`Close");
+
 	return true;
 }
 };
-#pragma endregion

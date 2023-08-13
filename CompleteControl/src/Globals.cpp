@@ -2,7 +2,7 @@
 #include "Misc.h"
 
 #if OBLIVION
-OBSECommandTableInterface * g_commandTableIntfc = nullptr; // assigned in OBSEPlugin_Load
+// OBSECommandTableInterface * g_commandTableIntfc = nullptr; // assigned in OBSEPlugin_Load
 OBSEScriptInterface * g_scriptIntfc = nullptr; //For command argument extraction
 #define ExtractArgsEx(...) g_scriptIntfc->ExtractArgsEx(__VA_ARGS__)
 #define ExtractFormatStringArgs(...) g_scriptIntfc->ExtractFormatStringArgs(__VA_ARGS__)

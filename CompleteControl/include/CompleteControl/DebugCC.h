@@ -4,7 +4,7 @@
 #include "Settings.h"
 #include "TM_CommonCPP/String.h"
 
-extern IDebugLog		gLog; //Log
+// extern IDebugLog		gLog; //Log
 void FnDebug(std::string sString);
 #define DebugCC(iLvl,sTxt) if (DebugThreshold >= (iLvl)) {FnDebug(sTxt);};
 #define logz(sTxt) if (DebugThreshold >= -1) {FnDebug(sTxt);};

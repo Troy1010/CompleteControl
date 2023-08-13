@@ -1,7 +1,7 @@
 #include "DebugCC.h"
 
-IDebugLog		gLog(DebugLogName); //Log
-
+// IDebugLog		gLog(DebugLogName); //Log
+//
 void FnDebug(std::string sString)
 {
 	SafeConsolePrint(sString);
